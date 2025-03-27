@@ -13,11 +13,11 @@ gradlePlugin {
     plugins {
         register("androidHilt") {
             id = "trace.android.hilt"
-            implementationClass = "com.example.trace.build.logic.HiltAndroidPlugin"
+            implementationClass = "com.example.app.HiltAndroidPlugin"
         }
         register("kotlinHilt") {
             id = "trace.kotlin.hilt"
-            implementationClass = "com.example.trace.build.logic.HiltKotlinPlugin"
+            implementationClass = "com.example.app.HiltKotlinPlugin"
         }
     }
 }
