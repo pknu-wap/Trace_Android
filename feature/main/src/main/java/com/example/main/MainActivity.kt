@@ -1,4 +1,4 @@
-package com.example.trace
+package com.example.main
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,14 +10,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.example.designsystem.theme.TraceTheme
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            com.example.designsystem.theme.TraceTheme {
+            TraceTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
 
                     Column(
@@ -27,7 +28,7 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
-    }
+        }
 
     }
 

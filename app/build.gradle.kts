@@ -1,6 +1,5 @@
 plugins {
     id("trace.android.application")
-    id("trace.android.compose")
 }
 
 android {
@@ -16,7 +15,7 @@ android {
 }
 
 dependencies {
-    implementation(projects.core.data)
-    implementation(projects.core.domain)
+    implementation(projects.feature.main)
+
     implementation(projects.core.designsystem)
 }

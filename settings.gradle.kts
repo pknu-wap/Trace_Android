@@ -32,3 +32,7 @@ include(":core:common")
 include(":core:network")
 include(":core:navigation")
 include(":core:domain")
+
+include(":feature")
+include(":feature:main")
+include(":feature:auth")

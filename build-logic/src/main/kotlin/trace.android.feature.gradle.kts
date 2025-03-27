@@ -7,7 +7,6 @@ plugins {
     id("trace.android.compose")
 }
 
-
 android {
     defaultConfig {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -29,4 +28,5 @@ dependencies {
     implementation(libs.findLibrary("androidx.lifecycle.runtimeCompose").get())
     androidTestImplementation(libs.findLibrary("androidx.compose.ui.test").get())
     debugImplementation(libs.findLibrary("androidx.compose.ui.test.manifest").get())
+
 }
