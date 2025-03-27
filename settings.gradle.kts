@@ -1,4 +1,5 @@
 pluginManagement {
+    includeBuild("build-logic")
     repositories {
         google {
             content {
@@ -20,5 +21,8 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "trace"
+
 include(":app")
- 
+
+include(":core")
+include(":core:data")
