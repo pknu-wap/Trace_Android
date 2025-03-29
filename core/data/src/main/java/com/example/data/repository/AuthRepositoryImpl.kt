@@ -7,7 +7,7 @@ import javax.inject.Inject
 class AuthRepositoryImpl @Inject constructor(
     private val authDataSource : AuthDataSource
 ) : AuthRepository {
-    override suspend fun loginKakao(): Result<Unit> {
+    override suspend fun loginKakao(idToken : String): Result<Unit> {
         return Result.success(Unit)
     }
 }
