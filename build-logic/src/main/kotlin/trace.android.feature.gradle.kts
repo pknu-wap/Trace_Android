@@ -22,10 +22,12 @@ dependencies {
 
 
     val libs = project.extensions.libs
-    implementation(libs.findLibrary("kotlinx.serialization.json").get())
+    implementation(libs.findLibrary("hilt-navigation-compose").get())
     implementation(libs.findLibrary("androidx.compose.navigation").get())
+
     implementation(libs.findLibrary("androidx.lifecycle.viewModelCompose").get())
     implementation(libs.findLibrary("androidx.lifecycle.runtimeCompose").get())
+
     androidTestImplementation(libs.findLibrary("androidx.compose.ui.test").get())
     debugImplementation(libs.findLibrary("androidx.compose.ui.test.manifest").get())
 

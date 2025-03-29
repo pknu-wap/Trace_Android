@@ -4,7 +4,6 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.example.auth.graph.login.LoginRoute
-import com.example.auth.graph.signup.SignUpRoute
 import com.example.navigation.AuthGraph
 import com.example.navigation.AuthGraphBaseRoute
 
@@ -15,8 +14,8 @@ fun NavGraphBuilder.authNavGraph() {
             LoginRoute()
         }
 
-        composable<AuthGraph.SignUpRoute> {
-            SignUpRoute()
-        }
+//        composable<AuthGraph.SignUpRoute> {
+//            SignUpRoute()
+//        }
     }
 }
