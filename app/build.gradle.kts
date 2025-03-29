@@ -1,6 +1,11 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     id("trace.android.application")
 }
+
+
 
 android {
     namespace = "com.example.trace"
@@ -11,11 +16,20 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
     }
+
+    buildFeatures {
+        buildConfig = true
+    }
+
 }
 
 dependencies {
     implementation(projects.feature.main)
+
+    implementation(libs.kakao.user)
+
     implementation(projects.core.designsystem)
     implementation(projects.core.data)
     implementation(projects.core.domain)
