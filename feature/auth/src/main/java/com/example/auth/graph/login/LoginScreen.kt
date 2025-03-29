@@ -37,6 +37,8 @@ import com.example.designsystem.component.checkDialog
 
 @Composable
 internal fun LoginRoute(
+    navigateToHome: () -> Unit,
+    navigateToSignUp: () -> Unit,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
@@ -48,22 +50,31 @@ internal fun LoginRoute(
             when (event) {
                 is LoginEvent.loginKakao -> loginKakao(
                     context,
-                    onSuccess = {
-                        idToken -> viewModel.loginKakao(idToken)
+                    onSuccess = { idToken ->
+                        viewModel.loginKakao(idToken)
                     },
                     onFailure = {
                         dialogMessage = "로그인에 실패했습니다."
                     }
                 )
-                is LoginEvent.NavigateToHome -> {}
-                is LoginEvent.NavigateToSignUp -> {}
+
+                is LoginEvent.NavigateToHome -> {
+                    navigateToHome()
+                }
+
+                is LoginEvent.NavigateToSignUp -> {
+                    navigateToSignUp()
+                }
             }
         }
     }
 
 
     LoginScreen(
-       loginKakao = { viewModel.onEvent(LoginEvent.loginKakao) }
+        loginKakao = { viewModel.onEvent(LoginEvent.loginKakao) },
+        navigateToHome = { viewModel.onEvent(LoginEvent.NavigateToHome) },
+        navigateToSignUp = { viewModel.onEvent(LoginEvent.NavigateToSignUp) }
+
     )
 
     dialogMessage?.let {
@@ -76,7 +87,9 @@ internal fun LoginRoute(
 
 @Composable
 private fun LoginScreen(
-    loginKakao : () -> Unit,
+    loginKakao: () -> Unit,
+    navigateToHome: () -> Unit,
+    navigateToSignUp: () -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -93,22 +106,22 @@ private fun LoginScreen(
 
         Spacer(Modifier.height(20.dp))
 
-        Text("둘러보기", style = TextStyle(
-            fontSize = 15.sp, fontWeight = FontWeight.SemiBold
-        ),
+        Text(
+            "둘러보기", style = TextStyle(
+                fontSize = 15.sp, fontWeight = FontWeight.SemiBold
+            ),
             modifier = Modifier.clickable {
-
+                navigateToHome()
             })
-
 
 
     }
 }
 
 private fun loginKakao(
-    context : Context,
-    onSuccess : (String) -> Unit,
-    onFailure : () -> Unit
+    context: Context,
+    onSuccess: (String) -> Unit,
+    onFailure: () -> Unit
 ) {
     // 카카오계정으로 로그인 공통 callback 구성
     // 카카오톡으로 로그인 할 수 없어 카카오계정으로 로그인할 경우 사용됨
@@ -132,7 +145,7 @@ private fun loginKakao(
                     }
 
                     // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인 시도
-                   loginWithKakaoAccount(context, callback = callback)
+                    loginWithKakaoAccount(context, callback = callback)
                 } else if (token != null) {
                     onSuccess(token.idToken!!)
                 }

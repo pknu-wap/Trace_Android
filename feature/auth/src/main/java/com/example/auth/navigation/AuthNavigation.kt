@@ -1,22 +1,42 @@
 package com.example.auth.navigation
 
+import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import androidx.navigation.navigation
 import com.example.auth.graph.login.LoginRoute
 import com.example.auth.graph.signup.SignUpRoute
-import com.example.navigation.AuthGraph
-import com.example.navigation.AuthGraphBaseRoute
+import com.example.navigation.LoginRoute
+import com.example.navigation.SignUpRoute
 
 
-fun NavGraphBuilder.authNavGraph() {
-    navigation<AuthGraphBaseRoute>(startDestination = AuthGraph.LoginRoute) {
-        composable<AuthGraph.LoginRoute> {
-            LoginRoute()
-        }
+fun NavController.navigateToLogin(navOptions: NavOptions? = null) {
+    navigate(LoginRoute, navOptions)
+}
 
-        composable<AuthGraph.SignUpRoute> {
-            SignUpRoute()
-        }
+fun NavController.navigateToSignUp(navOptions: NavOptions? = null) {
+    navigate(SignUpRoute, navOptions)
+}
+
+
+fun NavGraphBuilder.loginScreen(
+    navigateToHome: () -> Unit,
+    navigateToSignUp: () -> Unit
+) {
+    composable<LoginRoute> {
+        LoginRoute(
+            navigateToHome = navigateToHome,
+            navigateToSignUp = navigateToSignUp
+        )
+    }
+}
+
+fun NavGraphBuilder.signUpScreen(
+    navigateToHome: () -> Unit,
+) {
+    composable<SignUpRoute> {
+        SignUpRoute(
+            navigateToHome = navigateToHome,
+        )
     }
 }

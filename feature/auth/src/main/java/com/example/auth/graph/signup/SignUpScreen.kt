@@ -6,7 +6,8 @@ import com.example.auth.graph.login.LoginViewModel
 
 @Composable
 internal fun SignUpRoute(
-//    viewModel: SignUpViewModel = hiltViewModel(),
+    navigateToHome : () -> Unit,
+    viewModel: SignUpViewModel = hiltViewModel(),
 ) {
 
 }

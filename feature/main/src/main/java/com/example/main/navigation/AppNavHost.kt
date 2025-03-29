@@ -4,8 +4,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import com.example.auth.navigation.authNavGraph
-import com.example.navigation.AuthGraphBaseRoute
+import androidx.navigation.navOptions
+import com.example.auth.navigation.loginScreen
+import com.example.auth.navigation.navigateToLogin
+import com.example.auth.navigation.navigateToSignUp
+import com.example.auth.navigation.signUpScreen
+import com.example.navigation.LoginRoute
+import com.example.navigation.SignUpRoute
 
 @Composable
 fun AppNavHost(
@@ -14,9 +19,33 @@ fun AppNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = AuthGraphBaseRoute,
+        startDestination = LoginRoute,
         modifier = modifier,
     ) {
-        authNavGraph()
+        loginScreen(
+            navigateToHome = {
+                navController.navigateToLogin(
+                    navOptions {
+                        popUpTo<LoginRoute> { inclusive = true }
+                    }
+                )
+            },
+            navigateToSignUp = {
+                navController.navigateToSignUp(
+                    navOptions {
+                        popUpTo<SignUpRoute> { inclusive = true }
+                    }
+                )
+            }
+        )
+        signUpScreen(
+            navigateToHome = {
+                navController.navigateToLogin(
+                    navOptions {
+                        popUpTo<LoginRoute> { inclusive = true }
+                    }
+                )
+            }
+        )
     }
 }
