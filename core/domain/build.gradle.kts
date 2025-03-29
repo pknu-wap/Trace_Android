@@ -3,9 +3,8 @@ plugins {
     id("trace.kotlin.hilt")
 }
 
+
 dependencies {
-    dependencies {
-        implementation(libs.coroutines.core)
-        implementation(projects.core.common)
-    }
+    implementation(libs.coroutines.core)
+
 }
