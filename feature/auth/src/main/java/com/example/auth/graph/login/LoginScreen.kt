@@ -9,8 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.material.Button
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -33,6 +32,7 @@ import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
 import com.example.auth.graph.login.LoginViewModel.LoginEvent
 import com.example.designsystem.component.checkDialog
+
 
 
 @Composable
@@ -73,8 +73,6 @@ internal fun LoginRoute(
     LoginScreen(
         loginKakao = { viewModel.onEvent(LoginEvent.loginKakao) },
         navigateToHome = { viewModel.onEvent(LoginEvent.NavigateToHome) },
-        navigateToSignUp = { viewModel.onEvent(LoginEvent.NavigateToSignUp) }
-
     )
 
     dialogMessage?.let {
@@ -89,8 +87,8 @@ internal fun LoginRoute(
 private fun LoginScreen(
     loginKakao: () -> Unit,
     navigateToHome: () -> Unit,
-    navigateToSignUp: () -> Unit
 ) {
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
