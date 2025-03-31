@@ -2,6 +2,7 @@ package com.example.auth.graph.login
 
 import android.content.Context
 import android.util.Log
+import android.widget.Button
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -34,13 +35,13 @@ import com.example.auth.graph.login.LoginViewModel.LoginEvent
 import com.example.designsystem.component.checkDialog
 
 
-
 @Composable
 internal fun LoginRoute(
     navigateToHome: () -> Unit,
     navigateToSignUp: () -> Unit,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
+
     val context = LocalContext.current
 
     var dialogMessage by remember { mutableStateOf<String?>(null) }
