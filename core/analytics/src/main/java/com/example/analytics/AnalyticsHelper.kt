@@ -10,6 +10,8 @@ import com.example.analytics.AnalyticsEvent.Types.SCREEN_VIEW
 
 abstract class AnalyticsHelper {
     abstract fun logEvent(event: AnalyticsEvent)
+    abstract fun logError(exception: Throwable)
+    abstract fun setUserId(userId: String)
 
     fun trackClickEvent(
         screenName: String,

@@ -2,13 +2,25 @@ package com.example.analytics
 
 import android.os.Bundle
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import javax.inject.Inject
 
 class FirebaseAnalyticsHelper @Inject constructor(
-    private val firebaseAnalytics : FirebaseAnalytics
+    private val firebaseAnalytics: FirebaseAnalytics,
+    private val firebaseCrashlytics: FirebaseCrashlytics
 ) : AnalyticsHelper() {
+
     override fun logEvent(event: AnalyticsEvent) {
         firebaseAnalytics.logEvent(event.type, event.toBundle())
+    }
+
+    override fun logError(exception: Throwable) {
+        firebaseCrashlytics.recordException(exception)
+    }
+
+    override fun setUserId(userId: String) {
+        firebaseAnalytics.setUserId(userId)
+        firebaseCrashlytics.setUserId(userId)
     }
 
     private fun AnalyticsEvent.toBundle(): Bundle {
