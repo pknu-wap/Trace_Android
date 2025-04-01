@@ -23,7 +23,7 @@ object AnalyticsModule {
 
     @Provides
     @Singleton
-    fun providesFirebaseCrashlytics(firebaseCrashlytics: FirebaseCrashlytics): FirebaseCrashlytics =
+    fun providesFirebaseCrashlytics(): FirebaseCrashlytics =
         Firebase.crashlytics
 
     @Provides

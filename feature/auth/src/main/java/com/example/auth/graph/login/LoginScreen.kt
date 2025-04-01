@@ -1,8 +1,6 @@
 package com.example.auth.graph.login
 
 import android.content.Context
-import android.util.Log
-import android.widget.Button
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
