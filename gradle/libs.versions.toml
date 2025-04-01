@@ -51,7 +51,12 @@ gson = "2.12.1"
 
 ## OAuth
 # https://developers.kakao.com/docs/latest/ko/android/getting-started#apply-sdk
-kakao = "2.20.6"
+kakao = "2.21.0"
+
+## firebase
+googleServices = "4.4.2"
+firebaseBom = "33.11.0"
+crashlytics = "3.0.3"
 
 ## Test
 # https://github.com/junit-team/junit4
@@ -68,6 +73,7 @@ androidxEspresso = "3.6.1"
 
 # https://kotest.io/
 kotest = "5.9.0"
+firebaseCommonKtx = "21.0.0"
 
 [libraries]
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
@@ -119,6 +125,10 @@ okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor",
 retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-kotlin-serialization = { module = "com.squareup.retrofit2:converter-kotlinx-serialization", version.ref = "retrofit" }
 
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
+firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
+
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 
@@ -154,3 +164,5 @@ hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 android-test = { id = "com.android.test", version.ref = "androidGradlePlugin" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint"}
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "crashlytics" }

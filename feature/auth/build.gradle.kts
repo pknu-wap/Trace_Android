@@ -5,10 +5,6 @@ plugins {
 android {
     namespace = "com.example.auth"
 
-
-    buildFeatures {
-        buildConfig = true
-    }
 }
 
 dependencies {

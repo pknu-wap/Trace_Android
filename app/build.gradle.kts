@@ -1,8 +1,7 @@
-import java.io.FileInputStream
-import java.util.Properties
-
 plugins {
     id("trace.android.application")
+    alias(libs.plugins.firebase.crashlytics)
+    alias(libs.plugins.google.services)
 }
 
 
@@ -29,6 +28,7 @@ dependencies {
     implementation(projects.feature.main)
 
     implementation(libs.kakao.user)
+
 
     implementation(projects.core.designsystem)
     implementation(projects.core.data)

@@ -1,7 +1,6 @@
 package com.example.auth.graph.login
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -9,8 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.material.Button
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -41,6 +39,7 @@ internal fun LoginRoute(
     navigateToSignUp: () -> Unit,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
+
     val context = LocalContext.current
 
     var dialogMessage by remember { mutableStateOf<String?>(null) }
@@ -73,8 +72,6 @@ internal fun LoginRoute(
     LoginScreen(
         loginKakao = { viewModel.onEvent(LoginEvent.loginKakao) },
         navigateToHome = { viewModel.onEvent(LoginEvent.NavigateToHome) },
-        navigateToSignUp = { viewModel.onEvent(LoginEvent.NavigateToSignUp) }
-
     )
 
     dialogMessage?.let {
@@ -89,8 +86,8 @@ internal fun LoginRoute(
 private fun LoginScreen(
     loginKakao: () -> Unit,
     navigateToHome: () -> Unit,
-    navigateToSignUp: () -> Unit
 ) {
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
