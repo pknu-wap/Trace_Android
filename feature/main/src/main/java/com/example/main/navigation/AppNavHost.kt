@@ -31,11 +31,7 @@ fun AppNavHost(
                 )
             },
             navigateToSignUp = {
-                navController.navigateToSignUp(
-                    navOptions {
-                        popUpTo<SignUpRoute> { inclusive = true }
-                    }
-                )
+                navController.navigateToSignUp()
             }
         )
         signUpScreen(
@@ -45,6 +41,9 @@ fun AppNavHost(
                         popUpTo<LoginRoute> { inclusive = true }
                     }
                 )
+            },
+            navigateBack = {
+                navController.popBackStack()
             }
         )
     }

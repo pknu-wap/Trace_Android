@@ -33,10 +33,12 @@ fun NavGraphBuilder.loginScreen(
 
 fun NavGraphBuilder.signUpScreen(
     navigateToHome: () -> Unit,
+    navigateBack: () -> Unit
 ) {
     composable<SignUpRoute> {
         SignUpRoute(
             navigateToHome = navigateToHome,
+            navigateBack = navigateBack
         )
     }
 }

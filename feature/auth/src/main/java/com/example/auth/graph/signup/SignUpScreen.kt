@@ -4,20 +4,29 @@ package com.example.auth.graph.signup
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.InputTransformation.Companion.keyboardOptions
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
@@ -29,6 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
@@ -46,6 +56,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 
 import com.example.auth.graph.signup.SignUpViewModel.SignUpEvent
+import com.example.common.util.clickable
 import com.example.designsystem.R
 import com.example.designsystem.theme.background
 import com.example.designsystem.theme.field
@@ -57,6 +68,7 @@ import com.example.designsystem.theme.primaryDefault85
 @Composable
 internal fun SignUpRoute(
     navigateToHome: () -> Unit,
+    navigateBack: () -> Unit,
     viewModel: SignUpViewModel = hiltViewModel(),
 ) {
 
@@ -71,14 +83,16 @@ internal fun SignUpRoute(
     }
 
     SignUpScreen(
-        viewModel::signUp
+        viewModel::signUp,
+        navigateBack
     )
 
 }
 
 @Composable
 private fun SignUpScreen(
-    signUp: () -> Unit
+    signUp: () -> Unit,
+    navigateBack: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -90,8 +104,21 @@ private fun SignUpScreen(
         val signUpAvailability = true
         val keyboardController = LocalSoftwareKeyboardController.current
 
+        Spacer(Modifier.height(16.dp))
 
-        Spacer(Modifier.height(57.dp))
+        Icon(
+            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+            contentDescription = "뒤로 가기",
+            modifier = Modifier
+                .size(50.dp)
+                .align(Alignment.Start)
+                .padding(start = 9.dp)
+                .clickable() {
+                    navigateBack()
+                }
+        )
+
+        Spacer(Modifier.height(25.dp))
 
         Text(
             text = buildAnnotatedString {
@@ -129,7 +156,11 @@ private fun SignUpScreen(
                 Image(
                     painter = painterResource(id = R.drawable.camera_ic),
                     contentDescription = "갤러리 불러오기",
-                    modifier = Modifier.padding(12.dp)
+                    modifier = Modifier
+                        .padding(12.dp)
+                        .clickable {
+
+                        }
                 )
             }
 
@@ -169,6 +200,7 @@ private fun SignUpScreen(
                 .padding(horizontal = 20.dp)
                 .height(50.dp),
             maxLines = 1,
+            textStyle = TextStyle(fontSize = 14.sp),
             colors = TextFieldDefaults.colors(
                 unfocusedContainerColor = field,
                 focusedContainerColor = field,
@@ -231,5 +263,5 @@ private fun CircleWithStroke(
 @Preview(showBackground = true)
 @Composable
 fun SignUpScreenPreview() {
-    SignUpScreen(signUp = { })
+    SignUpScreen(signUp = {}, navigateBack = {})
 }

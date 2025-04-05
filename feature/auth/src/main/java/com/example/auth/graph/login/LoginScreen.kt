@@ -30,6 +30,7 @@ import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
 import com.example.auth.graph.login.LoginViewModel.LoginEvent
+import com.example.common.util.clickable
 import com.example.designsystem.component.checkDialog
 
 
