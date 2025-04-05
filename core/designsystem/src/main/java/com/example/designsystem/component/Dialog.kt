@@ -6,7 +6,7 @@ import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.example.designsystem.R
-import com.example.designsystem.theme.primary
+import com.example.designsystem.theme.primaryDefault
 
 @Composable
 fun checkDialog(
@@ -17,7 +17,7 @@ fun checkDialog(
         text = { Text(dialogText) },
         confirmButton = {
             TextButton(onClick = { onDismiss() }) {
-                Text(stringResource(R.string.dialog_confirm), color = primary)
+                Text(stringResource(R.string.dialog_confirm), color = primaryDefault)
             }
         }
     )
@@ -32,12 +32,12 @@ fun checkCancleDialog(
         text = { Text(dialogText) },
         confirmButton = {
             TextButton(onClick = { onCheck() }) {
-                Text(stringResource(R.string.dialog_confirm), color = primary)
+                Text(stringResource(R.string.dialog_confirm), color = primaryDefault)
             }
         },
         dismissButton = {
             TextButton(onClick = { onDismiss() }) {
-                Text(stringResource(R.string.dialog_cancel), color = primary)
+                Text(stringResource(R.string.dialog_cancel), color = primaryDefault)
             }
         }
     )

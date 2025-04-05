@@ -72,6 +72,7 @@ internal fun LoginRoute(
     LoginScreen(
         loginKakao = { viewModel.onEvent(LoginEvent.loginKakao) },
         navigateToHome = { viewModel.onEvent(LoginEvent.NavigateToHome) },
+        navigateToSignUp = { viewModel.onEvent(LoginEvent.NavigateToSignUp) }
     )
 
     dialogMessage?.let {
@@ -85,6 +86,7 @@ internal fun LoginRoute(
 @Composable
 private fun LoginScreen(
     loginKakao: () -> Unit,
+    navigateToSignUp: () -> Unit,
     navigateToHome: () -> Unit,
 ) {
 
@@ -97,7 +99,8 @@ private fun LoginScreen(
             painter = painterResource(id = R.drawable.kakao_login),
             contentDescription = "카카오 로그인",
             modifier = Modifier.clickable {
-                loginKakao()
+                // loginKakao()
+                navigateToSignUp()
             }
         )
 
