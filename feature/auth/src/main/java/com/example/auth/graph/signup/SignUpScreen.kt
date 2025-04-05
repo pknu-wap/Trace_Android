@@ -1,22 +1,21 @@
 package com.example.auth.graph.signup
 
+
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.input.InputTransformation.Companion.keyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedTextField
@@ -28,15 +27,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
@@ -53,7 +52,6 @@ import com.example.designsystem.theme.field
 import com.example.designsystem.theme.primaryActive
 import com.example.designsystem.theme.primaryDefault
 import com.example.designsystem.theme.primaryDefault85
-import com.google.common.io.Files.append
 
 
 @Composable
@@ -101,7 +99,12 @@ private fun SignUpScreen(
                     append("프로필")
                 }
                 append(" 설정")
-            }, style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold),
+            },
+            style = TextStyle(
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily(Font(R.font.bookk_myungjo_bold))
+            ),
             modifier = Modifier
                 .align(Alignment.Start)
                 .padding(start = 20.dp)
@@ -119,7 +122,9 @@ private fun SignUpScreen(
             )
 
             Box(
-                modifier = Modifier.align(Alignment.BottomEnd)
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .offset(x = 10.dp, y = 10.dp)
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.camera_ic),
@@ -133,7 +138,12 @@ private fun SignUpScreen(
         Spacer(Modifier.height(46.dp))
 
         Text(
-            "사용자 이름", style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold),
+            "사용자 이름",
+            style = TextStyle(
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily(Font(R.font.bookk_myungjo_bold))
+            ),
             color = primaryDefault,
             modifier = Modifier
                 .align(Alignment.Start)
