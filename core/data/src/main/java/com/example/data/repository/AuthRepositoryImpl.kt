@@ -11,7 +11,7 @@ class AuthRepositoryImpl @Inject constructor(
         return Result.success(Unit)
     }
 
-    override suspend fun signUp(): Result<Unit> {
+    override suspend fun registerUser(): Result<Unit> {
         return Result.success(Unit)
     }
 }

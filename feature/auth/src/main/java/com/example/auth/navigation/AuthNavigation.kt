@@ -4,8 +4,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import com.example.auth.graph.editProfile.EditProfileRoute
 import com.example.auth.graph.login.LoginRoute
-import com.example.auth.graph.signup.EditProfileRoute
 import com.example.navigation.LoginRoute
 import com.example.navigation.EditProfileRoute
 

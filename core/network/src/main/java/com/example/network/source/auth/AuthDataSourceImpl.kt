@@ -8,4 +8,8 @@ class AuthDataSourceImpl : AuthDataSource {
         return Result.success(Unit)
     }
 
+    override suspend fun registerUser(): Result<Unit> {
+        return Result.success(Unit)
+    }
+
 }
