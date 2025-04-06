@@ -66,7 +66,7 @@ import com.example.designsystem.theme.primaryDefault85
 
 
 @Composable
-internal fun SignUpRoute(
+internal fun EditProfileRoute(
     navigateToHome: () -> Unit,
     navigateBack: () -> Unit,
     viewModel: SignUpViewModel = hiltViewModel(),
@@ -82,7 +82,7 @@ internal fun SignUpRoute(
         }
     }
 
-    SignUpScreen(
+    EditProfileScreen(
         viewModel::signUp,
         navigateBack
     )
@@ -90,7 +90,7 @@ internal fun SignUpRoute(
 }
 
 @Composable
-private fun SignUpScreen(
+private fun EditProfileScreen(
     signUp: () -> Unit,
     navigateBack: () -> Unit
 ) {
@@ -263,5 +263,5 @@ private fun CircleWithStroke(
 @Preview(showBackground = true)
 @Composable
 fun SignUpScreenPreview() {
-    SignUpScreen(signUp = {}, navigateBack = {})
+    EditProfileScreen(signUp = {}, navigateBack = {})
 }

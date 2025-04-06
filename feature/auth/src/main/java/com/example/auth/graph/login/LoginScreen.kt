@@ -37,7 +37,7 @@ import com.example.designsystem.component.checkDialog
 @Composable
 internal fun LoginRoute(
     navigateToHome: () -> Unit,
-    navigateToSignUp: () -> Unit,
+    navigateToEditProfile: () -> Unit,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
 
@@ -62,8 +62,8 @@ internal fun LoginRoute(
                     navigateToHome()
                 }
 
-                is LoginEvent.NavigateToSignUp -> {
-                    navigateToSignUp()
+                is LoginEvent.NavigateEditProfile -> {
+                    navigateToEditProfile()
                 }
             }
         }
@@ -73,7 +73,7 @@ internal fun LoginRoute(
     LoginScreen(
         loginKakao = { viewModel.onEvent(LoginEvent.loginKakao) },
         navigateToHome = { viewModel.onEvent(LoginEvent.NavigateToHome) },
-        navigateToSignUp = { viewModel.onEvent(LoginEvent.NavigateToSignUp) }
+        navigateToEditProfile = { viewModel.onEvent(LoginEvent.NavigateEditProfile) }
     )
 
     dialogMessage?.let {
@@ -87,7 +87,7 @@ internal fun LoginRoute(
 @Composable
 private fun LoginScreen(
     loginKakao: () -> Unit,
-    navigateToSignUp: () -> Unit,
+    navigateToEditProfile: () -> Unit,
     navigateToHome: () -> Unit,
 ) {
 
@@ -101,7 +101,7 @@ private fun LoginScreen(
             contentDescription = "카카오 로그인",
             modifier = Modifier.clickable {
                 // loginKakao()
-                navigateToSignUp()
+                navigateToEditProfile()
             }
         )
 

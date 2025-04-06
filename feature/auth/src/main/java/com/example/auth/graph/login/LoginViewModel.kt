@@ -29,7 +29,7 @@ class LoginViewModel @Inject constructor(
     }
 
     sealed class LoginEvent {
-        data object NavigateToSignUp : LoginEvent()
+        data object NavigateEditProfile : LoginEvent()
         data object NavigateToHome : LoginEvent()
         data object loginKakao : LoginEvent()
     }

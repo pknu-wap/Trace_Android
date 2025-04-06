@@ -5,12 +5,11 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
+import com.example.auth.navigation.editProfileScreen
 import com.example.auth.navigation.loginScreen
 import com.example.auth.navigation.navigateToLogin
 import com.example.auth.navigation.navigateToSignUp
-import com.example.auth.navigation.signUpScreen
 import com.example.navigation.LoginRoute
-import com.example.navigation.SignUpRoute
 
 @Composable
 fun AppNavHost(
@@ -30,11 +29,11 @@ fun AppNavHost(
                     }
                 )
             },
-            navigateToSignUp = {
+            navigateToEditProfile = {
                 navController.navigateToSignUp()
             }
         )
-        signUpScreen(
+        editProfileScreen(
             navigateToHome = {
                 navController.navigateToLogin(
                     navOptions {

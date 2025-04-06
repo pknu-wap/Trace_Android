@@ -3,7 +3,8 @@ plugins {
     id("trace.android.compose")
 }
 
-dependencies {
 
+android {
+    namespace = "com.example.common"
 }
 
