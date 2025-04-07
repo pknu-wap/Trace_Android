@@ -35,7 +35,7 @@ class SignUpViewModel @Inject constructor(
         validateName()
     }
 
-    fun setProfileImage(imageUri : Uri) {
+    fun setProfileImage(imageUri : Uri?) {
         _profileImage.value = imageUri
     }
 

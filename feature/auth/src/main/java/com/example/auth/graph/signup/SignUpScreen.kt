@@ -22,8 +22,11 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -31,6 +34,9 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -61,6 +67,7 @@ import com.example.designsystem.theme.background
 import com.example.designsystem.theme.field
 import com.example.designsystem.theme.primaryActive
 import com.example.designsystem.theme.primaryDefault
+
 
 @Composable
 internal fun EditProfileRoute(
@@ -95,13 +102,14 @@ internal fun EditProfileRoute(
 
 }
 
+
 @Composable
 private fun EditProfileScreen(
     name: String,
     profileImage: Uri?,
     isNameValid: Boolean,
     onNameChange: (String) -> Unit,
-    onProfileImageChange: (Uri) -> Unit,
+    onProfileImageChange: (Uri?) -> Unit,
     registerUser: () -> Unit,
     navigateBack: () -> Unit
 ) {
@@ -114,6 +122,14 @@ private fun EditProfileScreen(
             }
         }
     )
+
+    var expanded by remember { mutableStateOf(false) }
+    val options = if (profileImage != null) {
+        listOf("사진/앨범에서 불러오기", "기본 이미지 적용")
+    } else {
+        listOf("사진/앨범에서 불러오기")
+    }
+
 
     Column(
         modifier = Modifier
@@ -161,26 +177,61 @@ private fun EditProfileScreen(
         Spacer(Modifier.height(26.dp))
 
         Box() {
-            CircleWithStroke()
+            Canvas(modifier = Modifier.size(133.dp)) {
+                val canvasWidth = size.width
+                val center = center
+                val radius = canvasWidth / 2f
+
+                drawCircle(
+                    color = primaryDefault,
+                    radius = radius,
+                    center = center,
+                    style = Stroke(12f)
+                )
+            }
 
             ProfileImage(profileImage)
 
             Box(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .offset(x = 10.dp, y = 13.dp)
+                modifier = Modifier.align(Alignment.BottomEnd)
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.camera_ic),
-                    contentDescription = "갤러리 불러오기",
+                    contentDescription = "프로필 이미지 설정",
                     modifier = Modifier
-                        .padding(12.dp)
                         .clickable {
-                            launcher.launch("image/*")
+                            expanded = true
                         }
                 )
-            }
 
+                Box() {
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false },
+                        modifier = Modifier
+                            .background(Color.White, shape = RoundedCornerShape(8.dp))
+                    ) {
+                        options.forEach { option ->
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        option,
+                                        style = TextStyle(fontSize = 12.sp),
+                                    )
+                                },
+                                onClick = {
+                                    expanded = false
+                                    when (option) {
+                                        "사진/앨범에서 불러오기" -> launcher.launch("image/*")
+                                        "기본 이미지 적용" -> onProfileImageChange(null)
+                                    }
+                                },
+                            )
+                        }
+                    }
+                }
+
+            }
         }
 
         Spacer(Modifier.height(46.dp))
@@ -274,22 +325,6 @@ private fun EditProfileScreen(
 }
 
 @Composable
-private fun CircleWithStroke() {
-    Canvas(modifier = Modifier.size(133.dp)) {
-        val canvasWidth = size.width
-        val center = center
-        val radius = canvasWidth / 2f
-
-        drawCircle(
-            color = primaryDefault,
-            radius = radius,
-            center = center,
-            style = Stroke(12f)
-        )
-    }
-}
-
-@Composable
 fun ProfileImage(imageUri: Uri?) {
     val painter = if (imageUri != null) {
         rememberAsyncImagePainter(imageUri)
@@ -297,7 +332,7 @@ fun ProfileImage(imageUri: Uri?) {
         painterResource(id = R.drawable.default_profile)
     }
 
-    if(imageUri != null) {
+    if (imageUri != null) {
         Box(Modifier.padding(2.dp)) {
             Image(
                 painter = painter,
@@ -309,8 +344,7 @@ fun ProfileImage(imageUri: Uri?) {
             )
         }
 
-    }
-    else {
+    } else {
         Box(Modifier.padding(9.dp)) {
             Image(
                 painter = painter,
@@ -323,18 +357,5 @@ fun ProfileImage(imageUri: Uri?) {
         }
     }
 
-
 }
 
-//
-//@Preview(showBackground = true)
-//@Composable
-//fun SignUpScreenPreview() {
-//    EditProfileScreen(
-//        name = "",
-//        isNameValid = true,
-//        onNameChange = {},
-//        onProfileImageChange = {},
-//        registerUser = {},
-//        navigateBack = {},)
-//}
