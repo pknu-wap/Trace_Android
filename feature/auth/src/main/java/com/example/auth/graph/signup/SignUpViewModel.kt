@@ -27,13 +27,17 @@ class SignUpViewModel @Inject constructor(
     private val _isNameValid = MutableStateFlow(false)
     val isNameValid = _isNameValid.asStateFlow()
 
-    private val _selectedImageUri  = MutableStateFlow<Uri?>(null)
-    val selectedImageUri = _selectedImageUri.asStateFlow()
+    private val _profileImage = MutableStateFlow<Uri?>(null)
+    val profileImage = _profileImage.asStateFlow()
 
     fun setName(name : String) {
         _name.value = name
+        validateName()
     }
 
+    fun setProfileImage(imageUri : Uri) {
+        _profileImage.value = imageUri
+    }
 
 
     internal fun registerUser() = viewModelScope.launch {
