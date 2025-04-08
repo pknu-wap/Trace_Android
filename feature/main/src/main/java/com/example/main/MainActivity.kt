@@ -17,6 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.rememberNavController
 import com.example.common.event.TraceEvent
+import com.example.designsystem.component.TraceSnackBar
+import com.example.designsystem.component.TraceSnackBarHost
 import com.example.designsystem.theme.TraceTheme
 import com.example.main.navigation.AppNavHost
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,26 +38,31 @@ class MainActivity : ComponentActivity() {
 
             LaunchedEffect(true) {
                 launch {
-                       viewModel.eventHelper.eventChannel.collect { event ->
-                            when (event) {
-                                is TraceEvent.ShowSnackBar -> snackBarHostState.showSnackbar(event.message)
-                            }
+                    viewModel.eventHelper.eventChannel.collect { event ->
+                        when (event) {
+                            is TraceEvent.ShowSnackBar -> snackBarHostState.showSnackbar(event.message)
                         }
+                    }
                 }
             }
 
             TraceTheme {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
-                    snackbarHost = { SnackbarHost(snackBarHostState) },
+                    snackbarHost = {
+                        TraceSnackBarHost(
+                            hostState = snackBarHostState,
+                            snackbar = { snackBarData -> TraceSnackBar(snackBarData) }
+                        )
+                    },
                     containerColor = Color.White,
                 ) { innerPadding ->
                     AppNavHost(navController, Modifier.padding(innerPadding))
                 }
+
             }
         }
 
     }
-
 }
 

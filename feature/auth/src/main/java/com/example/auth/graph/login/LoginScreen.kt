@@ -1,22 +1,17 @@
 package com.example.auth.graph.login
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -43,7 +38,6 @@ internal fun LoginRoute(
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
 
-    val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
@@ -71,6 +65,7 @@ private fun LoginScreen(
 ) {
     val context = LocalContext.current
 
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -81,8 +76,8 @@ private fun LoginScreen(
             contentDescription = "카카오 로그인",
             modifier = Modifier.clickable {
                 onLoginFailure()
-               // loginKakao(context, loginKakao, onLoginFailure)
-                navigateToEditProfile()
+               //loginKakao(context, loginKakao, onLoginFailure)
+               navigateToEditProfile()
             }
         )
 
@@ -109,6 +104,7 @@ private fun loginKakao(
         if (error != null) {
             onFailure()
         } else if (token != null) {
+
             onSuccess(token.idToken!!)
         }
     }
@@ -118,17 +114,19 @@ private fun loginKakao(
         if (isKakaoTalkLoginAvailable(context)) {
             loginWithKakaoTalk(context) { token, error ->
                 if (error != null) {
+                    Log.d("idTokenError", error.toString())
                     if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
                         return@loginWithKakaoTalk
                     }
 
                     loginWithKakaoAccount(context, callback = callback)
                 } else if (token != null) {
+
                     onSuccess(token.idToken!!)
                 }
             }
         } else {
-            UserApiClient.instance.loginWithKakaoAccount(context, callback = callback)
+            loginWithKakaoAccount(context, callback = callback)
         }
     }
 
