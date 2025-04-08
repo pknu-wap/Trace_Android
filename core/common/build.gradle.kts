@@ -1,4 +1,10 @@
 plugins {
-    id("trace.kotlin.library")
+    id("trace.android.library")
+    id("trace.android.compose")
+}
+
+
+android {
+    namespace = "com.example.common"
 }
 

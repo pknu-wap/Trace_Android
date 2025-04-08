@@ -10,4 +10,8 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun loginKakao(idToken : String): Result<Unit> {
         return Result.success(Unit)
     }
+
+    override suspend fun registerUser(): Result<Unit> {
+        return Result.success(Unit)
+    }
 }

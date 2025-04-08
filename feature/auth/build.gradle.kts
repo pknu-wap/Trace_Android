@@ -9,4 +9,5 @@ android {
 
 dependencies {
     implementation(libs.kakao.user)
+    implementation(libs.coil.compose)
 }

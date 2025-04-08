@@ -8,4 +8,4 @@ sealed interface Route
 data object LoginRoute : Route
 
 @Serializable
-data object SignUpRoute : Route
+data object EditProfileRoute : Route
