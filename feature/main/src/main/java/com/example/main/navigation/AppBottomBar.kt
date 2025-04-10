@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -37,55 +36,60 @@ internal fun AppBottomBar(
     modifier: Modifier = Modifier
 ) {
 
+        NavigationBar(
+            containerColor = White,
+            modifier = modifier
+                .height(60.dp)
+        ) {
+            TopLevelDestination.entries.forEach { topLevelRoute ->
+                val icon =
+                    if (currentDestination.eqaulsRoute(topLevelRoute.route)) topLevelRoute.selectedIcon else topLevelRoute.unSelectedIcon
 
-    NavigationBar(
-        containerColor = White,
-    ) {
-        TopLevelDestination.entries.forEach { topLevelRoute ->
-            val icon = if (currentDestination.eqaulsRoute(topLevelRoute.route)) topLevelRoute.selectedIcon else topLevelRoute.unSelectedIcon
+                NavigationBarItem(
+                    icon = {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.padding(top = 2.dp),
+                        ) {
 
-            NavigationBarItem(
-                icon = {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = modifier.padding(top = 2.dp),
-                    ) {
-
-                        Icon(
-                            painter = painterResource(icon),
-                            contentDescription = topLevelRoute.contentDescription,
-                            modifier = Modifier.size(32.dp),
-                        )
-
-                        Spacer(Modifier.height(2.dp))
-
-                        Text(
-                            text = topLevelRoute.title,
-                            style = TextStyle(
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 12.sp,
-                                lineHeight = 16.sp,
+                            Icon(
+                                painter = painterResource(icon),
+                                contentDescription = topLevelRoute.contentDescription,
+                                modifier = Modifier.size(24.dp),
                             )
-                        )
-                    }
-                },
-                onClick = {
-                    when (topLevelRoute) {
-                        TopLevelDestination.HOME -> navigateToBottomNaviDestination(HomeRoute)
-                        TopLevelDestination.Mission -> navigateToBottomNaviDestination(HomeRoute)
-                        TopLevelDestination.MyPage -> navigateToBottomNaviDestination(HomeRoute)
-                    }
-                },
-                selected = currentDestination.eqaulsRoute(topLevelRoute.route),
-                interactionSource = remember { NoRippleInteractionSource() },
-                colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = PrimaryDefault,
-                    selectedTextColor = PrimaryDefault,
-                    unselectedTextColor = Black,
-                    indicatorColor = Color.Transparent,
-                ),
-            )
+
+                            Spacer(Modifier.height(2.dp))
+
+                            Text(
+                                text = topLevelRoute.title,
+                                style = TextStyle(
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 12.sp,
+                                    lineHeight = 16.sp,
+                                )
+                            )
+                        }
+                    },
+                    onClick = {
+                        when (topLevelRoute) {
+                            TopLevelDestination.HOME -> navigateToBottomNaviDestination(HomeRoute)
+                            TopLevelDestination.Mission -> navigateToBottomNaviDestination(HomeRoute)
+                            TopLevelDestination.MyPage -> navigateToBottomNaviDestination(HomeRoute)
+                        }
+                    },
+                    selected = currentDestination.eqaulsRoute(topLevelRoute.route),
+                    interactionSource = remember { NoRippleInteractionSource() },
+                    colors = NavigationBarItemDefaults.colors(
+                        selectedIconColor = PrimaryDefault,
+                        selectedTextColor = PrimaryDefault,
+                        unselectedTextColor = Black,
+                        indicatorColor = Color.Transparent,
+                    ),
+
+                    )
+            }
         }
-    }
+
+
 
 }

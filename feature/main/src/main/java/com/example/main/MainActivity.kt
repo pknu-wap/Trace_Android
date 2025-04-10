@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
@@ -20,6 +21,7 @@ import com.example.designsystem.component.TraceSnackBar
 import com.example.designsystem.component.TraceSnackBarHost
 import com.example.designsystem.theme.Background
 import com.example.designsystem.theme.TraceTheme
+import com.example.designsystem.theme.White
 import com.example.main.navigation.AppBottomBar
 import com.example.main.navigation.AppNavHost
 import com.example.navigation.shouldHideBottomBar
@@ -61,10 +63,11 @@ class MainActivity : ComponentActivity() {
                             snackbar = { snackBarData -> TraceSnackBar(snackBarData) }
                         )
                     },
-                    containerColor = Background,
+                    containerColor = White,
                     bottomBar = {
                         TraceBottomBarAnimation(
-                            visible = currentDestination?.shouldHideBottomBar() == false
+                            visible = currentDestination?.shouldHideBottomBar() == false,
+                            modifier = Modifier.navigationBarsPadding(),
                         ) {
                             AppBottomBar(
                                 currentDestination = currentDestination,
