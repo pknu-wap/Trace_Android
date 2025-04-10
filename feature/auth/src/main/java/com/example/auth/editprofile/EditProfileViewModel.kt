@@ -1,4 +1,4 @@
-package com.example.auth.graph.signup
+package com.example.auth.editprofile
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel

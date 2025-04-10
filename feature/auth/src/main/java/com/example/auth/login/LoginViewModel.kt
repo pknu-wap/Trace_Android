@@ -1,4 +1,4 @@
-package com.example.auth.graph.login
+package com.example.auth.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

@@ -1,4 +1,4 @@
-package com.example.auth.graph.login
+package com.example.auth.login
 
 import android.content.Context
 import android.util.Log
@@ -26,7 +26,7 @@ import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
-import com.example.auth.graph.login.LoginViewModel.LoginEvent
+import com.example.auth.login.LoginViewModel.LoginEvent
 import com.example.common.event.TraceEvent
 import com.example.common.util.clickable
 
@@ -37,7 +37,6 @@ internal fun LoginRoute(
     navigateToEditProfile: () -> Unit,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
-
 
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
@@ -59,7 +58,7 @@ internal fun LoginRoute(
 @Composable
 private fun LoginScreen(
     loginKakao: (String) -> Unit,
-    onLoginFailure : () -> Unit,
+    onLoginFailure: () -> Unit,
     navigateToEditProfile: () -> Unit,
     navigateToHome: () -> Unit,
 ) {
@@ -76,8 +75,8 @@ private fun LoginScreen(
             contentDescription = "카카오 로그인",
             modifier = Modifier.clickable {
                 onLoginFailure()
-               //loginKakao(context, loginKakao, onLoginFailure)
-               navigateToEditProfile()
+                //loginKakao(context, loginKakao, onLoginFailure)
+                navigateToEditProfile()
             }
         )
 

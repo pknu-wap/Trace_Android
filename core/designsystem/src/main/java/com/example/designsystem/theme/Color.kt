@@ -4,12 +4,12 @@ import androidx.compose.ui.graphics.Color
 
 
 
-val primaryDefault = Color(0xFF419A78)
-val primaryActive = Color(0xFF235240)
+val PrimaryDefault = Color(0xFF419A78)
+val PrimaryActive = Color(0xFF235240)
 
-val background = Color(0xFFFFFEEE)
+val Background = Color(0xFFFFFEEE)
 
-val textField = Color(0xFFF2F1E1)
+val TextField = Color(0xFFF2F1E1)
 
 val Error = Color(0xFFFF0000)
 

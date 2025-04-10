@@ -48,8 +48,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.withStyle
@@ -58,17 +56,18 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.rememberAsyncImagePainter
-import com.example.auth.graph.signup.EditProfileViewModel
-import com.example.auth.graph.signup.EditProfileViewModel.EditProfileEvent
+import com.example.auth.editprofile.EditProfileViewModel
+import com.example.auth.editprofile.EditProfileViewModel.EditProfileEvent
 import com.example.common.util.clickable
 import com.example.designsystem.R
+import com.example.designsystem.theme.Background
 import com.example.designsystem.theme.Error
+import com.example.designsystem.theme.PrimaryActive
+import com.example.designsystem.theme.PrimaryDefault
+import com.example.designsystem.theme.TextField
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.White
-import com.example.designsystem.theme.background
-import com.example.designsystem.theme.textField
-import com.example.designsystem.theme.primaryActive
-import com.example.designsystem.theme.primaryDefault
+
 
 
 @Composable
@@ -136,7 +135,7 @@ private fun EditProfileScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(background),
+            .background(Background),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 
@@ -161,7 +160,7 @@ private fun EditProfileScreen(
 
         Text(
             text = buildAnnotatedString {
-                withStyle(style = SpanStyle(color = primaryDefault)) {
+                withStyle(style = SpanStyle(color = PrimaryDefault)) {
                     append("프로필")
                 }
                 append(" 설정")
@@ -181,7 +180,7 @@ private fun EditProfileScreen(
                 val radius = canvasWidth / 2f
 
                 drawCircle(
-                    color = primaryDefault,
+                    color = PrimaryDefault,
                     radius = radius,
                     center = center,
                     style = Stroke(12f)
@@ -236,12 +235,8 @@ private fun EditProfileScreen(
 
         Text(
             "사용자 이름",
-            style = TextStyle(
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily(Font(R.font.bookk_myungjo_bold))
-            ),
-            color = primaryDefault,
+            style = TraceTheme.typography.headingMB,
+            color = PrimaryDefault,
             modifier = Modifier
                 .align(Alignment.Start)
                 .padding(start = 20.dp)
@@ -266,10 +261,10 @@ private fun EditProfileScreen(
             maxLines = 1,
             textStyle = TextStyle(fontSize = 14.sp),
             colors = TextFieldDefaults.colors(
-                unfocusedContainerColor = textField,
-                focusedContainerColor = textField,
-                focusedIndicatorColor = primaryActive,
-                unfocusedIndicatorColor = primaryDefault
+                unfocusedContainerColor = TextField,
+                focusedContainerColor = TextField,
+                focusedIndicatorColor = PrimaryActive,
+                unfocusedIndicatorColor = PrimaryDefault
             ),
             shape = RoundedCornerShape(8.dp),
             keyboardOptions = KeyboardOptions.Default.copy(
@@ -303,8 +298,9 @@ private fun EditProfileScreen(
             onClick = {
                 if (signUpAvailability) registerUser()
             },
-            colors = if (!signUpAvailability) ButtonDefaults.buttonColors(primaryDefault.copy(alpha = 0.65F)) else ButtonDefaults.buttonColors(
-                primaryActive
+            colors = if (!signUpAvailability) ButtonDefaults.buttonColors(PrimaryDefault
+                .copy(alpha = 0.65F)) else ButtonDefaults.buttonColors(
+                PrimaryActive
             ),
             shape = RoundedCornerShape(8.dp),
             modifier = Modifier

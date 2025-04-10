@@ -21,9 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
-
-import com.example.designsystem.theme.primaryDefault
+import com.example.designsystem.theme.PrimaryDefault
 import kotlinx.coroutines.delay
 
 @Composable
@@ -38,7 +36,7 @@ fun TraceSnackBar(
             .padding(bottom = 36.dp, start = 20.dp, end = 20.dp)
             .wrapContentSize()
             .clip(RoundedCornerShape(12.dp))
-            .background(primaryDefault)
+            .background(PrimaryDefault)
             .padding(horizontal = 30.dp, vertical = 8.dp),
     ) {
         Text(

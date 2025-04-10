@@ -9,6 +9,7 @@ import androidx.compose.ui.unit.sp
 import com.example.designsystem.R
 
 
+
 val BookkBold = FontFamily(
     Font(
         resId = R.font.bookk_myungjo_bold,
@@ -22,5 +23,10 @@ data class TraceTypography(
         fontFamily = BookkBold,
         fontSize = 24.sp,
         lineHeight = 32.sp
+    ),
+    val headingMB: TextStyle = TextStyle(
+        fontFamily = BookkBold,
+        fontSize = 20.sp,
+        lineHeight = 24.sp
     )
 )
