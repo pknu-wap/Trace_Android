@@ -1,5 +1,6 @@
 package com.example.main.navigation
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -14,6 +15,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -35,10 +39,30 @@ internal fun AppBottomBar(
     navigateToBottomNaviDestination: (Route) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    Box(
+        modifier = Modifier
+            .height(61.dp)
+            .drawBehind {
+                val shadowHeight = 1.dp.toPx()
 
+                drawRect(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            Color.Transparent,
+                            Black.copy(alpha = 0.1f),
+                        ),
+                        startY = 0f,
+                        endY = shadowHeight
+                    ),
+                    topLeft = androidx.compose.ui.geometry.Offset(0f, 0f),
+                    size = Size(size.width, shadowHeight)
+                )
+            }
+    ) {
         NavigationBar(
             containerColor = White,
             modifier = modifier
+                .align(Alignment.BottomCenter)
                 .height(60.dp)
         ) {
             TopLevelDestination.entries.forEach { topLevelRoute ->
@@ -90,6 +114,5 @@ internal fun AppBottomBar(
             }
         }
 
-
-
+    }
 }
