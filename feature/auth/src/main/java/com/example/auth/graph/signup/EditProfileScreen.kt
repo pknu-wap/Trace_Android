@@ -58,13 +58,15 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.rememberAsyncImagePainter
-import com.example.auth.graph.signup.SignUpViewModel
-
-import com.example.auth.graph.signup.SignUpViewModel.SignUpEvent
+import com.example.auth.graph.signup.EditProfileViewModel
+import com.example.auth.graph.signup.EditProfileViewModel.EditProfileEvent
 import com.example.common.util.clickable
 import com.example.designsystem.R
+import com.example.designsystem.theme.Error
+import com.example.designsystem.theme.TraceTheme
+import com.example.designsystem.theme.White
 import com.example.designsystem.theme.background
-import com.example.designsystem.theme.field
+import com.example.designsystem.theme.textField
 import com.example.designsystem.theme.primaryActive
 import com.example.designsystem.theme.primaryDefault
 
@@ -73,7 +75,7 @@ import com.example.designsystem.theme.primaryDefault
 internal fun EditProfileRoute(
     navigateToHome: () -> Unit,
     navigateBack: () -> Unit,
-    viewModel: SignUpViewModel = hiltViewModel(),
+    viewModel: EditProfileViewModel = hiltViewModel(),
 ) {
 
     val name by viewModel.nameText.collectAsStateWithLifecycle()
@@ -83,7 +85,7 @@ internal fun EditProfileRoute(
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
             when (event) {
-                is SignUpEvent.SignUpSuccess -> {
+                is EditProfileEvent.SignUpSuccess -> {
                     navigateToHome()
                 }
             }
@@ -164,11 +166,7 @@ private fun EditProfileScreen(
                 }
                 append(" 설정")
             },
-            style = TextStyle(
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily(Font(R.font.bookk_myungjo_bold))
-            ),
+            style = TraceTheme.typography.headingLB,
             modifier = Modifier
                 .align(Alignment.Start)
                 .padding(start = 20.dp)
@@ -209,7 +207,7 @@ private fun EditProfileScreen(
                         expanded = expanded,
                         onDismissRequest = { expanded = false },
                         modifier = Modifier
-                            .background(Color.White, shape = RoundedCornerShape(8.dp))
+                            .background(White, shape = RoundedCornerShape(8.dp))
                     ) {
                         options.forEach { option ->
                             DropdownMenuItem(
@@ -268,8 +266,8 @@ private fun EditProfileScreen(
             maxLines = 1,
             textStyle = TextStyle(fontSize = 14.sp),
             colors = TextFieldDefaults.colors(
-                unfocusedContainerColor = field,
-                focusedContainerColor = field,
+                unfocusedContainerColor = textField,
+                focusedContainerColor = textField,
                 focusedIndicatorColor = primaryActive,
                 unfocusedIndicatorColor = primaryDefault
             ),
@@ -291,7 +289,7 @@ private fun EditProfileScreen(
                 "닉네임은 최소 2자, 최대 12자까지 가능해요",
                 fontSize = 12.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = Color.Red,
+                color = Error,
                 modifier = Modifier
                     .align(Alignment.Start)
                     .padding(20.dp)
@@ -315,7 +313,7 @@ private fun EditProfileScreen(
         ) {
             Text(
                 "완료",
-                color = Color.White,
+                color = White,
                 style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Medium)
             )
         }
@@ -325,7 +323,7 @@ private fun EditProfileScreen(
 }
 
 @Composable
-fun ProfileImage(imageUri: Uri?) {
+private fun ProfileImage(imageUri: Uri?) {
     val painter = if (imageUri != null) {
         rememberAsyncImagePainter(imageUri)
     } else {

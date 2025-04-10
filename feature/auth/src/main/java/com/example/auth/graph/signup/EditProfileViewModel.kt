@@ -1,8 +1,6 @@
 package com.example.auth.graph.signup
 
 import android.net.Uri
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.repository.AuthRepository
@@ -15,10 +13,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SignUpViewModel @Inject constructor(
+class EditProfileViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ) : ViewModel() {
-    private val _eventChannel = Channel<SignUpEvent>()
+    private val _eventChannel = Channel<EditProfileEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
 
     private val _name = MutableStateFlow("")
@@ -58,7 +56,7 @@ class SignUpViewModel @Inject constructor(
         private const val NAME_MAX_LENGTH = 12
     }
 
-    sealed class SignUpEvent {
-        data object SignUpSuccess : SignUpEvent()
+    sealed class EditProfileEvent {
+        data object SignUpSuccess : EditProfileEvent()
     }
 }

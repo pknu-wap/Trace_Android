@@ -20,6 +20,7 @@ import com.example.common.event.TraceEvent
 import com.example.designsystem.component.TraceSnackBar
 import com.example.designsystem.component.TraceSnackBarHost
 import com.example.designsystem.theme.TraceTheme
+import com.example.designsystem.theme.White
 import com.example.main.navigation.AppNavHost
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -46,22 +47,22 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            TraceTheme {
-                Scaffold(
-                    modifier = Modifier.fillMaxSize(),
-                    snackbarHost = {
-                        TraceSnackBarHost(
-                            hostState = snackBarHostState,
-                            snackbar = { snackBarData -> TraceSnackBar(snackBarData) }
-                        )
-                    },
-                    containerColor = Color.White,
-                ) { innerPadding ->
-                    AppNavHost(navController, Modifier.padding(innerPadding))
-                }
 
+            Scaffold(
+                modifier = Modifier.fillMaxSize(),
+                snackbarHost = {
+                    TraceSnackBarHost(
+                        hostState = snackBarHostState,
+                        snackbar = { snackBarData -> TraceSnackBar(snackBarData) }
+                    )
+                },
+                containerColor = White,
+            ) { innerPadding ->
+                AppNavHost(navController, Modifier.padding(innerPadding))
             }
+
         }
+
 
     }
 }

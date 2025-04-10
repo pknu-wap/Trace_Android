@@ -21,7 +21,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.designsystem.theme.background
+
+
 import com.example.designsystem.theme.primaryDefault
 import kotlinx.coroutines.delay
 
