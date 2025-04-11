@@ -148,7 +148,7 @@ private fun EditProfileScreen(
             imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
             contentDescription = "뒤로 가기",
             modifier = Modifier
-                .size(50.dp)
+                .size(30.dp)
                 .align(Alignment.Start)
                 .padding(start = 9.dp)
                 .clickable() {

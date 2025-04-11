@@ -1,6 +1,5 @@
 package com.example.home.home
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,7 +20,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.White
 import com.example.designsystem.R
-import com.example.designsystem.theme.Background
+
 
 
 @Composable
