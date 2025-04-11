@@ -17,6 +17,20 @@ val BookkBold = FontFamily(
     )
 )
 
+val PretendardSemiBold = FontFamily(
+    Font(
+        resId = R.font.pretendard_semi_bold,
+        weight = FontWeight.SemiBold
+    )
+)
+val PretendardMedium = FontFamily(
+    Font(
+        resId = R.font.pretendard_semi_bold,
+        weight = FontWeight.Medium
+    )
+)
+
+
 @Immutable
 data class TraceTypography(
     val headingLB: TextStyle = TextStyle(
@@ -28,5 +42,27 @@ data class TraceTypography(
         fontFamily = BookkBold,
         fontSize = 20.sp,
         lineHeight = 24.sp
+    ),
+    val bodyMM: TextStyle = TextStyle(
+        fontFamily = PretendardMedium,
+        fontSize = 18.sp,
+        lineHeight = 22.sp
+    ),
+    val bodySM: TextStyle = TextStyle(
+        fontFamily = PretendardMedium,
+        fontSize = 14.sp,
+        lineHeight = 18.sp
+    ),
+    val bodyMSB: TextStyle = TextStyle(
+        fontFamily = PretendardSemiBold,
+        fontSize = 20.sp,
+        lineHeight = 24.sp
+    ),
+    val bodySSB: TextStyle = TextStyle(
+        fontFamily = PretendardSemiBold,
+        fontSize = 14.sp,
+        lineHeight = 18.sp
     )
+
+
 )

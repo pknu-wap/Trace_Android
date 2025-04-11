@@ -213,7 +213,7 @@ private fun EditProfileScreen(
                                 text = {
                                     Text(
                                         option,
-                                        style = TextStyle(fontSize = 12.sp),
+                                        style = TraceTheme.typography.bodySM.copy(fontSize = 12.sp),
                                     )
                                 },
                                 onClick = {
@@ -250,7 +250,7 @@ private fun EditProfileScreen(
             placeholder = {
                 Text(
                     "사용자 이름을 입력해주세요",
-                    style = TextStyle(fontSize = 14.sp),
+                    style = TraceTheme.typography.bodySM,
                     color = Color.Gray
                 )
             },

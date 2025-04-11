@@ -1,5 +1,6 @@
 package com.example.home.writepost
 
+import android.os.Trace
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -13,17 +14,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ExitToApp
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxColors
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -32,11 +29,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -77,6 +76,7 @@ private fun WritePostScreen(
     navigateBack: () -> Unit,
 ) {
     val scrollState = rememberScrollState()
+    var text by remember { mutableStateOf("") }
     var isTextVerified by remember { mutableStateOf(true) }
     var isImageVerified by remember { mutableStateOf(false) }
 
@@ -112,8 +112,38 @@ private fun WritePostScreen(
 
             Text(
                 "완료",
-                style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Medium), color = Gray
+                style = TraceTheme.typography.bodyMM, color = Gray
             )
+
+        }
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Background)
+                .verticalScroll(scrollState)
+                .align(Alignment.Center)
+                .padding(horizontal = 15.dp)
+        ) {
+
+            BasicTextField(
+                value = "제목",
+                onValueChange = {  },
+                textStyle = TraceTheme.typography.bodyMSB,
+                maxLines = 2,
+                cursorBrush = SolidColor(PrimaryDefault),
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(Modifier.height(15.dp))
+
+            Spacer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(1.dp)
+                    .background(Gray)
+            )
+
 
         }
 
@@ -157,7 +187,7 @@ private fun WritePostScreen(
                 Text(
                     "글 인증",
                     color = if (isTextVerified) PrimaryActive else Gray,
-                    style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Medium),
+                    style = TraceTheme.typography.bodySM,
                 )
             }
 
@@ -187,7 +217,7 @@ private fun WritePostScreen(
                 Text(
                     "사진 인증",
                     color = if (isImageVerified) PrimaryActive else Gray,
-                    style = TextStyle(fontSize = 13.sp, fontWeight = FontWeight.Medium),
+                    style = TraceTheme.typography.bodySM,
                 )
             }
 
@@ -195,13 +225,7 @@ private fun WritePostScreen(
     }
 
 
-    Column(
-        modifier = Modifier
-            .background(Background)
-            .verticalScroll(scrollState)
-    ) {
 
-    }
 
 }
 

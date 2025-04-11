@@ -5,10 +5,16 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.example.home.home.HomeRoute
+import com.example.home.writepost.WritePostRoute
 import com.example.navigation.HomeRoute
+import com.example.navigation.WritePostRoute
 
 fun NavController.navigateToHome(navOptions: NavOptions? = null) {
     navigate(HomeRoute, navOptions)
+}
+
+fun NavController.navigateToWritePost(navOptions: NavOptions? = null) {
+    navigate(WritePostRoute, navOptions)
 }
 
 fun NavGraphBuilder.homeScreen(
@@ -19,6 +25,16 @@ fun NavGraphBuilder.homeScreen(
         HomeRoute(
             navigateToPost = navigateToPost,
             navigateToWritePost = navigateToWritePost
+        )
+    }
+}
+
+fun NavGraphBuilder.writePostScreen(
+    navigateBack: () -> Unit,
+) {
+    composable<WritePostRoute> {
+        WritePostRoute(
+            navigateBack = navigateBack
         )
     }
 }

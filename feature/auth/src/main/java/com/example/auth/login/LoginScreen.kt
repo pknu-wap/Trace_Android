@@ -29,6 +29,7 @@ import com.kakao.sdk.user.UserApiClient
 import com.example.auth.login.LoginViewModel.LoginEvent
 import com.example.common.event.TraceEvent
 import com.example.common.util.clickable
+import com.example.designsystem.theme.TraceTheme
 
 
 @Composable
@@ -83,9 +84,7 @@ private fun LoginScreen(
         Spacer(Modifier.height(20.dp))
 
         Text(
-            "둘러보기", style = TextStyle(
-                fontSize = 15.sp, fontWeight = FontWeight.SemiBold
-            ),
+            "둘러보기", style = TraceTheme.typography.bodyMM.copy(fontSize = 20.sp),
             modifier = Modifier.clickable {
                 navigateToHome()
             })

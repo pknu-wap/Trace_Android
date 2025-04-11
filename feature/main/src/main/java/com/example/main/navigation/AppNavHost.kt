@@ -11,6 +11,8 @@ import com.example.auth.navigation.navigateToEditProfile
 import com.example.auth.navigation.navigateToLogin
 import com.example.home.navigation.homeScreen
 import com.example.home.navigation.navigateToHome
+import com.example.home.navigation.navigateToWritePost
+import com.example.home.navigation.writePostScreen
 import com.example.navigation.EditProfileRoute
 import com.example.navigation.LoginRoute
 
@@ -44,13 +46,16 @@ fun AppNavHost(
                     }
                 )
             },
-            navigateBack = {
-                navController.popBackStack()
-            }
+            navigateBack = { navController.popBackStack() }
         )
         homeScreen(
             navigateToPost = {},
-            navigateToWritePost = {}
+            navigateToWritePost = {
+                navController.navigateToWritePost()
+            }
+        )
+        writePostScreen(
+            navigateBack = { navController.popBackStack() }
         )
     }
 }
