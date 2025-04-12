@@ -69,7 +69,6 @@ import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.White
 
 
-
 @Composable
 internal fun EditProfileRoute(
     navigateToHome: () -> Unit,
@@ -144,17 +143,19 @@ private fun EditProfileScreen(
 
         Spacer(Modifier.height(16.dp))
 
+
         Icon(
             imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
             contentDescription = "뒤로 가기",
             modifier = Modifier
-                .size(30.dp)
+                .size(50.dp)
                 .align(Alignment.Start)
-                .padding(start = 9.dp)
-                .clickable() {
+                .padding(8.dp)
+                .clickable(isRipple = true) {
                     navigateBack()
                 }
         )
+
 
         Spacer(Modifier.height(25.dp))
 
@@ -264,7 +265,8 @@ private fun EditProfileScreen(
                 unfocusedContainerColor = TextField,
                 focusedContainerColor = TextField,
                 focusedIndicatorColor = PrimaryActive,
-                unfocusedIndicatorColor = PrimaryDefault
+                unfocusedIndicatorColor = PrimaryDefault,
+                cursorColor = PrimaryDefault
             ),
             shape = RoundedCornerShape(8.dp),
             keyboardOptions = KeyboardOptions.Default.copy(
@@ -282,13 +284,11 @@ private fun EditProfileScreen(
 
             Text(
                 "닉네임은 최소 2자, 최대 12자까지 가능해요",
-                fontSize = 12.sp,
-                fontWeight = FontWeight.SemiBold,
+                style = TraceTheme.typography.bodySM.copy(fontSize = 12.sp),
                 color = Error,
                 modifier = Modifier
                     .align(Alignment.Start)
-                    .padding(20.dp)
-                    .offset(y = -10.dp)
+                    .padding(top = 10.dp, start = 20.dp)
             )
         }
 
@@ -298,14 +298,16 @@ private fun EditProfileScreen(
             onClick = {
                 if (signUpAvailability) registerUser()
             },
-            colors = if (!signUpAvailability) ButtonDefaults.buttonColors(PrimaryDefault
-                .copy(alpha = 0.65F)) else ButtonDefaults.buttonColors(
+            colors = if (!signUpAvailability) ButtonDefaults.buttonColors(
+                PrimaryDefault
+                    .copy(alpha = 0.65F)
+            ) else ButtonDefaults.buttonColors(
                 PrimaryActive
             ),
             shape = RoundedCornerShape(8.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 20.dp, end = 20.dp)
+                .padding(horizontal = 20.dp)
         ) {
             Text(
                 "완료",
