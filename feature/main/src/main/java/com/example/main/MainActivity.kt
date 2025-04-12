@@ -19,7 +19,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -64,12 +63,9 @@ class MainActivity : ComponentActivity() {
             }
 
             TraceTheme {
-
-
                 val imeIsShown = WindowInsets.isImeVisible
-                val statusBarPadding = WindowInsets.statusBars.asPaddingValues().calculateTopPadding() // 상태바 여백
-                val bottomPadding = if (imeIsShown) 0.dp else WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()  // 하단 네비게이션 바 패딩을 키보드 상태에 따라 처리
-
+                val statusBarPadding = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
+                val bottomPadding = if (imeIsShown) 0.dp else WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
 
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),

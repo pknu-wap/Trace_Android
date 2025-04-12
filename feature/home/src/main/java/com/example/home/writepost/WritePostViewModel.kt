@@ -1,5 +1,7 @@
 package com.example.home.writepost
 
+import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,14 +19,18 @@ class WritePostViewModel @Inject constructor(
     private val _eventChannel = Channel<WritePostEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
 
+
+    private val _type : MutableStateFlow<PostType> = MutableStateFlow(PostType.None)
+    val type = _type.asStateFlow()
+
     private val _title = MutableStateFlow("")
     val title = _title.asStateFlow()
 
     private val _content = MutableStateFlow("")
     val content = _content.asStateFlow()
 
-    private val _type : MutableStateFlow<PostType> = MutableStateFlow(PostType.None)
-    val type = _type.asStateFlow()
+    private val _images : MutableStateFlow<List<Uri>> = MutableStateFlow(emptyList())
+    val images = _images.asStateFlow()
 
     private val _isTextVerified = MutableStateFlow(true)
     val isTextVerified = _isTextVerified.asStateFlow()
@@ -50,6 +56,15 @@ class WritePostViewModel @Inject constructor(
 
     fun setIsImageVerified(isVerified: Boolean) {
         _isImageVerfied.value = isVerified
+    }
+
+    fun addImage(image: Uri) {
+        _images.value = _images.value + image
+        Log.d("images size", images.value.size.toString() )
+    }
+
+    fun removeImage(image: Uri) {
+        _images.value = _images.value.filter { it != image }
     }
 
     internal fun onEvent(event: WritePostEvent) = viewModelScope.launch {

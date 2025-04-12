@@ -7,3 +7,8 @@ android {
     namespace = "com.example.designsystem"
 }
 
+dependencies {
+    implementation(libs.coil.compose)
+}
+
+
