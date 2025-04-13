@@ -51,7 +51,6 @@ class WritePostViewModel @Inject constructor(
         _isVerified.value = isVerified
     }
 
-
     fun addImage(image: Uri) {
         _images.value = _images.value + image
         Log.d("images size", images.value.size.toString() )

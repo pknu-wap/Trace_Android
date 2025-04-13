@@ -16,6 +16,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Icon
@@ -110,11 +113,13 @@ private fun WritePostScreen(
         }
     )
 
+    val lazyListState = rememberLazyListState()
+
+    val requestAvailable = title.isNotEmpty() && content.isNotEmpty() && type != PostType.None
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .imePadding()
     ) {
 
         LazyColumn(
@@ -122,6 +127,8 @@ private fun WritePostScreen(
                 .fillMaxSize()
                 .background(Background)
                 .padding(vertical = 70.dp, horizontal = 15.dp)
+                .imePadding(),
+            state = lazyListState
         ) {
 
             item {
@@ -148,6 +155,7 @@ private fun WritePostScreen(
                 TraceContentField(
                     value = content,
                     onValueChange = onContentChange,
+                    lazyListState = lazyListState,
                     hint = if (type == PostType.GoodDeed) "따뜻한 흔적을 남겨보세요!" else "내용을 입력하세요.",
                     modifier = Modifier.focusRequester(contentFieldFocusRequester)
                 )
@@ -157,7 +165,6 @@ private fun WritePostScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(White)
                 .align(Alignment.TopCenter)
                 .height(50.dp)
                 .padding(horizontal = 15.dp, vertical = 8.dp),
@@ -183,7 +190,8 @@ private fun WritePostScreen(
 
             Text(
                 "완료",
-                style = TraceTheme.typography.bodyMM, color = Gray
+                style = TraceTheme.typography.bodyMM,
+                color = if (requestAvailable) PrimaryActive else Gray
             )
 
         }
@@ -210,25 +218,29 @@ private fun WritePostScreen(
 
             Spacer(Modifier.weight(1f))
 
-            Row(
-                modifier = Modifier.clickable(isRipple = true) {
-                    onIsVerifiedChange(!isVerified)
+            if (true) {
+                Row(
+                    modifier = Modifier.clickable(isRipple = true) {
+                        onIsVerifiedChange(!isVerified)
+                    }
+                ) {
+                    Image(
+                        painter = if (isVerified) painterResource(R.drawable.checkbox_on) else painterResource(
+                            R.drawable.checkbox_off
+                        ),
+                        contentDescription = "선행 인증",
+                        modifier = Modifier.size(20.dp)
+                    )
+
+                    Spacer(Modifier.width(2.dp))
+
+
+                    Text(
+                        "선행 인증",
+                        color = if (isVerified) PrimaryActive else Gray,
+                        style = TraceTheme.typography.bodySM,
+                    )
                 }
-            ) {
-                Image(
-                    painter = if (isVerified) painterResource(R.drawable.checkbox_on) else painterResource(R.drawable.checkbox_off),
-                    contentDescription = "선행 인증",
-                    modifier = Modifier.size(20.dp)
-                )
-
-                Spacer(Modifier.width(2.dp))
-
-
-                Text(
-                    "선행 인증",
-                    color = if (isVerified) PrimaryActive else Gray,
-                    style = TraceTheme.typography.bodySM,
-                )
             }
 
 
