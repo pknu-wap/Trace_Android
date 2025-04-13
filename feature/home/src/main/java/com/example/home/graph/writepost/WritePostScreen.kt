@@ -1,4 +1,4 @@
-package com.example.home.writepost
+package com.example.home.graph.writepost
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -6,7 +6,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,18 +16,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -37,34 +28,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.Placeholder
-import androidx.compose.ui.text.PlaceholderVerticalAlign
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil3.compose.rememberAsyncImagePainter
 import com.example.common.util.clickable
 import com.example.designsystem.theme.Background
 import com.example.designsystem.theme.Black
 import com.example.designsystem.theme.Gray
 import com.example.designsystem.theme.PrimaryActive
-import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.White
 import com.example.designsystem.R
-import com.example.home.writepost.WritePostViewModel.WritePostEvent
-import com.example.home.writepost.WritePostViewModel.PostType
-import com.example.home.writepost.component.ImageContent
-import com.example.home.writepost.component.TraceContentField
-import com.example.home.writepost.component.TraceTitleField
+import com.example.home.graph.writepost.WritePostViewModel.WritePostEvent
+import com.example.home.graph.writepost.WritePostViewModel.PostType
+import com.example.home.graph.writepost.component.ImageContent
+import com.example.home.graph.writepost.component.TraceContentField
+import com.example.home.graph.writepost.component.TraceTitleField
 
 
 @Composable
@@ -76,8 +57,7 @@ internal fun WritePostRoute(
     val title by viewModel.title.collectAsStateWithLifecycle()
     val content by viewModel.content.collectAsStateWithLifecycle()
     val images by viewModel.images.collectAsStateWithLifecycle()
-    val isTextVerified by viewModel.isTextVerified.collectAsStateWithLifecycle()
-    val isImageVerified by viewModel.isImageVerified.collectAsStateWithLifecycle()
+    val isVerified by viewModel.isVerified.collectAsStateWithLifecycle()
 
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
@@ -92,17 +72,16 @@ internal fun WritePostRoute(
         title = title,
         content = content,
         images = images,
-        isTextVerified = isTextVerified,
-        isImageVerified = isImageVerified,
+        isVerified = isVerified,
         navigateBack = navigateBack,
         onTitleChange = viewModel::setTitle,
         onContentChange = viewModel::setContent,
         addImage = viewModel::addImage,
         removeImage = viewModel::removeImage,
         onTypeChange = viewModel::setType,
-        onTextVerifiedChange = viewModel::setIsTextVerified,
-        onImageVerifiedChange = viewModel::setIsImageVerified
-    )
+        onIsVerifiedChange = viewModel::setIsVerified,
+
+        )
 }
 
 @Composable
@@ -111,15 +90,13 @@ private fun WritePostScreen(
     title: String,
     content: String,
     images: List<Uri>,
-    isTextVerified: Boolean,
-    isImageVerified: Boolean,
+    isVerified: Boolean,
     onTypeChange: (PostType) -> Unit,
     onTitleChange: (String) -> Unit,
     onContentChange: (String) -> Unit,
     addImage: (Uri) -> Unit,
     removeImage: (Uri) -> Unit,
-    onTextVerifiedChange: (Boolean) -> Unit,
-    onImageVerifiedChange: (Boolean) -> Unit,
+    onIsVerifiedChange: (Boolean) -> Unit,
     navigateBack: () -> Unit,
 ) {
     val contentFieldFocusRequester = remember { FocusRequester() }
@@ -235,14 +212,12 @@ private fun WritePostScreen(
 
             Row(
                 modifier = Modifier.clickable(isRipple = true) {
-                    onTextVerifiedChange(!isTextVerified)
+                    onIsVerifiedChange(!isVerified)
                 }
             ) {
                 Image(
-                    painter = if (isTextVerified) painterResource(R.drawable.checkbox_on) else painterResource(
-                        R.drawable.checkbox_off
-                    ),
-                    contentDescription = "글 인증 여부",
+                    painter = if (isVerified) painterResource(R.drawable.checkbox_on) else painterResource(R.drawable.checkbox_off),
+                    contentDescription = "선행 인증",
                     modifier = Modifier.size(20.dp)
                 )
 
@@ -250,38 +225,12 @@ private fun WritePostScreen(
 
 
                 Text(
-                    "글 인증",
-                    color = if (isTextVerified) PrimaryActive else Gray,
+                    "선행 인증",
+                    color = if (isVerified) PrimaryActive else Gray,
                     style = TraceTheme.typography.bodySM,
                 )
             }
 
-
-
-            Spacer(Modifier.width(5.dp))
-
-            Row(
-                modifier = Modifier.clickable(isRipple = true) {
-                    onImageVerifiedChange(!isImageVerified)
-                }
-            ) {
-                Image(
-                    painter = if (isImageVerified) painterResource(R.drawable.checkbox_on) else painterResource(
-                        R.drawable.checkbox_off
-                    ),
-                    contentDescription = "사진 인증 여부",
-                    modifier = Modifier
-                        .size(20.dp)
-                )
-
-                Spacer(Modifier.width(2.dp))
-
-                Text(
-                    "사진 인증",
-                    color = if (isImageVerified) PrimaryActive else Gray,
-                    style = TraceTheme.typography.bodySM,
-                )
-            }
 
         }
     }
@@ -295,13 +244,11 @@ fun WritePostScreenPreview() {
         type = PostType.None,
         title = "",
         content = "",
-        isTextVerified = true,
-        isImageVerified = false,
+        isVerified = true,
         onTypeChange = {},
         onTitleChange = {},
         onContentChange = {},
-        onTextVerifiedChange = {},
-        onImageVerifiedChange = {},
+        onIsVerifiedChange = {},
         navigateBack = {},
         images = emptyList(),
         addImage = {},

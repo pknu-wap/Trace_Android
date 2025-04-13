@@ -1,4 +1,4 @@
-package com.example.home.writepost.component
+package com.example.home.graph.writepost.component
 
 import android.net.Uri
 import androidx.compose.foundation.Image

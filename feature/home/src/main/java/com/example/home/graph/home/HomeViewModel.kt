@@ -1,4 +1,4 @@
-package com.example.home.home
+package com.example.home.graph.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

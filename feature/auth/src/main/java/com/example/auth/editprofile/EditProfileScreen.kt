@@ -256,7 +256,7 @@ private fun EditProfileScreen(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 20.dp)
+                .padding(horizontal = 20.   dp)
                 .height(50.dp),
             maxLines = 1,
             textStyle = TextStyle(fontSize = 14.sp),

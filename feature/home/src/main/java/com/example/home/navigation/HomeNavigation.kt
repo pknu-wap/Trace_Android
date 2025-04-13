@@ -4,8 +4,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import com.example.home.home.HomeRoute
-import com.example.home.writepost.WritePostRoute
+import com.example.home.graph.home.HomeRoute
+import com.example.home.graph.writepost.WritePostRoute
 import com.example.navigation.HomeRoute
 import com.example.navigation.WritePostRoute
 

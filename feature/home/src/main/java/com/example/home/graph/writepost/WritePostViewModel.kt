@@ -1,4 +1,4 @@
-package com.example.home.writepost
+package com.example.home.graph.writepost
 
 import android.net.Uri
 import android.util.Log
@@ -32,11 +32,8 @@ class WritePostViewModel @Inject constructor(
     private val _images : MutableStateFlow<List<Uri>> = MutableStateFlow(emptyList())
     val images = _images.asStateFlow()
 
-    private val _isTextVerified = MutableStateFlow(true)
-    val isTextVerified = _isTextVerified.asStateFlow()
-
-    private val _isImageVerfied = MutableStateFlow(false)
-    val isImageVerified = _isImageVerfied.asStateFlow()
+    private val _isVerified = MutableStateFlow(true)
+    val isVerified = _isVerified.asStateFlow()
 
     fun setTitle(title: String) {
         _title.value = title
@@ -50,13 +47,10 @@ class WritePostViewModel @Inject constructor(
         _type.value = type
     }
 
-    fun setIsTextVerified(isVerified: Boolean) {
-        _isTextVerified.value = isVerified
+    fun setIsVerified(isVerified: Boolean) {
+        _isVerified.value = isVerified
     }
 
-    fun setIsImageVerified(isVerified: Boolean) {
-        _isImageVerfied.value = isVerified
-    }
 
     fun addImage(image: Uri) {
         _images.value = _images.value + image

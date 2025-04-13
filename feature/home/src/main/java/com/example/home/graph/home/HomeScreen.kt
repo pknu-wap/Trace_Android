@@ -1,4 +1,4 @@
-package com.example.home.home
+package com.example.home.graph.home
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.example.home.home.HomeViewModel.HomeEvent
+import com.example.home.graph.home.HomeViewModel.HomeEvent
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.White
