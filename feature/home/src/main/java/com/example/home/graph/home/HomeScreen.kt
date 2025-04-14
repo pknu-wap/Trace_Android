@@ -41,6 +41,7 @@ import com.example.home.graph.home.HomeViewModel.HomeEvent
 import com.example.home.graph.home.HomeViewModel.SortBy
 import com.example.home.graph.home.HomeViewModel.TabType
 import com.example.home.graph.home.component.PostFeed
+import com.example.home.graph.home.component.TabSelector
 
 
 @Composable
@@ -67,6 +68,8 @@ internal fun HomeRoute(
         postFeeds = postFeeds,
         tabType = tabType,
         sortBy = sortBy,
+        onTabTypeChange = viewModel::setTabType,
+        onSortByChange = viewModel::setSortBy,
         navigateToPost = { viewModel.onEvent(HomeEvent.NavigateToPost) },
         navigateToWritePost = { viewModel.onEvent(HomeEvent.NavigateToWritePost) })
 }
@@ -74,9 +77,11 @@ internal fun HomeRoute(
 
 @Composable
 private fun HomeScreen(
-    postFeeds : List<PostFeed>,
-    tabType : TabType,
+    postFeeds: List<PostFeed>,
+    tabType: TabType,
     sortBy: SortBy,
+    onTabTypeChange: (TabType) -> Unit,
+    onSortByChange: (SortBy) -> Unit,
     navigateToPost: () -> Unit,
     navigateToWritePost: () -> Unit,
 ) {
@@ -86,17 +91,22 @@ private fun HomeScreen(
             .background(Background)
     ) {
         LazyColumn(
-            modifier = Modifier.fillMaxSize().padding(top = 105.dp, start = 20.dp, end = 20.dp)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 105.dp, start = 20.dp, end = 20.dp)
         ) {
-           items(postFeeds.size) { index ->
-               PostFeed(postFeed = postFeeds[index])
+            items(postFeeds.size) { index ->
+                PostFeed(postFeed = postFeeds[index])
 
-               Spacer(Modifier.height(8.dp))
+                Spacer(Modifier.height(8.dp))
 
-               Spacer(Modifier.fillMaxWidth().height(1.dp).background(GrayLine))
+                Spacer(Modifier
+                    .fillMaxWidth()
+                    .height(1.dp)
+                    .background(GrayLine))
 
-               Spacer(Modifier.height(15.dp))
-           }
+                Spacer(Modifier.height(15.dp))
+            }
         }
 
         Column(
@@ -146,7 +156,19 @@ private fun HomeScreen(
                     },
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Text("전체 글", style = TraceTheme.typography.bodySSB.copy(fontSize = 15.sp))
+                    TabSelector(type = TabType.All, selectedType = tabType, onTabSelected = onTabTypeChange)
+
+                    Spacer(Modifier.width(12.dp))
+
+                    TabSelector(type = TabType.GoodDeed, selectedType = tabType, onTabSelected = onTabTypeChange)
+
+                    Spacer(Modifier.width(12.dp))
+
+                    TabSelector(type = TabType.Mission, selectedType = tabType, onTabSelected = onTabTypeChange)
+
+                    Spacer(Modifier.width(12.dp))
+
+                    TabSelector(type = TabType.Free, selectedType = tabType, onTabSelected = onTabTypeChange)
                 }
 
                 Spacer(Modifier.weight(1f))
@@ -192,7 +214,14 @@ private fun HomeScreen(
 
 @Preview
 @Composable
-fun homeScreenPreview() {
-    HomeScreen(navigateToPost = {}, navigateToWritePost = {}, postFeeds = fakePostFeeds, tabType = TabType.All, sortBy = SortBy.NewestDate)
+fun HomeScreenPreview() {
+    HomeScreen(
+        navigateToPost = {},
+        navigateToWritePost = {},
+        postFeeds = fakePostFeeds,
+        tabType = TabType.All,
+        sortBy = SortBy.NewestDate,
+        onTabTypeChange = {},
+        onSortByChange = {})
 }
 

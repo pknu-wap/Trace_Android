@@ -27,11 +27,23 @@ class HomeViewModel @Inject constructor(
     private val _postFeeds: MutableStateFlow<List<PostFeed>> = MutableStateFlow(fakePostFeeds)
     val postFeeds = _postFeeds.asStateFlow()
 
-    private val _tabType = MutableStateFlow(TabType.All)
+    private val _tabType : MutableStateFlow<TabType> = MutableStateFlow(TabType.All)
     val tabType = _tabType.asStateFlow()
 
-    private val _sortBy = MutableStateFlow(SortBy.NewestDate)
+    private val _sortBy : MutableStateFlow<SortBy> = MutableStateFlow(SortBy.NewestDate)
     val sortBy = _sortBy.asStateFlow()
+
+    private fun setPostFeeds(postFeeds: List<PostFeed>) {
+        _postFeeds.value = postFeeds
+    }
+
+    fun setTabType(tabType: TabType) {
+        _tabType.value = tabType
+    }
+
+    fun setSortBy(sortBy: SortBy) {
+        _sortBy.value = sortBy
+    }
 
 
     sealed class TabType(val lable: String) {
