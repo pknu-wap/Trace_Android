@@ -11,7 +11,7 @@ val Background = Color(0xFFFFFEEE)
 
 val TextField = Color(0xFFF2F1E1)
 
-val Error = Color(0xFFFF0000)
+val Red = Color(0xFFFF0000)
 
 val Black = Color(0xFF000000)
 val White = Color(0xFFFFFFFF)

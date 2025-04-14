@@ -120,6 +120,7 @@ private fun WritePostScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .imePadding()
     ) {
 
         LazyColumn(

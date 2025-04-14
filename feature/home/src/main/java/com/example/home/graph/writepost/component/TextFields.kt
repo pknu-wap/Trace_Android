@@ -56,6 +56,7 @@ internal fun TraceTitleField(
     val keyboardController = LocalSoftwareKeyboardController.current
     var isFocused by remember { mutableStateOf(false) }
 
+
     CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
         BasicTextField(
             value = value,
@@ -101,6 +102,7 @@ internal fun TraceContentField(
     var isFocused by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
     var prevHeight by remember { mutableStateOf(0) }
+
 
     CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
         BasicTextField(

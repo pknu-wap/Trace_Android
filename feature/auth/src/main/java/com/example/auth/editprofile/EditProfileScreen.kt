@@ -60,9 +60,9 @@ import com.example.auth.editprofile.EditProfileViewModel.EditProfileEvent
 import com.example.common.util.clickable
 import com.example.designsystem.R
 import com.example.designsystem.theme.Background
-import com.example.designsystem.theme.Error
 import com.example.designsystem.theme.PrimaryActive
 import com.example.designsystem.theme.PrimaryDefault
+import com.example.designsystem.theme.Red
 import com.example.designsystem.theme.TextField
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.White
@@ -284,7 +284,7 @@ private fun EditProfileScreen(
             Text(
                 "닉네임은 최소 2자, 최대 12자까지 가능해요",
                 style = TraceTheme.typography.bodySM.copy(fontSize = 12.sp),
-                color = Error,
+                color = Red,
                 modifier = Modifier
                     .align(Alignment.Start)
                     .padding(top = 10.dp, start = 20.dp)
