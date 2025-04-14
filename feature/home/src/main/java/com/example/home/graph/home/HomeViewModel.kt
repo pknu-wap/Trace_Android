@@ -53,7 +53,7 @@ class HomeViewModel @Inject constructor(
         data object Mission : TabType("미션")
     }
 
-    sealed class SortBy(lable: String) {
+    sealed class SortBy(val lable: String) {
         data object NewestDate : SortBy("최신순")
         data object Popularity : SortBy("인기순")
         data object ViewCount : SortBy("조회순")

@@ -34,6 +34,7 @@ import com.example.designsystem.R
 import com.example.designsystem.theme.Background
 import com.example.designsystem.theme.GrayLine
 import com.example.designsystem.theme.PrimaryDefault
+import com.example.designsystem.theme.Tab
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.White
 import com.example.domain.model.home.PostFeed
@@ -183,7 +184,7 @@ private fun HomeScreen(
 
                     Spacer(Modifier.width(5.dp))
 
-                    Text("정렬", style = TraceTheme.typography.bodySSB.copy(fontSize = 15.sp))
+                    Text("정렬", style = TraceTheme.typography.bodySSB.copy(fontSize = 15.sp), color = Tab)
                 }
             }
 
