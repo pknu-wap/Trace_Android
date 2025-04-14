@@ -5,6 +5,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -190,7 +191,11 @@ private fun WritePostScreen(
             Text(
                 "완료",
                 style = TraceTheme.typography.bodyMM,
-                color = if (requestAvailable) PrimaryActive else Gray
+                color = if (requestAvailable) PrimaryActive else Gray,
+                modifier = Modifier.clickable(isRipple = true, enabled = requestAvailable) {
+
+                }
+
             )
 
         }
