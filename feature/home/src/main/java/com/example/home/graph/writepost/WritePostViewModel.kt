@@ -4,6 +4,7 @@ import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.domain.model.home.PostType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -64,11 +65,7 @@ class WritePostViewModel @Inject constructor(
         _eventChannel.send(event)
     }
 
-    sealed class PostType {
-        object Free : PostType()
-        object GoodDeed : PostType()
-        object None : PostType()
-    }
+
 
     sealed class WritePostEvent {
         data object NavigateToBack : WritePostEvent()
