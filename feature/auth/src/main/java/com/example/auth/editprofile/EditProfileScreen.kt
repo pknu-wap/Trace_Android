@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -48,8 +47,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.withStyle
@@ -58,22 +55,24 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.rememberAsyncImagePainter
-import com.example.auth.graph.signup.SignUpViewModel
-
-import com.example.auth.graph.signup.SignUpViewModel.SignUpEvent
+import com.example.auth.editprofile.EditProfileViewModel
+import com.example.auth.editprofile.EditProfileViewModel.EditProfileEvent
 import com.example.common.util.clickable
 import com.example.designsystem.R
-import com.example.designsystem.theme.background
-import com.example.designsystem.theme.field
-import com.example.designsystem.theme.primaryActive
-import com.example.designsystem.theme.primaryDefault
+import com.example.designsystem.theme.Background
+import com.example.designsystem.theme.PrimaryActive
+import com.example.designsystem.theme.PrimaryDefault
+import com.example.designsystem.theme.Red
+import com.example.designsystem.theme.TextField
+import com.example.designsystem.theme.TraceTheme
+import com.example.designsystem.theme.White
 
 
 @Composable
 internal fun EditProfileRoute(
     navigateToHome: () -> Unit,
     navigateBack: () -> Unit,
-    viewModel: SignUpViewModel = hiltViewModel(),
+    viewModel: EditProfileViewModel = hiltViewModel(),
 ) {
 
     val name by viewModel.nameText.collectAsStateWithLifecycle()
@@ -83,7 +82,7 @@ internal fun EditProfileRoute(
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
             when (event) {
-                is SignUpEvent.SignUpSuccess -> {
+                is EditProfileEvent.SignUpSuccess -> {
                     navigateToHome()
                 }
             }
@@ -134,7 +133,7 @@ private fun EditProfileScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(background),
+            .background(Background),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 
@@ -143,32 +142,30 @@ private fun EditProfileScreen(
 
         Spacer(Modifier.height(16.dp))
 
+
         Icon(
             imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
             contentDescription = "뒤로 가기",
             modifier = Modifier
                 .size(50.dp)
                 .align(Alignment.Start)
-                .padding(start = 9.dp)
-                .clickable() {
+                .padding(8.dp)
+                .clickable(isRipple = true) {
                     navigateBack()
                 }
         )
+
 
         Spacer(Modifier.height(25.dp))
 
         Text(
             text = buildAnnotatedString {
-                withStyle(style = SpanStyle(color = primaryDefault)) {
+                withStyle(style = SpanStyle(color = PrimaryDefault)) {
                     append("프로필")
                 }
                 append(" 설정")
             },
-            style = TextStyle(
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily(Font(R.font.bookk_myungjo_bold))
-            ),
+            style = TraceTheme.typography.headingLB,
             modifier = Modifier
                 .align(Alignment.Start)
                 .padding(start = 20.dp)
@@ -183,7 +180,7 @@ private fun EditProfileScreen(
                 val radius = canvasWidth / 2f
 
                 drawCircle(
-                    color = primaryDefault,
+                    color = PrimaryDefault,
                     radius = radius,
                     center = center,
                     style = Stroke(12f)
@@ -209,14 +206,14 @@ private fun EditProfileScreen(
                         expanded = expanded,
                         onDismissRequest = { expanded = false },
                         modifier = Modifier
-                            .background(Color.White, shape = RoundedCornerShape(8.dp))
+                            .background(White, shape = RoundedCornerShape(8.dp))
                     ) {
                         options.forEach { option ->
                             DropdownMenuItem(
                                 text = {
                                     Text(
                                         option,
-                                        style = TextStyle(fontSize = 12.sp),
+                                        style = TraceTheme.typography.bodySM.copy(fontSize = 12.sp),
                                     )
                                 },
                                 onClick = {
@@ -238,12 +235,8 @@ private fun EditProfileScreen(
 
         Text(
             "사용자 이름",
-            style = TextStyle(
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily(Font(R.font.bookk_myungjo_bold))
-            ),
-            color = primaryDefault,
+            style = TraceTheme.typography.headingMB,
+            color = PrimaryDefault,
             modifier = Modifier
                 .align(Alignment.Start)
                 .padding(start = 20.dp)
@@ -257,7 +250,7 @@ private fun EditProfileScreen(
             placeholder = {
                 Text(
                     "사용자 이름을 입력해주세요",
-                    style = TextStyle(fontSize = 14.sp),
+                    style = TraceTheme.typography.bodySM,
                     color = Color.Gray
                 )
             },
@@ -268,10 +261,11 @@ private fun EditProfileScreen(
             maxLines = 1,
             textStyle = TextStyle(fontSize = 14.sp),
             colors = TextFieldDefaults.colors(
-                unfocusedContainerColor = field,
-                focusedContainerColor = field,
-                focusedIndicatorColor = primaryActive,
-                unfocusedIndicatorColor = primaryDefault
+                unfocusedContainerColor = TextField,
+                focusedContainerColor = TextField,
+                focusedIndicatorColor = PrimaryActive,
+                unfocusedIndicatorColor = PrimaryDefault,
+                cursorColor = PrimaryDefault
             ),
             shape = RoundedCornerShape(8.dp),
             keyboardOptions = KeyboardOptions.Default.copy(
@@ -289,13 +283,11 @@ private fun EditProfileScreen(
 
             Text(
                 "닉네임은 최소 2자, 최대 12자까지 가능해요",
-                fontSize = 12.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = Color.Red,
+                style = TraceTheme.typography.bodySM.copy(fontSize = 12.sp),
+                color = Red,
                 modifier = Modifier
                     .align(Alignment.Start)
-                    .padding(20.dp)
-                    .offset(y = -10.dp)
+                    .padding(top = 10.dp, start = 20.dp)
             )
         }
 
@@ -305,17 +297,20 @@ private fun EditProfileScreen(
             onClick = {
                 if (signUpAvailability) registerUser()
             },
-            colors = if (!signUpAvailability) ButtonDefaults.buttonColors(primaryDefault.copy(alpha = 0.65F)) else ButtonDefaults.buttonColors(
-                primaryActive
+            colors = if (!signUpAvailability) ButtonDefaults.buttonColors(
+                PrimaryDefault
+                    .copy(alpha = 0.65F)
+            ) else ButtonDefaults.buttonColors(
+                PrimaryActive
             ),
             shape = RoundedCornerShape(8.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 20.dp, end = 20.dp)
+                .padding(horizontal = 20.dp)
         ) {
             Text(
                 "완료",
-                color = Color.White,
+                color = White,
                 style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Medium)
             )
         }
@@ -325,7 +320,7 @@ private fun EditProfileScreen(
 }
 
 @Composable
-fun ProfileImage(imageUri: Uri?) {
+private fun ProfileImage(imageUri: Uri?) {
     val painter = if (imageUri != null) {
         rememberAsyncImagePainter(imageUri)
     } else {
