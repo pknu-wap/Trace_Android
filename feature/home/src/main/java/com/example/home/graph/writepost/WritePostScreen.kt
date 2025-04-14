@@ -5,7 +5,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -36,15 +35,15 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.common.util.clickable
+import com.example.designsystem.R
 import com.example.designsystem.theme.Background
 import com.example.designsystem.theme.Black
 import com.example.designsystem.theme.Gray
 import com.example.designsystem.theme.PrimaryActive
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.White
-import com.example.designsystem.R
+import com.example.domain.model.home.PostType
 import com.example.home.graph.writepost.WritePostViewModel.WritePostEvent
-import com.example.home.graph.writepost.WritePostViewModel.PostType
 import com.example.home.graph.writepost.component.ImageContent
 import com.example.home.graph.writepost.component.TraceContentField
 import com.example.home.graph.writepost.component.TraceTitleField

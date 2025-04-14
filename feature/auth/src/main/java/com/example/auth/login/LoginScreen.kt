@@ -76,7 +76,7 @@ private fun LoginScreen(
             contentDescription = "카카오 로그인",
             modifier = Modifier.clickable {
                 onLoginFailure()
-                //loginKakao(context, loginKakao, onLoginFailure)
+                loginKakao(context, loginKakao, onLoginFailure)
                 navigateToEditProfile()
             }
         )
@@ -112,7 +112,6 @@ private fun loginKakao(
         if (isKakaoTalkLoginAvailable(context)) {
             loginWithKakaoTalk(context) { token, error ->
                 if (error != null) {
-                    Log.d("idTokenError", error.toString())
                     if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
                         return@loginWithKakaoTalk
                     }
@@ -121,6 +120,8 @@ private fun loginKakao(
                 } else if (token != null) {
 
                     onSuccess(token.idToken!!)
+                    Log.d("idToken", token.idToken!!)
+
                 }
             }
         } else {
