@@ -11,7 +11,7 @@ data class PostFeed(
     val viewCount: Int = 0,
     val commentCount: Int = 0,
     val isVerified : Boolean = false,
-    val imageUri: String,
+    val imageUri: String = "",
 )
 
 //data class PostDetail(

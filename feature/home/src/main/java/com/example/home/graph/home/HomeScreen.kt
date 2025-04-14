@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -31,6 +32,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.common.util.clickable
 import com.example.designsystem.R
 import com.example.designsystem.theme.Background
+import com.example.designsystem.theme.GrayLine
 import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.White
@@ -88,6 +90,12 @@ private fun HomeScreen(
         ) {
            items(postFeeds.size) { index ->
                PostFeed(postFeed = postFeeds[index])
+
+               Spacer(Modifier.height(8.dp))
+
+               Spacer(Modifier.fillMaxWidth().height(1.dp).background(GrayLine))
+
+               Spacer(Modifier.height(15.dp))
            }
         }
 

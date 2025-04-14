@@ -63,7 +63,6 @@ val fakePostFeeds: List<PostFeed> = listOf(
         viewCount = 150,
         commentCount = 5,
         isVerified = true,
-        imageUri = "https://picsum.photos/200/300?random=1"
     ),
     PostFeed(
         postType = PostType.GoodDeed,
@@ -85,7 +84,6 @@ val fakePostFeeds: List<PostFeed> = listOf(
         viewCount = 300,
         commentCount = 8,
         isVerified = true,
-        imageUri = "https://picsum.photos/200/300?random=3"
     ),
     PostFeed(
         postType = PostType.GoodDeed,
@@ -107,7 +105,6 @@ val fakePostFeeds: List<PostFeed> = listOf(
         viewCount = 500,
         commentCount = 35,
         isVerified = false,
-        imageUri = "https://picsum.photos/200/300?random=5"
     ),
     PostFeed(
         postType = PostType.GoodDeed,
@@ -129,7 +126,6 @@ val fakePostFeeds: List<PostFeed> = listOf(
         viewCount = 320,
         commentCount = 15,
         isVerified = true,
-        imageUri = "https://picsum.photos/200/300?random=7"
     ),
     PostFeed(
         postType = PostType.GoodDeed,
