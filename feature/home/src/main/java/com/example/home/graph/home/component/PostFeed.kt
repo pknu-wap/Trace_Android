@@ -142,8 +142,6 @@ internal fun PostFeed(
                 )
             }
 
-            Spacer(Modifier.width(20.dp))
-
         }
     } else {
         Column(
