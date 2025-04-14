@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -29,6 +30,7 @@ import coil3.request.crossfade
 import com.example.common.util.clickable
 import com.example.designsystem.R
 import com.example.designsystem.theme.DarkGray
+import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.WarmGray
 import com.example.domain.model.home.PostFeed
@@ -39,9 +41,9 @@ import java.time.format.DateTimeFormatter
 @Composable
 internal fun PostFeed(
     postFeed: PostFeed,
-    onClick : () -> Unit = {}
+    onClick: () -> Unit = {}
 ) {
-    if(postFeed.imageUri.isNotEmpty()) {
+    if (postFeed.imageUri.isNotEmpty()) {
 
         val painter = rememberAsyncImagePainter(
             model = ImageRequest.Builder(LocalContext.current)
@@ -50,11 +52,15 @@ internal fun PostFeed(
                 .build()
         )
 
-        Box(modifier = Modifier.fillMaxWidth().clickable {
-            onClick()
-        }) {
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                onClick()
+            }) {
             Column(
-                modifier = Modifier.padding(end = 95.dp).align(Alignment.CenterStart)
+                modifier = Modifier
+                    .padding(end = 95.dp)
+                    .align(Alignment.CenterStart)
             ) {
                 Text(
                     postFeed.title,
@@ -102,7 +108,13 @@ internal fun PostFeed(
 
                     Spacer(Modifier.width(7.dp))
 
-                    Image(painter = painterResource(R.drawable.comment_ic), contentDescription = "댓글 아이콘")
+                    Image(
+                        painter = painterResource(R.drawable.comment_ic),
+                        contentDescription = "댓글 아이콘",
+                        colorFilter = ColorFilter.tint(
+                            PrimaryDefault
+                        )
+                    )
 
                     Spacer(Modifier.width(3.dp))
 
@@ -117,7 +129,10 @@ internal fun PostFeed(
 
 
             Box(
-                modifier = Modifier.size(75.dp).clip(RoundedCornerShape(16.dp)).align(Alignment.CenterEnd),
+                modifier = Modifier
+                    .size(75.dp)
+                    .clip(RoundedCornerShape(16.dp))
+                    .align(Alignment.CenterEnd),
             ) {
                 Image(
                     painter = painter,
@@ -130,8 +145,7 @@ internal fun PostFeed(
             Spacer(Modifier.width(20.dp))
 
         }
-    }
-    else {
+    } else {
         Column(
             modifier = Modifier.clickable {
                 onClick()
@@ -183,7 +197,13 @@ internal fun PostFeed(
 
                 Spacer(Modifier.width(7.dp))
 
-                Image(painter = painterResource(R.drawable.comment_ic), contentDescription = "댓글 아이콘")
+                Image(
+                    painter = painterResource(R.drawable.comment_ic),
+                    contentDescription = "댓글 아이콘",
+                    colorFilter = ColorFilter.tint(
+                        PrimaryDefault
+                    )
+                )
 
                 Spacer(Modifier.width(3.dp))
 
