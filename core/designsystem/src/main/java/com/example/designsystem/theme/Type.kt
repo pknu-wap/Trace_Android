@@ -63,6 +63,11 @@ data class TraceTypography(
         fontSize = 20.sp,
         lineHeight = 24.sp
     ),
+    val bodyLM: TextStyle = TextStyle(
+        fontFamily = PretendardMedium,
+        fontSize = 24.sp,
+        lineHeight = 32.sp
+    ),
     val bodyMM: TextStyle = TextStyle(
         fontFamily = PretendardMedium,
         fontSize = 18.sp,

@@ -40,12 +40,14 @@ import com.example.common.util.clickable
 import com.example.designsystem.R
 import com.example.designsystem.theme.Background
 import com.example.designsystem.theme.DarkGray
+import com.example.designsystem.theme.Gray
 import com.example.designsystem.theme.GrayLine
 import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.White
 import com.example.domain.model.home.PostDetail
 import com.example.home.graph.post.PostViewModel.PostEvent
+import com.example.home.graph.post.component.CommentView
 import com.example.home.graph.post.component.PostImageContent
 import com.example.home.graph.post.component.TraceCommnetField
 
@@ -82,7 +84,6 @@ private fun PostScreen(
     onCommentInputChange: (String) -> Unit
 ) {
 
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -93,7 +94,7 @@ private fun PostScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 75.dp, start = 20.dp, end = 20.dp)
+                .padding(top = 75.dp, start = 20.dp, end = 20.dp, bottom = 75.dp)
         ) {
             item {
                 Text(postDetail.title, style = TraceTheme.typography.bodyLSB)
@@ -126,7 +127,7 @@ private fun PostScreen(
                     Column(
                         modifier = Modifier.fillMaxHeight()
                     ) {
-                        Text(postDetail.nickname, style = TraceTheme.typography.bodySM)
+                        Text(postDetail.nickname, style = TraceTheme.typography.bodySSB)
 
                         Spacer(Modifier.height(3.dp))
 
@@ -169,7 +170,28 @@ private fun PostScreen(
                         .background(GrayLine)
                 )
 
-                Spacer(Modifier.height(13.dp))
+                if(postDetail.comments.isEmpty()) Row(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("등록된 댓글이 없습니다.", style = TraceTheme.typography.bodyLM, color = Gray)
+                }
+
+                postDetail.comments.forEachIndexed { index, comment ->
+                    Spacer(Modifier.height(13.dp))
+
+                    CommentView(comment)
+
+                    if(index != postDetail.comments.size - 1) {
+                        Spacer(Modifier.height(11.dp))
+
+                        Spacer(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(1.dp)
+                                .background(GrayLine)
+                        )
+                    }
+                }
 
             }
         }
