@@ -21,6 +21,7 @@ val Gray = Color(0xFF888888)
 val DarkGray = Color(0xFF747070)
 val WarmGray = Color(0xFF838080)
 val GrayLine = Color(0xFFADACA0)
+val ImagePlaceHolder = Color(0xFFE7E7E7)
 
 
 

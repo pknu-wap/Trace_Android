@@ -38,8 +38,8 @@ import com.example.designsystem.theme.Tab
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.White
 import com.example.domain.model.home.PostFeed
+import com.example.domain.model.home.PostType
 import com.example.domain.model.home.SortType
-import com.example.domain.model.home.TabType
 import com.example.home.graph.home.HomeViewModel.HomeEvent
 import com.example.home.graph.home.component.PostFeed
 import com.example.home.graph.home.component.TabSelector
@@ -79,9 +79,9 @@ internal fun HomeRoute(
 @Composable
 private fun HomeScreen(
     postFeeds: List<PostFeed>,
-    tabType: TabType,
+    tabType: PostType,
     sortBy: SortType,
-    onTabTypeChange: (TabType) -> Unit,
+    onTabTypeChange: (PostType) -> Unit,
     onSortByChange: (SortType) -> Unit,
     navigateToPost: () -> Unit,
     navigateToWritePost: () -> Unit,
@@ -159,14 +159,14 @@ private fun HomeScreen(
                     },
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    TabType.entries.forEachIndexed { index, type ->
+                    PostType.entries.forEachIndexed { index, type ->
                         TabSelector(
                             type = type,
                             selectedType = tabType,
                             onTabSelected = onTabTypeChange
                         )
 
-                        if (index != TabType.entries.size - 1) Spacer(Modifier.width(12.dp))
+                        if (index != PostType.entries.size - 1) Spacer(Modifier.width(12.dp))
                     }
                 }
 
@@ -189,10 +189,7 @@ private fun HomeScreen(
                     )
                 }
             }
-
         }
-
-
 
         FloatingActionButton(
             onClick = navigateToWritePost,
@@ -221,7 +218,7 @@ fun HomeScreenPreview() {
         navigateToPost = {},
         navigateToWritePost = {},
         postFeeds = fakePostFeeds,
-        tabType = TabType.All,
+        tabType = PostType.All,
         sortBy = SortType.NewestDate,
         onTabTypeChange = {},
         onSortByChange = {})

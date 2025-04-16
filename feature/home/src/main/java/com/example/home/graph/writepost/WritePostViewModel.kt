@@ -4,7 +4,7 @@ import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.domain.model.home.PostType
+import com.example.domain.model.home.WritePostType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,8 +20,7 @@ class WritePostViewModel @Inject constructor(
     private val _eventChannel = Channel<WritePostEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
 
-
-    private val _type : MutableStateFlow<PostType> = MutableStateFlow(PostType.None)
+    private val _type : MutableStateFlow<WritePostType> = MutableStateFlow(WritePostType.NONE)
     val type = _type.asStateFlow()
 
     private val _title = MutableStateFlow("")
@@ -44,7 +43,7 @@ class WritePostViewModel @Inject constructor(
         _content.value = content
     }
 
-    fun setType(type: PostType) {
+    fun setType(type: WritePostType) {
         _type.value = type
     }
 
@@ -64,8 +63,6 @@ class WritePostViewModel @Inject constructor(
     internal fun onEvent(event: WritePostEvent) = viewModelScope.launch {
         _eventChannel.send(event)
     }
-
-
 
     sealed class WritePostEvent {
         data object NavigateToBack : WritePostEvent()

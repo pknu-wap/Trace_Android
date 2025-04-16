@@ -19,7 +19,7 @@ val BookkBold = FontFamily(
 
 val PretendardBold = FontFamily(
     Font(
-        resId = R.font.pretendard_semi_bold,
+        resId = R.font.pretendard_bold,
         weight = FontWeight.Bold
     )
 )
@@ -33,10 +33,17 @@ val PretendardSemiBold = FontFamily(
 
 val PretendardMedium = FontFamily(
     Font(
-        resId = R.font.pretendard_semi_bold,
+        resId = R.font.pretendard_medium,
         weight = FontWeight.Medium
     )
 )
+val PretendardRegular = FontFamily(
+    Font(
+        resId = R.font.pretendard_regular,
+        weight = FontWeight.Normal
+    )
+)
+
 
 
 @Immutable
@@ -66,6 +73,16 @@ data class TraceTypography(
         fontSize = 14.sp,
         lineHeight = 18.sp
     ),
+    val bodyXSM: TextStyle = TextStyle(
+        fontFamily = PretendardMedium,
+        fontSize = 11.sp,
+        lineHeight = 15.sp
+    ),
+    val bodyLSB: TextStyle = TextStyle(
+        fontFamily = PretendardSemiBold,
+        fontSize = 24.sp,
+        lineHeight = 32.sp
+    ),
     val bodyMSB: TextStyle = TextStyle(
         fontFamily = PretendardSemiBold,
         fontSize = 20.sp,
@@ -75,7 +92,13 @@ data class TraceTypography(
         fontFamily = PretendardSemiBold,
         fontSize = 14.sp,
         lineHeight = 18.sp
-    )
+    ),
+    val bodySR: TextStyle = TextStyle(
+        fontFamily = PretendardRegular,
+        fontSize = 14.sp,
+        lineHeight = 18.sp
+    ),
+
 
 
 )

@@ -320,36 +320,19 @@ private fun EditProfileScreen(
 
 @Composable
 private fun ProfileImage(imageUri: Uri?) {
-    val painter = if (imageUri != null) {
-        rememberAsyncImagePainter(imageUri)
-    } else {
-        painterResource(id = R.drawable.default_profile)
+    val profileImage = rememberAsyncImagePainter(imageUri ?: R.drawable.default_profile)
+    val imageSize = if (imageUri != null) 129.dp else 115.dp
+    val paddingValue = if (imageUri != null) 2.dp else 9.dp
+
+    Box(Modifier.padding(paddingValue)) {
+        Image(
+            painter = profileImage,
+            contentDescription = "프로필 이미지",
+            modifier = Modifier
+                .size(imageSize)
+                .clip(CircleShape),
+            contentScale = ContentScale.Crop
+        )
     }
-
-    if (imageUri != null) {
-        Box(Modifier.padding(2.dp)) {
-            Image(
-                painter = painter,
-                contentDescription = "프로필 이미지",
-                modifier = Modifier
-                    .size(129.dp)
-                    .clip(CircleShape),
-                contentScale = ContentScale.Crop
-            )
-        }
-
-    } else {
-        Box(Modifier.padding(9.dp)) {
-            Image(
-                painter = painter,
-                contentDescription = "프로필 이미지",
-                modifier = Modifier
-                    .size(115.dp)
-                    .clip(CircleShape),
-                contentScale = ContentScale.Crop
-            )
-        }
-    }
-
 }
 

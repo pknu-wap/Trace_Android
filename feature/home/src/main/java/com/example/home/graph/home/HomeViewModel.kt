@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.domain.model.home.PostFeed
 import com.example.domain.model.home.PostType
 import com.example.domain.model.home.SortType
-import com.example.domain.model.home.TabType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,7 +28,7 @@ class HomeViewModel @Inject constructor(
     private val _postFeeds: MutableStateFlow<List<PostFeed>> = MutableStateFlow(fakePostFeeds)
     val postFeeds = _postFeeds.asStateFlow()
 
-    private val _tabType : MutableStateFlow<TabType> = MutableStateFlow(TabType.All)
+    private val _tabType : MutableStateFlow<PostType> = MutableStateFlow(PostType.All)
     val tabType = _tabType.asStateFlow()
 
     private val _sortBy : MutableStateFlow<SortType> = MutableStateFlow(SortType.NewestDate)
@@ -39,7 +38,7 @@ class HomeViewModel @Inject constructor(
         _postFeeds.value = postFeeds
     }
 
-    fun setTabType(tabType: TabType) {
+    fun setTabType(tabType: PostType) {
         _tabType.value = tabType
     }
 

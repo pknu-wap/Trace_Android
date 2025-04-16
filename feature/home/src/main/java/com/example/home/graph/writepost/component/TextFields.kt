@@ -17,7 +17,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -45,8 +44,6 @@ internal fun TraceTitleField(
     keyboardType: KeyboardType = KeyboardType.Text,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
-    var isFocused by remember { mutableStateOf(false) }
-
 
     CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
         BasicTextField(
@@ -65,7 +62,7 @@ internal fun TraceTitleField(
             textStyle = TraceTheme.typography.bodyMB,
             cursorBrush = SolidColor(PrimaryDefault),
             decorationBox = { innerTextField ->
-                if (value.isEmpty() && !isFocused) {
+                if (value.isEmpty()) {
                     Text(
                         text = hint,
                         style = TraceTheme.typography.bodyMB,
@@ -74,9 +71,7 @@ internal fun TraceTitleField(
                 }
                 innerTextField()
             },
-            modifier = modifier.onFocusChanged { focusState ->
-                isFocused = focusState.isFocused
-            },
+            modifier = modifier
         )
     }
 
@@ -90,7 +85,6 @@ internal fun TraceContentField(
     onValueChange: (String) -> Unit,
     hint: String = "",
 ) {
-    var isFocused by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
     var prevHeight by remember { mutableStateOf(0) }
 
@@ -106,7 +100,7 @@ internal fun TraceContentField(
             textStyle = TraceTheme.typography.bodyMM,
             cursorBrush = SolidColor(PrimaryDefault),
             decorationBox = { innerTextField ->
-                if (value.isEmpty() && !isFocused) {
+                if (value.isEmpty()) {
                     Text(
                         text = hint,
                         style = TraceTheme.typography.bodyMM,
@@ -116,8 +110,6 @@ internal fun TraceContentField(
                 }
 
                 innerTextField()
-
-
             },
             modifier = modifier
                 .fillMaxWidth()
@@ -133,17 +125,8 @@ internal fun TraceContentField(
                             lazyListState.firstVisibleItemIndex,
                             lazyListState.firstVisibleItemScrollOffset + diff
                         )
-
                     }
                 }
-                .onFocusChanged { focusState ->
-                    isFocused = focusState.isFocused
-                },
-
             )
-
-
     }
-
-
 }

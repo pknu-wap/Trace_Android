@@ -2,6 +2,7 @@ package com.example.home.graph.post.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,13 +14,8 @@ import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
@@ -46,12 +42,10 @@ internal fun TraceCommnetField(
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
-    onAddComment : () -> Unit,
+    onAddComment: () -> Unit,
     hint: String = "댓글을 입력하세요",
     keyboardType: KeyboardType = KeyboardType.Text,
 ) {
-    var isFocused by remember { mutableStateOf(false) }
-
     CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
         BasicTextField(
             value = value,
@@ -63,18 +57,20 @@ internal fun TraceCommnetField(
             textStyle = TraceTheme.typography.bodySM.copy(fontSize = 15.sp),
             cursorBrush = SolidColor(PrimaryDefault),
             decorationBox = { innerTextField ->
-                    Row(
-                        modifier = Modifier.padding(top = 14.dp, bottom = 14.dp).fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        if (value.isEmpty() && !isFocused) {
-                            Text(
-                                text = hint,
-                                style = TraceTheme.typography.bodySM,
-                                color = Gray,
-                            )
-                        }
+                Box(
+                    modifier = Modifier
+                        .padding(top = 14.dp, bottom = 14.dp)
+                        .fillMaxWidth(),
+                ) {
+                    if (value.isEmpty()) {
+                        Text(
+                            text = hint,
+                            style = TraceTheme.typography.bodySM,
+                            color = Gray,
+                        )
+                    }
 
+                    Row(verticalAlignment = Alignment.CenterVertically) {
                         innerTextField()
 
                         Spacer(Modifier.weight(1f))
@@ -87,10 +83,11 @@ internal fun TraceCommnetField(
                             }
                         )
                     }
+                }
             },
-            modifier = modifier.background(CommentField).padding(start = 14.dp, end = 10.dp).onFocusChanged { focusState ->
-                isFocused = focusState.isFocused
-            },
+            modifier = modifier
+                .background(CommentField)
+                .padding(start = 14.dp, end = 10.dp)
         )
     }
 }
