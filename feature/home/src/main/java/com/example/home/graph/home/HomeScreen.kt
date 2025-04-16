@@ -38,9 +38,9 @@ import com.example.designsystem.theme.Tab
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.White
 import com.example.domain.model.home.PostFeed
+import com.example.domain.model.home.SortType
+import com.example.domain.model.home.TabType
 import com.example.home.graph.home.HomeViewModel.HomeEvent
-import com.example.home.graph.home.HomeViewModel.SortBy
-import com.example.home.graph.home.HomeViewModel.TabType
 import com.example.home.graph.home.component.PostFeed
 import com.example.home.graph.home.component.TabSelector
 
@@ -80,9 +80,9 @@ internal fun HomeRoute(
 private fun HomeScreen(
     postFeeds: List<PostFeed>,
     tabType: TabType,
-    sortBy: SortBy,
+    sortBy: SortType,
     onTabTypeChange: (TabType) -> Unit,
-    onSortByChange: (SortBy) -> Unit,
+    onSortByChange: (SortType) -> Unit,
     navigateToPost: () -> Unit,
     navigateToWritePost: () -> Unit,
 ) {
@@ -159,35 +159,15 @@ private fun HomeScreen(
                     },
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    TabSelector(
-                        type = TabType.All,
-                        selectedType = tabType,
-                        onTabSelected = onTabTypeChange
-                    )
+                    TabType.entries.forEachIndexed { index, type ->
+                        TabSelector(
+                            type = type,
+                            selectedType = tabType,
+                            onTabSelected = onTabTypeChange
+                        )
 
-                    Spacer(Modifier.width(12.dp))
-
-                    TabSelector(
-                        type = TabType.GoodDeed,
-                        selectedType = tabType,
-                        onTabSelected = onTabTypeChange
-                    )
-
-                    Spacer(Modifier.width(12.dp))
-
-                    TabSelector(
-                        type = TabType.Mission,
-                        selectedType = tabType,
-                        onTabSelected = onTabTypeChange
-                    )
-
-                    Spacer(Modifier.width(12.dp))
-
-                    TabSelector(
-                        type = TabType.Free,
-                        selectedType = tabType,
-                        onTabSelected = onTabTypeChange
-                    )
+                        if (index != TabType.entries.size - 1) Spacer(Modifier.width(12.dp))
+                    }
                 }
 
                 Spacer(Modifier.weight(1f))
@@ -242,7 +222,7 @@ fun HomeScreenPreview() {
         navigateToWritePost = {},
         postFeeds = fakePostFeeds,
         tabType = TabType.All,
-        sortBy = SortBy.NewestDate,
+        sortBy = SortType.NewestDate,
         onTabTypeChange = {},
         onSortByChange = {})
 }

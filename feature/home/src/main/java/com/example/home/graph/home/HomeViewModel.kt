@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.model.home.PostFeed
 import com.example.domain.model.home.PostType
+import com.example.domain.model.home.SortType
+import com.example.domain.model.home.TabType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,7 +32,7 @@ class HomeViewModel @Inject constructor(
     private val _tabType : MutableStateFlow<TabType> = MutableStateFlow(TabType.All)
     val tabType = _tabType.asStateFlow()
 
-    private val _sortBy : MutableStateFlow<SortBy> = MutableStateFlow(SortBy.NewestDate)
+    private val _sortBy : MutableStateFlow<SortType> = MutableStateFlow(SortType.NewestDate)
     val sortBy = _sortBy.asStateFlow()
 
     private fun setPostFeeds(postFeeds: List<PostFeed>) {
@@ -41,22 +43,8 @@ class HomeViewModel @Inject constructor(
         _tabType.value = tabType
     }
 
-    fun setSortBy(sortBy: SortBy) {
+    fun setSortBy(sortBy: SortType) {
         _sortBy.value = sortBy
-    }
-
-
-    sealed class TabType(val label: String) {
-        data object All : TabType("전체")
-        data object Free : TabType("자유")
-        data object GoodDeed : TabType("선행")
-        data object Mission : TabType("미션")
-    }
-
-    sealed class SortBy(val label: String) {
-        data object NewestDate : SortBy("최신순")
-        data object Popularity : SortBy("인기순")
-        data object ViewCount : SortBy("조회순")
     }
 
     sealed class HomeEvent {

@@ -14,16 +14,16 @@ data class PostFeed(
     val imageUri: String = "",
 )
 
-//data class PostDetail(
-//    val postType : PostType,
-//    val title : String,
-//    val content : String,
-//    val nickname: String,
-//    val viewCount : Int,
-//   val comments: List<Comment>,
-//     val feelings : List<Feeling>
-//    val images : List<String>,
-//)
+data class PostDetail(
+    val postType : PostType,
+    val title : String,
+    val content : String,
+    val nickname: String,
+    val viewCount : Int,
+   val comments: List<Comment>,
+    val feeling : Feeling,
+    val images : List<String>,
+)
 
 
 sealed class PostType {
