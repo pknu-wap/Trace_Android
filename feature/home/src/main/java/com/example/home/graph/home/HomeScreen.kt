@@ -101,10 +101,12 @@ private fun HomeScreen(
 
                 Spacer(Modifier.height(8.dp))
 
-                Spacer(Modifier
-                    .fillMaxWidth()
-                    .height(1.dp)
-                    .background(GrayLine))
+                Spacer(
+                    Modifier
+                        .fillMaxWidth()
+                        .height(1.dp)
+                        .background(GrayLine)
+                )
 
                 Spacer(Modifier.height(15.dp))
             }
@@ -157,19 +159,35 @@ private fun HomeScreen(
                     },
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    TabSelector(type = TabType.All, selectedType = tabType, onTabSelected = onTabTypeChange)
+                    TabSelector(
+                        type = TabType.All,
+                        selectedType = tabType,
+                        onTabSelected = onTabTypeChange
+                    )
 
                     Spacer(Modifier.width(12.dp))
 
-                    TabSelector(type = TabType.GoodDeed, selectedType = tabType, onTabSelected = onTabTypeChange)
+                    TabSelector(
+                        type = TabType.GoodDeed,
+                        selectedType = tabType,
+                        onTabSelected = onTabTypeChange
+                    )
 
                     Spacer(Modifier.width(12.dp))
 
-                    TabSelector(type = TabType.Mission, selectedType = tabType, onTabSelected = onTabTypeChange)
+                    TabSelector(
+                        type = TabType.Mission,
+                        selectedType = tabType,
+                        onTabSelected = onTabTypeChange
+                    )
 
                     Spacer(Modifier.width(12.dp))
 
-                    TabSelector(type = TabType.Free, selectedType = tabType, onTabSelected = onTabTypeChange)
+                    TabSelector(
+                        type = TabType.Free,
+                        selectedType = tabType,
+                        onTabSelected = onTabTypeChange
+                    )
                 }
 
                 Spacer(Modifier.weight(1f))
@@ -184,7 +202,11 @@ private fun HomeScreen(
 
                     Spacer(Modifier.width(5.dp))
 
-                    Text("정렬", style = TraceTheme.typography.bodySSB.copy(fontSize = 15.sp), color = Tab)
+                    Text(
+                        "정렬",
+                        style = TraceTheme.typography.bodySSB.copy(fontSize = 15.sp),
+                        color = Tab
+                    )
                 }
             }
 
@@ -205,8 +227,7 @@ private fun HomeScreen(
             Icon(
                 painter = painterResource(id = R.drawable.write_ic),
                 contentDescription = "게시글 쓰기",
-
-                )
+            )
         }
     }
 
