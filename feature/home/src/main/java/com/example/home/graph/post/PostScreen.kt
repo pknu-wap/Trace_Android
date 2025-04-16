@@ -169,6 +169,8 @@ private fun PostScreen(
                         .background(GrayLine)
                 )
 
+                Spacer(Modifier.height(13.dp))
+
             }
         }
 

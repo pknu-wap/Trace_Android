@@ -4,7 +4,7 @@ import java.time.LocalDateTime
 
 data class Comment(
     val nickName: String,
+    val profileImage : String? = null,
     val content : String,
     val createdAt : LocalDateTime,
-    val profileImage : String? = null
 )
