@@ -48,7 +48,7 @@ fun NavGraphBuilder.writePostScreen(
 fun NavGraphBuilder.postScreen(
     navigateBack: () -> Unit,
 ) {
-    composable<WritePostRoute> {
+    composable<PostRoute> {
         PostRoute(
             navigateBack = navigateBack
         )

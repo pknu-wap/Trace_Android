@@ -6,7 +6,8 @@ import kotlin.reflect.KClass
 private val HIDDEN_BOTTOM_BAR_ROUTES = setOf(
     LoginRoute::class,
     EditProfileRoute::class,
-    WritePostRoute::class
+    WritePostRoute::class,
+    PostRoute::class
 )
 
 fun NavDestination?.shouldHideBottomBar(): Boolean =

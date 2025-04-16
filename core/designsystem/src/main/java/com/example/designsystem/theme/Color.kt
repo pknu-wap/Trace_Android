@@ -10,6 +10,7 @@ val PrimaryActive = Color(0xFF235240)
 val Background = Color(0xFFFFFEEE)
 
 val TextField = Color(0xFFF2F1E1)
+val CommentField = Color(0xFFE4E3D6)
 val Tab = Color(0xFF464545)
 
 val Red = Color(0xFFFF0000)

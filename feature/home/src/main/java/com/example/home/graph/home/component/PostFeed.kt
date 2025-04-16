@@ -41,7 +41,7 @@ import java.time.format.DateTimeFormatter
 @Composable
 internal fun PostFeed(
     postFeed: PostFeed,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit
 ) {
     if (postFeed.imageUri.isNotEmpty()) {
 

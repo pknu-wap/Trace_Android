@@ -134,7 +134,6 @@ private fun WritePostScreen(
                 TraceTitleField(
                     value = title,
                     onValueChange = onTitleChange,
-                    hint = "제목",
                     onNext = { contentFieldFocusRequester.requestFocus() }
                 )
 

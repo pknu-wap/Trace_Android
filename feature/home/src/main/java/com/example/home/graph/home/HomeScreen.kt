@@ -97,7 +97,7 @@ private fun HomeScreen(
                 .padding(top = 105.dp, start = 20.dp, end = 20.dp)
         ) {
             items(postFeeds.size) { index ->
-                PostFeed(postFeed = postFeeds[index])
+                PostFeed(postFeed = postFeeds[index], onClick = navigateToPost)
 
                 Spacer(Modifier.height(8.dp))
 
