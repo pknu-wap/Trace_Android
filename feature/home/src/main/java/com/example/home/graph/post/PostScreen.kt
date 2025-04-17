@@ -39,11 +39,12 @@ import coil3.request.crossfade
 import com.example.common.util.clickable
 import com.example.designsystem.R
 import com.example.designsystem.theme.Background
+import com.example.designsystem.theme.Black
 import com.example.designsystem.theme.DarkGray
-import com.example.designsystem.theme.Gray
 import com.example.designsystem.theme.GrayLine
 import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.TraceTheme
+import com.example.designsystem.theme.WarmGray
 import com.example.designsystem.theme.White
 import com.example.domain.model.home.PostDetail
 import com.example.home.graph.post.PostViewModel.PostEvent
@@ -119,7 +120,7 @@ private fun PostScreen(
                             )
                         }
 
-                       ProfileImage(postDetail.profileImageUrl)
+                        ProfileImage(postDetail.profileImageUrl)
                     }
 
                     Spacer(Modifier.width(10.dp))
@@ -132,11 +133,19 @@ private fun PostScreen(
                         Spacer(Modifier.height(3.dp))
 
                         Row() {
-                            Text(postDetail.getFormattedDate(), style = TraceTheme.typography.bodyXSM, color = DarkGray)
+                            Text(
+                                postDetail.getFormattedDate(),
+                                style = TraceTheme.typography.bodyXSM,
+                                color = DarkGray
+                            )
 
                             Spacer(Modifier.width(10.dp))
 
-                            Text("${postDetail.viewCount} 읽음", style = TraceTheme.typography.bodyXSM, color = DarkGray)
+                            Text(
+                                "${postDetail.viewCount} 읽음",
+                                style = TraceTheme.typography.bodyXSM,
+                                color = DarkGray
+                            )
                         }
 
                     }
@@ -151,7 +160,7 @@ private fun PostScreen(
                         .background(GrayLine)
                 )
 
-                if(postDetail.images.isNotEmpty()) {
+                if (postDetail.images.isNotEmpty()) {
                     Spacer(Modifier.height(12.dp))
 
                     PostImageContent(images = postDetail.images)
@@ -170,10 +179,24 @@ private fun PostScreen(
                         .background(GrayLine)
                 )
 
-                if(postDetail.comments.isEmpty()) Row(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("등록된 댓글이 없습니다.", style = TraceTheme.typography.bodyLM, color = Gray)
+                if (postDetail.comments.isEmpty()) {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Spacer(Modifier.height(55.dp))
+
+                        Text(
+                            "아직 댓글이 없습니다.",
+                            style = TraceTheme.typography.bodyMM,
+                            color = Black,
+                        )
+
+                        Spacer(Modifier.height(6.dp))
+
+                        Text("당신의 생각을 댓글로 남겨주세요.", style = TraceTheme.typography.bodySM, color = WarmGray)
+                    }
+
                 }
 
                 postDetail.comments.forEachIndexed { index, comment ->
@@ -181,7 +204,7 @@ private fun PostScreen(
 
                     CommentView(comment)
 
-                    if(index != postDetail.comments.size - 1) {
+                    if (index != postDetail.comments.size - 1) {
                         Spacer(Modifier.height(11.dp))
 
                         Spacer(
@@ -274,7 +297,6 @@ private fun ProfileImage(imageUrl: String?) {
         )
     }
 }
-
 
 
 @Preview
