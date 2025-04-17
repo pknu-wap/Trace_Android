@@ -276,22 +276,22 @@ private fun PostScreen(
                         }
                 )
 
-                if (isOwnPostDropDownMenuExpanded) {
-                    OwnPostDropdownMenu(
-                        expanded = isOwnPostDropDownMenuExpanded,
-                        onDismiss = { isOwnPostDropDownMenuExpanded = false },
-                        onEdit = {},
-                        onDelete = {}
-                    )
-                }
 
-                if (isOtherPostDropDownMenuExpanded) {
-                    OtherPostDropdownMenu(
-                        expanded = isOtherPostDropDownMenuExpanded,
-                        onDismiss = { isOtherPostDropDownMenuExpanded = false },
-                        onReport = {}
-                    )
-                }
+                OwnPostDropdownMenu(
+                    expanded = isOwnPostDropDownMenuExpanded,
+                    onDismiss = { isOwnPostDropDownMenuExpanded = false },
+                    onEdit = {},
+                    onDelete = {}
+                )
+
+
+
+                OtherPostDropdownMenu(
+                    expanded = isOtherPostDropDownMenuExpanded,
+                    onDismiss = { isOtherPostDropDownMenuExpanded = false },
+                    onReport = {}
+                )
+
             }
 
         }
