@@ -26,7 +26,7 @@ import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.White
 
 @Composable
-internal fun OwnPostDropdownMenu(
+internal fun OwnCommentDropdownMenu(
     expanded: Boolean,
     onDismiss: () -> Unit,
     onEdit: () -> Unit,
@@ -95,7 +95,7 @@ internal fun OwnPostDropdownMenu(
 }
 
 @Composable
-internal fun OtherPostDropdownMenu(
+internal fun OtherCommentDropdownMenu(
     expanded: Boolean,
     onDismiss: () -> Unit,
     onReport: () -> Unit,

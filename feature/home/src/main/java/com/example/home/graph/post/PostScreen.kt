@@ -96,7 +96,6 @@ private fun PostScreen(
     var isOwnPostDropDownMenuExpanded by remember { mutableStateOf(false) }
     var isOtherPostDropDownMenuExpanded by remember { mutableStateOf(false) }
 
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -107,7 +106,7 @@ private fun PostScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 75.dp, start = 20.dp, end = 20.dp, bottom = 75.dp)
+                .padding(top = 75.dp, start = 20.dp, end = 20.dp, bottom = 50.dp)
         ) {
             item {
                 Text(postDetail.title, style = TraceTheme.typography.bodyLSB)
@@ -232,6 +231,7 @@ private fun PostScreen(
                     }
                 }
 
+                Spacer(Modifier.height(100.dp))
             }
         }
 
@@ -276,15 +276,12 @@ private fun PostScreen(
                         }
                 )
 
-
                 OwnPostDropdownMenu(
                     expanded = isOwnPostDropDownMenuExpanded,
                     onDismiss = { isOwnPostDropDownMenuExpanded = false },
                     onEdit = {},
                     onDelete = {}
                 )
-
-
 
                 OtherPostDropdownMenu(
                     expanded = isOtherPostDropDownMenuExpanded,

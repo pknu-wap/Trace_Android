@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.designsystem.R
+import com.example.designsystem.theme.DarkGray
 import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.White
@@ -56,7 +57,7 @@ fun CheckCancleDialog(
             TextButton(onClick = { onDismiss() }) {
                 Text(
                     stringResource(R.string.dialog_cancel),
-                    color = PrimaryDefault,
+                    color = DarkGray,
                     style = TraceTheme.typography.bodySM
                 )
             }

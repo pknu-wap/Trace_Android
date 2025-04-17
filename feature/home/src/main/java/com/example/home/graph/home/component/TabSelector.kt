@@ -22,7 +22,7 @@ import com.example.designsystem.theme.White
 import com.example.domain.model.home.PostType
 
 @Composable
-fun TabSelector(
+internal fun TabSelector(
     type: PostType,
     selectedType: PostType,
     onTabSelected: (PostType) -> Unit
