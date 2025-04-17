@@ -26,6 +26,9 @@ class PostViewModel @Inject constructor(
         _eventChannel.send(event)
     }
 
+    private val _userId = MutableStateFlow("")
+    val userId = _userId.asStateFlow()
+
     private val _postDetail = MutableStateFlow(fakePostDetail)
     val postDetail = _postDetail.asStateFlow()
 
@@ -80,7 +83,7 @@ val fakePostDetail = PostDetail(
     content = "오늘은 작은 선행을 나누었습니다. 많은 사람들에게 도움이 되었으면 좋겠습니다.",
     nickname = "홍길동",
     viewCount = 120,
-    comments = emptyList(),
+    comments = fakeComments,
     feelingCount = FeelingCount(
         heartWarmingCount = 35,
         likeableCount = 50,

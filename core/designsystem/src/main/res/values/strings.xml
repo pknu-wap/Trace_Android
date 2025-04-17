@@ -4,4 +4,8 @@
     <string name="dialog_confirm">확인</string>
     <string name="dialog_cancel">취소</string>
 
+    <!-- DropDownMenu -->
+    <string name="edit">수정</string>
+    <string name="delete">삭제</string>
+    <string name="report">신고</string>
 </resources>

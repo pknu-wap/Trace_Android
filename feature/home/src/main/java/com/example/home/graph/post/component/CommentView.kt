@@ -27,6 +27,7 @@ import com.example.domain.model.home.Comment
 
 @Composable
 fun CommentView(
+    userId : String = "",
     comment: Comment,
 ) {
     val profileImage = rememberAsyncImagePainter(

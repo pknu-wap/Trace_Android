@@ -22,6 +22,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -49,6 +52,8 @@ import com.example.designsystem.theme.White
 import com.example.domain.model.home.PostDetail
 import com.example.home.graph.post.PostViewModel.PostEvent
 import com.example.home.graph.post.component.CommentView
+import com.example.home.graph.post.component.OtherPostDropdownMenu
+import com.example.home.graph.post.component.OwnPostDropdownMenu
 import com.example.home.graph.post.component.PostImageContent
 import com.example.home.graph.post.component.TraceCommnetField
 
@@ -58,6 +63,7 @@ internal fun PostRoute(
     navigateBack: () -> Unit,
     viewModel: PostViewModel = hiltViewModel()
 ) {
+    val userId by viewModel.userId.collectAsStateWithLifecycle()
     val commentInput by viewModel.commentInput.collectAsStateWithLifecycle()
     val postDetail by viewModel.postDetail.collectAsStateWithLifecycle()
 
@@ -71,6 +77,7 @@ internal fun PostRoute(
 
     PostScreen(
         navigateBack = { viewModel.onEvent(PostEvent.NavigateBack) },
+        userId = userId,
         postDetail = postDetail,
         commentInput = commentInput,
         onCommentInputChange = viewModel::setCommentInput
@@ -80,10 +87,15 @@ internal fun PostRoute(
 @Composable
 private fun PostScreen(
     navigateBack: () -> Unit,
+    userId: String,
     postDetail: PostDetail,
     commentInput: String,
     onCommentInputChange: (String) -> Unit
 ) {
+
+    var isOwnPostDropDownMenuExpanded by remember { mutableStateOf(false) }
+    var isOtherPostDropDownMenuExpanded by remember { mutableStateOf(false) }
+
 
     Box(
         modifier = Modifier
@@ -194,7 +206,11 @@ private fun PostScreen(
 
                         Spacer(Modifier.height(6.dp))
 
-                        Text("당신의 생각을 댓글로 남겨주세요.", style = TraceTheme.typography.bodySM, color = WarmGray)
+                        Text(
+                            "당신의 생각을 댓글로 남겨주세요.",
+                            style = TraceTheme.typography.bodySM,
+                            color = WarmGray
+                        )
                     }
 
                 }
@@ -202,7 +218,7 @@ private fun PostScreen(
                 postDetail.comments.forEachIndexed { index, comment ->
                     Spacer(Modifier.height(13.dp))
 
-                    CommentView(comment)
+                    CommentView(comment = comment)
 
                     if (index != postDetail.comments.size - 1) {
                         Spacer(Modifier.height(11.dp))
@@ -246,14 +262,38 @@ private fun PostScreen(
 
             Spacer(Modifier.weight(1f))
 
-            Image(
-                painter = painterResource(R.drawable.menu_ic),
-                contentDescription = "메뉴",
-                modifier = Modifier
-                    .clickable(isRipple = true) {
+            Box() {
+                Image(
+                    painter = painterResource(R.drawable.menu_ic),
+                    contentDescription = "메뉴",
+                    modifier = Modifier
+                        .clickable(isRipple = true) {
+                            if (userId.isEmpty()) {
+                                isOwnPostDropDownMenuExpanded = true
+                            } else {
+                                isOtherPostDropDownMenuExpanded = true
+                            }
+                        }
+                )
 
-                    }
-            )
+                if (isOwnPostDropDownMenuExpanded) {
+                    OwnPostDropdownMenu(
+                        expanded = isOwnPostDropDownMenuExpanded,
+                        onDismiss = { isOwnPostDropDownMenuExpanded = false },
+                        onEdit = {},
+                        onDelete = {}
+                    )
+                }
+
+                if (isOtherPostDropDownMenuExpanded) {
+                    OtherPostDropdownMenu(
+                        expanded = isOtherPostDropDownMenuExpanded,
+                        onDismiss = { isOtherPostDropDownMenuExpanded = false },
+                        onReport = {}
+                    )
+                }
+            }
+
         }
 
         Row(
@@ -303,6 +343,10 @@ private fun ProfileImage(imageUrl: String?) {
 @Composable
 fun PostScreenPreview() {
     PostScreen(
-        navigateBack = {}, commentInput = "", postDetail = fakePostDetail, onCommentInputChange = {}
+        navigateBack = {},
+        commentInput = "",
+        postDetail = fakePostDetail,
+        userId = "",
+        onCommentInputChange = {}
     )
 }

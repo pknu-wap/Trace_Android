@@ -88,7 +88,6 @@ internal fun TraceContentField(
     val coroutineScope = rememberCoroutineScope()
     var prevHeight by remember { mutableStateOf(0) }
 
-
     CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
         BasicTextField(
             value = value,

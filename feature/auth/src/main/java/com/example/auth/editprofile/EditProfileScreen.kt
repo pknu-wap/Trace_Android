@@ -46,7 +46,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
@@ -282,7 +281,7 @@ private fun EditProfileScreen(
 
             Text(
                 "닉네임은 최소 2자, 최대 12자까지 가능해요",
-                style = TraceTheme.typography.bodySM.copy(fontSize = 12.sp),
+                style = TraceTheme.typography.bodyXSM.copy(fontSize = 12.sp),
                 color = Red,
                 modifier = Modifier
                     .align(Alignment.Start)
@@ -310,7 +309,7 @@ private fun EditProfileScreen(
             Text(
                 "완료",
                 color = White,
-                style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Medium)
+                style = TraceTheme.typography.bodyXMM
             )
         }
 

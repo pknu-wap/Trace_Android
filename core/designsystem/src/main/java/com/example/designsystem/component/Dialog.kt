@@ -1,8 +1,8 @@
 package com.example.designsystem.component
 
-import androidx.compose.material.AlertDialog
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.example.designsystem.R
@@ -10,7 +10,7 @@ import com.example.designsystem.theme.PrimaryDefault
 
 
 @Composable
-fun checkDialog(
+fun CheckDialog(
     onDismiss: () -> Unit, dialogText: String
 ) {
     AlertDialog(
@@ -25,7 +25,7 @@ fun checkDialog(
 }
 
 @Composable
-fun checkCancleDialog(
+fun CheckCancleDialog(
     onCheck: () -> Unit, onDismiss: () -> Unit, dialogText: String
 ) {
     AlertDialog(
@@ -42,4 +42,5 @@ fun checkCancleDialog(
             }
         }
     )
+
 }
