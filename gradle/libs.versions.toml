@@ -3,7 +3,7 @@
 androidGradlePlugin = "8.9.1"
 ## AndroidX
 # https://developer.android.com/jetpack/androidx/releases/core
-androidxCore = "1.15.0"
+androidxCore = "1.16.0"
 # https://developer.android.com/jetpack/androidx/releases/appcompat
 androidxAppCompat = "1.7.0"
 # https://developer.android.com/jetpack/androidx/releases/lifecycle
@@ -17,7 +17,7 @@ androidxNavigation = "2.8.9"
 # https://developer.android.com/jetpack/androidx/releases/core
 androidxSplashscreen = "1.0.1"
 # https://developer.android.com/develop/ui/compose/bom/bom-mapping
-androidxComposeBom = "2025.03.01"
+androidxComposeBom = "2025.04.00"
 # https://developer.android.com/jetpack/androidx/releases/navigation
 androidxComposeNavigation = "2.8.9"
 # https://developer.android.com/jetpack/androidx/releases/compose-foundation

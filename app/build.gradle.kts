@@ -29,7 +29,6 @@ dependencies {
 
     implementation(libs.kakao.user)
 
-
     implementation(projects.core.designsystem)
     implementation(projects.core.data)
     implementation(projects.core.domain)

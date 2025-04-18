@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.data"
+    namespace = "com.puzzle.datastore"
 }
 
 dependencies {
     implementation(projects.core.domain)
-    implementation(projects.core.network)
-    implementation(projects.core.datastore)
+
+    implementation(libs.androidx.datastore)
 }
