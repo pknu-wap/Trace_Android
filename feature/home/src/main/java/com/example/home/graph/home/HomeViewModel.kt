@@ -34,14 +34,29 @@ class HomeViewModel @Inject constructor(
     private val _sortBy : MutableStateFlow<SortType> = MutableStateFlow(SortType.NewestDate)
     val sortBy = _sortBy.asStateFlow()
 
+    /**
+     * Updates the current list of post feeds displayed on the home screen.
+     *
+     * @param postFeeds The new list of post feeds to set.
+     */
     private fun setPostFeeds(postFeeds: List<PostFeed>) {
         _postFeeds.value = postFeeds
     }
 
+    /**
+     * Updates the current post tab type displayed on the home screen.
+     *
+     * @param tabType The new post type to set as the active tab.
+     */
     fun setTabType(tabType: PostType) {
         _tabType.value = tabType
     }
 
+    /**
+     * Updates the current sort type for displaying post feeds.
+     *
+     * @param sortBy The new sort type to apply.
+     */
     fun setSortBy(sortBy: SortType) {
         _sortBy.value = sortBy
     }

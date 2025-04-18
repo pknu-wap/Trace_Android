@@ -25,6 +25,11 @@ import com.example.designsystem.component.CheckCancleDialog
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.White
 
+/**
+ * Displays a dropdown menu for actions on the user's own post, providing "Edit" and "Delete" options.
+ *
+ * When "Edit" is selected, the menu is dismissed and the edit callback is triggered. Selecting "Delete" opens a confirmation dialog; if confirmed, the delete callback is invoked.
+ */
 @Composable
 internal fun OwnPostDropdownMenu(
     expanded: Boolean,
@@ -94,6 +99,11 @@ internal fun OwnPostDropdownMenu(
 
 }
 
+/**
+ * Displays a dropdown menu with a "Report" option for posts not owned by the user.
+ *
+ * When expanded, shows a single menu item that triggers the report action and dismisses the menu when selected.
+ */
 @Composable
 internal fun OtherPostDropdownMenu(
     expanded: Boolean,

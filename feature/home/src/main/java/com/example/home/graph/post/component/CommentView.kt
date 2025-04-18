@@ -34,6 +34,15 @@ import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.WarmGray
 import com.example.domain.model.home.Comment
 
+/**
+ * Displays a comment with the user's profile image, nickname, timestamp, and content in a styled row.
+ *
+ * Shows a dropdown menu for comment actions when the menu icon is clicked, with options varying based on whether the comment belongs to the current user.
+ *
+ * @param modifier Modifier for styling and layout customization.
+ * @param userId The ID of the current user; used to determine available comment actions.
+ * @param comment The comment data to display, including profile image URL, nickname, timestamp, and content.
+ */
 @Composable
 internal fun CommentView(
     modifier: Modifier = Modifier,

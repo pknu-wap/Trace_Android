@@ -86,6 +86,11 @@ internal fun WritePostRoute(
         )
 }
 
+/**
+ * Displays the UI for composing a new post, including fields for title, content, image attachments, and a verification toggle.
+ *
+ * Provides controls for selecting the post type, entering text, adding or removing images, and toggling verification status. Includes navigation and completion actions, with the completion button enabled only when all required fields are filled.
+ */
 @Composable
 private fun WritePostScreen(
     type: WritePostType,
@@ -248,6 +253,9 @@ private fun WritePostScreen(
 }
 
 
+/**
+ * Displays a preview of the WritePostScreen composable with default values for design and development purposes.
+ */
 @Preview
 @Composable
 fun WritePostScreenPreview() {

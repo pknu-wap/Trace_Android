@@ -21,6 +21,15 @@ import com.example.designsystem.theme.WarmGray
 import com.example.designsystem.theme.White
 import com.example.domain.model.home.PostType
 
+/**
+ * Displays a selectable tab representing a post type.
+ *
+ * Highlights the tab if it matches the currently selected type and invokes a callback when selected.
+ *
+ * @param type The post type represented by this tab.
+ * @param selectedType The currently selected post type.
+ * @param onTabSelected Callback invoked with the tab's post type when the tab is clicked.
+ */
 @Composable
 internal fun TabSelector(
     type: PostType,

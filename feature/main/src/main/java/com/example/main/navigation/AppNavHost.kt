@@ -17,6 +17,12 @@ import com.example.home.navigation.writePostScreen
 import com.example.navigation.EditProfileRoute
 import com.example.navigation.LoginRoute
 
+/**
+ * Sets up the navigation graph for the app, defining routes and navigation actions between login, profile editing, home, post viewing, and post writing screens.
+ *
+ * @param navController The navigation controller that manages app navigation state.
+ * @param modifier Optional modifier to be applied to the navigation host.
+ */
 @Composable
 fun AppNavHost(
     navController: NavHostController,

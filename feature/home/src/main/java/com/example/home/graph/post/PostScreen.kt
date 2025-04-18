@@ -58,6 +58,11 @@ import com.example.home.graph.post.component.PostImageContent
 import com.example.home.graph.post.component.TraceCommnetField
 
 
+/**
+ * Composable entry point for the post detail screen, connecting UI state and events to the PostViewModel.
+ *
+ * Collects post and comment state from the view model, listens for navigation events, and displays the post detail UI.
+ */
 @Composable
 internal fun PostRoute(
     navigateBack: () -> Unit,
@@ -84,6 +89,17 @@ internal fun PostRoute(
     )
 }
 
+/**
+ * Displays the detailed post screen with post content, author information, images, and comments.
+ *
+ * Shows a top app bar with navigation and menu options, the post's details, a scrollable list of comments, and a comment input field at the bottom. Dropdown menus for editing, deleting, or reporting the post are conditionally shown based on the user ID.
+ *
+ * @param navigateBack Callback invoked when the back button is pressed.
+ * @param userId The current user's ID; used to determine menu options.
+ * @param postDetail The post data to display, including comments and images.
+ * @param commentInput The current text in the comment input field.
+ * @param onCommentInputChange Callback for updating the comment input text.
+ */
 @Composable
 private fun PostScreen(
     navigateBack: () -> Unit,
@@ -312,6 +328,13 @@ private fun PostScreen(
     }
 }
 
+/**
+ * Displays a circular profile image, using a default image if no URL is provided.
+ *
+ * The image is loaded asynchronously and sized with padding based on whether a custom image URL is given.
+ *
+ * @param imageUrl The URL of the profile image, or null to use the default profile image.
+ */
 @Composable
 private fun ProfileImage(imageUrl: String?) {
     val profileImage = rememberAsyncImagePainter(
@@ -336,6 +359,9 @@ private fun ProfileImage(imageUrl: String?) {
 }
 
 
+/**
+ * Displays a preview of the post detail screen with sample data for UI development.
+ */
 @Preview
 @Composable
 fun PostScreenPreview() {

@@ -10,7 +10,12 @@ private val HIDDEN_BOTTOM_BAR_ROUTES = setOf(
     PostRoute::class
 )
 
-fun NavDestination?.shouldHideBottomBar(): Boolean =
+/**
+     * Determines whether the bottom navigation bar should be hidden for the current navigation destination.
+     *
+     * Returns true if the destination's route matches any of the predefined routes that require the bottom bar to be hidden; otherwise, returns false.
+     */
+    fun NavDestination?.shouldHideBottomBar(): Boolean =
     this?.route?.let { route ->
         HIDDEN_BOTTOM_BAR_ROUTES.any { hiddenRoute ->
             route.startsWith(hiddenRoute.qualifiedName ?: "")

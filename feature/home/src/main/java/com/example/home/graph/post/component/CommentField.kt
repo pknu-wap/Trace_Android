@@ -37,6 +37,17 @@ private val customTextSelectionColors = TextSelectionColors(
     )
 )
 
+/**
+ * Displays a customizable comment input field with a send icon for submitting comments.
+ *
+ * Renders a text field with optional hint text, custom keyboard type, and a send icon that triggers the comment submission callback. The input field uses themed styling and custom text selection colors.
+ *
+ * @param value The current text entered in the comment field.
+ * @param onValueChange Callback invoked when the text input changes.
+ * @param onAddComment Callback triggered when the send icon is clicked to submit the comment.
+ * @param hint Placeholder text shown when the input is empty.
+ * @param keyboardType The type of keyboard to display for text input.
+ */
 @Composable
 internal fun TraceCommnetField(
     modifier: Modifier = Modifier,

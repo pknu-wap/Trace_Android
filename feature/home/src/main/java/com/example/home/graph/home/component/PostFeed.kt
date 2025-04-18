@@ -38,6 +38,11 @@ import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+/**
+ * Displays a post feed item with title, content, author, time, view count, and comment count, optionally including a thumbnail image.
+ *
+ * Renders a clickable UI component for a single post, showing post details and an image if available. Invokes the provided callback when clicked.
+ */
 @Composable
 internal fun PostFeed(
     postFeed: PostFeed,

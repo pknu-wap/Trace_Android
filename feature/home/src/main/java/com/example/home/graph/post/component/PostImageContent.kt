@@ -27,6 +27,15 @@ import com.example.designsystem.theme.ImagePlaceHolder
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.White
 
+/**
+ * Displays a horizontally scrollable pager of images with a page indicator overlay.
+ *
+ * Each image is shown inside a card with rounded corners and cropped to fill the available space.
+ * A semi-transparent overlay at the bottom-right corner displays the current image index and total count.
+ *
+ * @param images List of image URLs to display in the pager.
+ * @param modifier Modifier for styling and layout customization.
+ */
 @Composable
 internal fun PostImageContent(
     images: List<String>,

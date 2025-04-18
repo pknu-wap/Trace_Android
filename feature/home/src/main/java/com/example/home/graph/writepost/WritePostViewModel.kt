@@ -39,10 +39,20 @@ class WritePostViewModel @Inject constructor(
         _title.value = title
     }
 
+    /**
+     * Updates the current post content with the provided text.
+     *
+     * @param content The new content for the post.
+     */
     fun setContent(content: String) {
         _content.value = content
     }
 
+    /**
+     * Updates the current post type state.
+     *
+     * @param type The new post type to set.
+     */
     fun setType(type: WritePostType) {
         _type.value = type
     }
@@ -60,6 +70,11 @@ class WritePostViewModel @Inject constructor(
         _images.value = _images.value.filter { it != image }
     }
 
+    /**
+     * Sends a one-time write post event to observers via the event channel.
+     *
+     * Launches a coroutine to deliver the specified event asynchronously.
+     */
     internal fun onEvent(event: WritePostEvent) = viewModelScope.launch {
         _eventChannel.send(event)
     }

@@ -25,6 +25,11 @@ import com.example.designsystem.component.CheckCancleDialog
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.White
 
+/**
+ * Displays a dropdown menu for actions on the user's own comment, providing "Edit" and "Delete" options.
+ *
+ * When expanded, shows menu items for editing or deleting the comment. Selecting "Edit" triggers the edit callback and dismisses the menu. Selecting "Delete" opens a confirmation dialog; confirming triggers the delete callback.
+ */
 @Composable
 internal fun OwnCommentDropdownMenu(
     expanded: Boolean,
@@ -94,6 +99,11 @@ internal fun OwnCommentDropdownMenu(
 
 }
 
+/**
+ * Displays a dropdown menu with a "Report" option for comments not owned by the user.
+ *
+ * When expanded, shows a single menu item that triggers the report action and dismisses the menu when selected.
+ */
 @Composable
 internal fun OtherCommentDropdownMenu(
     expanded: Boolean,

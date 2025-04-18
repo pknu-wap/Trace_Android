@@ -22,6 +22,11 @@ class PostViewModel @Inject constructor(
     private val _eventChannel = Channel<PostEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
 
+    /**
+     * Sends a UI event to the event channel for handling in the post detail screen.
+     *
+     * @param event The event to be sent, such as navigation actions.
+     */
     internal fun onEvent(event: PostEvent) = viewModelScope.launch {
         _eventChannel.send(event)
     }
@@ -35,6 +40,11 @@ class PostViewModel @Inject constructor(
     private val _commentInput = MutableStateFlow("")
     val commentInput = _commentInput.asStateFlow()
 
+    /**
+     * Updates the current value of the comment input field.
+     *
+     * @param commentInput The new text to set as the comment input.
+     */
     fun setCommentInput(commentInput: String) {
         _commentInput.value = commentInput
     }

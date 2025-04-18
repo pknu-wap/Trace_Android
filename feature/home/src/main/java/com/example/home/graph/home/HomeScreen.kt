@@ -76,6 +76,19 @@ internal fun HomeRoute(
 }
 
 
+/**
+ * Displays the home feed screen with a list of posts, tab and sort selectors, and navigation actions.
+ *
+ * Shows a header, tab selection for post types, sort option, a scrollable list of post feeds, and a floating action button for creating new posts. Navigation callbacks are triggered when a post or the write button is selected.
+ *
+ * @param postFeeds List of post feed items to display.
+ * @param tabType Currently selected post type tab.
+ * @param sortBy Currently selected sort type.
+ * @param onTabTypeChange Callback invoked when the post type tab is changed.
+ * @param onSortByChange Callback invoked when the sort type is changed.
+ * @param navigateToPost Callback invoked when a post is selected.
+ * @param navigateToWritePost Callback invoked when the write post button is pressed.
+ */
 @Composable
 private fun HomeScreen(
     postFeeds: List<PostFeed>,
@@ -211,6 +224,9 @@ private fun HomeScreen(
 }
 
 
+/**
+ * Displays a preview of the HomeScreen composable with sample data for design and development purposes.
+ */
 @Preview
 @Composable
 fun HomeScreenPreview() {

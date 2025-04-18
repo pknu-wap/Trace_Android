@@ -15,7 +15,14 @@ data class PostFeed(
     val isVerified : Boolean = false,
     val imageUri: String = "",
 ) {
-     fun getFormattedTime(): String {
+     /**
+     * Returns a human-readable string representing the elapsed time since the post was created.
+     *
+     * The format varies based on the time difference: days ago (up to 7 days), date ("M/d") for older posts, hours ago, minutes ago, or "방금 전" ("just now") for less than a minute.
+     *
+     * @return A formatted string indicating how much time has passed since creation.
+     */
+    fun getFormattedTime(): String {
         val now = LocalDateTime.now()
         val duration = Duration.between(createdAt, now)
 
@@ -56,6 +63,11 @@ data class PostDetail(
     val feelingCount : FeelingCount,
     val images : List<String> = emptyList(),
 ) {
+    /**
+     * Returns the creation timestamp formatted as "M/d HH:mm".
+     *
+     * @return The formatted creation date and time of the post.
+     */
     fun getFormattedDate(): String {
         val formatter = DateTimeFormatter.ofPattern("M/d HH:mm")
         return createdAt.format(formatter)

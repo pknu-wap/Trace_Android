@@ -100,6 +100,19 @@ internal fun EditProfileRoute(
 }
 
 
+/**
+ * Displays the UI for editing a user's profile, including profile image selection and name input.
+ *
+ * Allows the user to pick or reset a profile image, enter and validate a user name, and submit changes. Provides navigation back to the previous screen.
+ *
+ * @param name The current user name input.
+ * @param profileImage The URI of the selected profile image, or null for the default image.
+ * @param isNameValid Indicates whether the entered name meets validation criteria.
+ * @param onNameChange Callback invoked when the user name input changes.
+ * @param onProfileImageChange Callback invoked when the profile image is changed or reset.
+ * @param registerUser Callback invoked when the user submits the profile changes.
+ * @param navigateBack Callback invoked when the user requests to navigate back.
+ */
 @Composable
 private fun EditProfileScreen(
     name: String,
@@ -317,6 +330,11 @@ private fun EditProfileScreen(
     }
 }
 
+/**
+ * Displays a circular profile image, using a provided image URI or a default image if none is set.
+ *
+ * @param imageUri The URI of the profile image to display, or null to use the default profile image.
+ */
 @Composable
 private fun ProfileImage(imageUri: Uri?) {
     val profileImage = rememberAsyncImagePainter(imageUri ?: R.drawable.default_profile)

@@ -10,6 +10,18 @@ data class Comment(
     val content : String,
     val createdAt : LocalDateTime,
 ) {
+    /**
+     * Returns a human-readable string representing how much time has passed since the comment was created.
+     *
+     * The result is formatted in Korean as follows:
+     * - If at least one day has passed but no more than seven days, returns the number of days followed by "일".
+     * - If more than seven days have passed, returns the creation date in "M/d" format.
+     * - If at least one hour but less than a day has passed, returns the number of hours followed by "시간".
+     * - If at least one minute but less than an hour has passed, returns the number of minutes followed by "분".
+     * - If less than a minute has passed, returns "방금" (just now).
+     *
+     * @return A string describing the elapsed time since creation in a user-friendly format.
+     */
     fun getFormattedTime(): String {
         val now = LocalDateTime.now()
         val duration = Duration.between(createdAt, now)

@@ -34,6 +34,18 @@ private val customTextSelectionColors = TextSelectionColors(
     )
 )
 
+/**
+ * Displays a single-line text input field for entering a title with a custom placeholder and keyboard action.
+ *
+ * Shows a hint when the input is empty and applies custom text selection colors and theme styles.
+ * Triggers the provided callback when the "Next" IME action is pressed.
+ *
+ * @param value The current text value of the input field.
+ * @param onValueChange Callback invoked when the text value changes.
+ * @param onNext Callback invoked when the "Next" IME action is pressed.
+ * @param hint The placeholder text shown when the input is empty.
+ * @param keyboardType The type of keyboard to display; defaults to text.
+ */
 @Composable
 internal fun TraceTitleField(
     modifier: Modifier = Modifier,
@@ -77,6 +89,14 @@ internal fun TraceTitleField(
 
 }
 
+/**
+ * Displays a multi-line text input field with a hint and custom text selection colors, automatically scrolling the associated list when the field's height changes.
+ *
+ * @param lazyListState The state of the lazy list to scroll when the text field's height changes.
+ * @param value The current text input value.
+ * @param onValueChange Callback invoked when the text input value changes.
+ * @param hint Placeholder text shown when the input is empty.
+ */
 @Composable
 internal fun TraceContentField(
     modifier: Modifier = Modifier,
