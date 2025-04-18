@@ -41,10 +41,9 @@ import java.time.format.DateTimeFormatter
 @Composable
 internal fun PostFeed(
     postFeed: PostFeed,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit
 ) {
     if (postFeed.imageUri.isNotEmpty()) {
-
         val painter = rememberAsyncImagePainter(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(postFeed.imageUri)
@@ -93,7 +92,7 @@ internal fun PostFeed(
                     Spacer(Modifier.width(17.dp))
 
                     Text(
-                        getFormattedTime(postFeed.createdAt),
+                        postFeed.getFormattedTime(),
                         style = TraceTheme.typography.bodySSB.copy(fontSize = 11.sp),
                         color = WarmGray
                     )
@@ -180,7 +179,7 @@ internal fun PostFeed(
                 Spacer(Modifier.width(17.dp))
 
                 Text(
-                    getFormattedTime(postFeed.createdAt),
+                    postFeed.getFormattedTime(),
                     style = TraceTheme.typography.bodySSB.copy(fontSize = 11.sp),
                     color = WarmGray
                 )
@@ -214,34 +213,4 @@ internal fun PostFeed(
 
         }
     }
-
-
-}
-
-private fun getFormattedTime(dateTime: LocalDateTime): String {
-    val now = LocalDateTime.now()
-    val duration = Duration.between(dateTime, now)
-
-    // 1일 이상일 경우
-    if (duration.toDays() >= 1) {
-        return if (duration.toDays() <= 7) {
-            "${duration.toDays()}일 전"
-        } else {
-            val formatter = DateTimeFormatter.ofPattern("M/d")
-            dateTime.format(formatter)
-        }
-    }
-
-    // 1시간 이상일 경우
-    if (duration.toHours() >= 1) {
-        return "${duration.toHours()}시간 전"
-    }
-
-    // 1분 이상일 경우
-    if (duration.toMinutes() >= 1) {
-        return "${duration.toMinutes()}분 전"
-    }
-
-    // 1분 미만일 경우
-    return "방금 전"
 }

@@ -19,13 +19,13 @@ import com.example.designsystem.theme.PrimaryActive
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.WarmGray
 import com.example.designsystem.theme.White
-import com.example.home.graph.home.HomeViewModel.TabType
+import com.example.domain.model.home.PostType
 
 @Composable
-fun TabSelector(
-    type: TabType,
-    selectedType: TabType,
-    onTabSelected: (TabType) -> Unit
+internal fun TabSelector(
+    type: PostType,
+    selectedType: PostType,
+    onTabSelected: (PostType) -> Unit
 ) {
     Box(
         modifier = Modifier

@@ -20,8 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
-
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
@@ -47,7 +46,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
@@ -144,7 +142,7 @@ private fun EditProfileScreen(
 
 
         Icon(
-            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
             contentDescription = "뒤로 가기",
             modifier = Modifier
                 .size(50.dp)
@@ -283,7 +281,7 @@ private fun EditProfileScreen(
 
             Text(
                 "닉네임은 최소 2자, 최대 12자까지 가능해요",
-                style = TraceTheme.typography.bodySM.copy(fontSize = 12.sp),
+                style = TraceTheme.typography.bodyXSM.copy(fontSize = 12.sp),
                 color = Red,
                 modifier = Modifier
                     .align(Alignment.Start)
@@ -311,7 +309,7 @@ private fun EditProfileScreen(
             Text(
                 "완료",
                 color = White,
-                style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Medium)
+                style = TraceTheme.typography.bodyXMM
             )
         }
 
@@ -321,36 +319,20 @@ private fun EditProfileScreen(
 
 @Composable
 private fun ProfileImage(imageUri: Uri?) {
-    val painter = if (imageUri != null) {
-        rememberAsyncImagePainter(imageUri)
-    } else {
-        painterResource(id = R.drawable.default_profile)
+    val profileImage = rememberAsyncImagePainter(imageUri ?: R.drawable.default_profile)
+    val imageSize = if (imageUri != null) 129.dp else 115.dp
+    val paddingValue = if (imageUri != null) 2.dp else 9.dp
+
+    Box(Modifier.padding(paddingValue)) {
+        Image(
+            painter = profileImage,
+            contentDescription = "프로필 이미지",
+            modifier = Modifier
+                .size(imageSize)
+                .clip(CircleShape),
+            contentScale = ContentScale.Crop
+        )
     }
-
-    if (imageUri != null) {
-        Box(Modifier.padding(2.dp)) {
-            Image(
-                painter = painter,
-                contentDescription = "프로필 이미지",
-                modifier = Modifier
-                    .size(129.dp)
-                    .clip(CircleShape),
-                contentScale = ContentScale.Crop
-            )
-        }
-
-    } else {
-        Box(Modifier.padding(9.dp)) {
-            Image(
-                painter = painter,
-                contentDescription = "프로필 이미지",
-                modifier = Modifier
-                    .size(115.dp)
-                    .clip(CircleShape),
-                contentScale = ContentScale.Crop
-            )
-        }
-    }
-
 }
+
 

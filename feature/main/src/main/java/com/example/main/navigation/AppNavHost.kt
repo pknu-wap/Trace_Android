@@ -10,7 +10,9 @@ import com.example.auth.navigation.loginScreen
 import com.example.auth.navigation.navigateToEditProfile
 import com.example.home.navigation.homeScreen
 import com.example.home.navigation.navigateToHome
+import com.example.home.navigation.navigateToPost
 import com.example.home.navigation.navigateToWritePost
+import com.example.home.navigation.postScreen
 import com.example.home.navigation.writePostScreen
 import com.example.navigation.EditProfileRoute
 import com.example.navigation.LoginRoute
@@ -49,12 +51,17 @@ fun AppNavHost(
             navigateBack = { navController.popBackStack() }
         )
         homeScreen(
-            navigateToPost = {},
+            navigateToPost = {
+                navController.navigateToPost()
+            },
             navigateToWritePost = {
                 navController.navigateToWritePost()
             }
         )
         writePostScreen(
+            navigateBack = { navController.popBackStack() }
+        )
+        postScreen(
             navigateBack = { navController.popBackStack() }
         )
     }

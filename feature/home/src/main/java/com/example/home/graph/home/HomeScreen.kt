@@ -26,7 +26,6 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.common.util.clickable
@@ -34,13 +33,11 @@ import com.example.designsystem.R
 import com.example.designsystem.theme.Background
 import com.example.designsystem.theme.GrayLine
 import com.example.designsystem.theme.PrimaryDefault
-import com.example.designsystem.theme.Tab
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.White
 import com.example.domain.model.home.PostFeed
+import com.example.domain.model.home.PostType
 import com.example.home.graph.home.HomeViewModel.HomeEvent
-import com.example.home.graph.home.HomeViewModel.SortBy
-import com.example.home.graph.home.HomeViewModel.TabType
 import com.example.home.graph.home.component.PostFeed
 import com.example.home.graph.home.component.TabSelector
 
@@ -54,7 +51,6 @@ internal fun HomeRoute(
 
     val postFeeds by viewModel.postFeeds.collectAsStateWithLifecycle()
     val tabType by viewModel.tabType.collectAsStateWithLifecycle()
-    val sortBy by viewModel.sortBy.collectAsStateWithLifecycle()
 
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
@@ -68,9 +64,7 @@ internal fun HomeRoute(
     HomeScreen(
         postFeeds = postFeeds,
         tabType = tabType,
-        sortBy = sortBy,
         onTabTypeChange = viewModel::setTabType,
-        onSortByChange = viewModel::setSortBy,
         navigateToPost = { viewModel.onEvent(HomeEvent.NavigateToPost) },
         navigateToWritePost = { viewModel.onEvent(HomeEvent.NavigateToWritePost) })
 }
@@ -79,10 +73,8 @@ internal fun HomeRoute(
 @Composable
 private fun HomeScreen(
     postFeeds: List<PostFeed>,
-    tabType: TabType,
-    sortBy: SortBy,
-    onTabTypeChange: (TabType) -> Unit,
-    onSortByChange: (SortBy) -> Unit,
+    tabType: PostType,
+    onTabTypeChange: (PostType) -> Unit,
     navigateToPost: () -> Unit,
     navigateToWritePost: () -> Unit,
 ) {
@@ -97,14 +89,16 @@ private fun HomeScreen(
                 .padding(top = 105.dp, start = 20.dp, end = 20.dp)
         ) {
             items(postFeeds.size) { index ->
-                PostFeed(postFeed = postFeeds[index])
+                PostFeed(postFeed = postFeeds[index], onClick = navigateToPost)
 
                 Spacer(Modifier.height(8.dp))
 
-                Spacer(Modifier
-                    .fillMaxWidth()
-                    .height(1.dp)
-                    .background(GrayLine))
+                Spacer(
+                    Modifier
+                        .fillMaxWidth()
+                        .height(1.dp)
+                        .background(GrayLine)
+                )
 
                 Spacer(Modifier.height(15.dp))
             }
@@ -157,40 +151,18 @@ private fun HomeScreen(
                     },
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    TabSelector(type = TabType.All, selectedType = tabType, onTabSelected = onTabTypeChange)
+                    PostType.entries.forEachIndexed { index, type ->
+                        TabSelector(
+                            type = type,
+                            selectedType = tabType,
+                            onTabSelected = onTabTypeChange
+                        )
 
-                    Spacer(Modifier.width(12.dp))
-
-                    TabSelector(type = TabType.GoodDeed, selectedType = tabType, onTabSelected = onTabTypeChange)
-
-                    Spacer(Modifier.width(12.dp))
-
-                    TabSelector(type = TabType.Mission, selectedType = tabType, onTabSelected = onTabTypeChange)
-
-                    Spacer(Modifier.width(12.dp))
-
-                    TabSelector(type = TabType.Free, selectedType = tabType, onTabSelected = onTabTypeChange)
-                }
-
-                Spacer(Modifier.weight(1f))
-
-                Row(
-                    modifier = Modifier.clickable {
-
-                    },
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Image(painter = painterResource(R.drawable.sort_ic), contentDescription = "정렬")
-
-                    Spacer(Modifier.width(5.dp))
-
-                    Text("정렬", style = TraceTheme.typography.bodySSB.copy(fontSize = 15.sp), color = Tab)
+                        if (index != PostType.entries.size - 1) Spacer(Modifier.width(12.dp))
+                    }
                 }
             }
-
         }
-
-
 
         FloatingActionButton(
             onClick = navigateToWritePost,
@@ -205,8 +177,7 @@ private fun HomeScreen(
             Icon(
                 painter = painterResource(id = R.drawable.write_ic),
                 contentDescription = "게시글 쓰기",
-
-                )
+            )
         }
     }
 
@@ -220,9 +191,8 @@ fun HomeScreenPreview() {
         navigateToPost = {},
         navigateToWritePost = {},
         postFeeds = fakePostFeeds,
-        tabType = TabType.All,
-        sortBy = SortBy.NewestDate,
+        tabType = PostType.ALL,
         onTabTypeChange = {},
-        onSortByChange = {})
+    )
 }
 

@@ -1,37 +1,27 @@
 package com.example.home.graph.writepost.component
 
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.dp
 import com.example.designsystem.theme.Gray
 import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.TraceTheme
@@ -50,12 +40,10 @@ internal fun TraceTitleField(
     value: String,
     onValueChange: (String) -> Unit,
     onNext: () -> Unit,
-    hint: String = "",
+    hint: String = "제목",
     keyboardType: KeyboardType = KeyboardType.Text,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
-    var isFocused by remember { mutableStateOf(false) }
-
 
     CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
         BasicTextField(
@@ -74,7 +62,7 @@ internal fun TraceTitleField(
             textStyle = TraceTheme.typography.bodyMB,
             cursorBrush = SolidColor(PrimaryDefault),
             decorationBox = { innerTextField ->
-                if (value.isEmpty() && !isFocused) {
+                if (value.isEmpty()) {
                     Text(
                         text = hint,
                         style = TraceTheme.typography.bodyMB,
@@ -83,9 +71,7 @@ internal fun TraceTitleField(
                 }
                 innerTextField()
             },
-            modifier = modifier.onFocusChanged { focusState ->
-                isFocused = focusState.isFocused
-            },
+            modifier = modifier
         )
     }
 
@@ -99,10 +85,8 @@ internal fun TraceContentField(
     onValueChange: (String) -> Unit,
     hint: String = "",
 ) {
-    var isFocused by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
     var prevHeight by remember { mutableStateOf(0) }
-
 
     CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
         BasicTextField(
@@ -115,7 +99,7 @@ internal fun TraceContentField(
             textStyle = TraceTheme.typography.bodyMM,
             cursorBrush = SolidColor(PrimaryDefault),
             decorationBox = { innerTextField ->
-                if (value.isEmpty() && !isFocused) {
+                if (value.isEmpty()) {
                     Text(
                         text = hint,
                         style = TraceTheme.typography.bodyMM,
@@ -125,8 +109,6 @@ internal fun TraceContentField(
                 }
 
                 innerTextField()
-
-
             },
             modifier = modifier
                 .fillMaxWidth()
@@ -142,17 +124,8 @@ internal fun TraceContentField(
                             lazyListState.firstVisibleItemIndex,
                             lazyListState.firstVisibleItemScrollOffset + diff
                         )
-
                     }
                 }
-                .onFocusChanged { focusState ->
-                    isFocused = focusState.isFocused
-                },
-
             )
-
-
     }
-
-
 }

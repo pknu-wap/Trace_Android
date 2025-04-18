@@ -39,10 +39,11 @@ import com.example.designsystem.R
 import com.example.designsystem.theme.Background
 import com.example.designsystem.theme.Black
 import com.example.designsystem.theme.Gray
+import com.example.designsystem.theme.GrayLine
 import com.example.designsystem.theme.PrimaryActive
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.White
-import com.example.domain.model.home.PostType
+import com.example.domain.model.home.WritePostType
 import com.example.home.graph.writepost.WritePostViewModel.WritePostEvent
 import com.example.home.graph.writepost.component.ImageContent
 import com.example.home.graph.writepost.component.TraceContentField
@@ -87,12 +88,12 @@ internal fun WritePostRoute(
 
 @Composable
 private fun WritePostScreen(
-    type: PostType,
+    type: WritePostType,
     title: String,
     content: String,
     images: List<Uri>,
     isVerified: Boolean,
-    onTypeChange: (PostType) -> Unit,
+    onTypeChange: (WritePostType) -> Unit,
     onTitleChange: (String) -> Unit,
     onContentChange: (String) -> Unit,
     addImage: (Uri) -> Unit,
@@ -113,7 +114,7 @@ private fun WritePostScreen(
 
     val lazyListState = rememberLazyListState()
 
-    val requestAvailable = title.isNotEmpty() && content.isNotEmpty() && type != PostType.None
+    val requestAvailable = title.isNotEmpty() && content.isNotEmpty() && type != WritePostType.NONE
 
     Box(
         modifier = Modifier
@@ -134,7 +135,6 @@ private fun WritePostScreen(
                 TraceTitleField(
                     value = title,
                     onValueChange = onTitleChange,
-                    hint = "제목",
                     onNext = { contentFieldFocusRequester.requestFocus() }
                 )
 
@@ -144,7 +144,7 @@ private fun WritePostScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(1.dp)
-                        .background(Gray)
+                        .background(GrayLine)
                 )
 
                 Spacer(Modifier.height(15.dp))
@@ -155,7 +155,7 @@ private fun WritePostScreen(
                     value = content,
                     onValueChange = onContentChange,
                     lazyListState = lazyListState,
-                    hint = if (type == PostType.GoodDeed) "따뜻한 흔적을 남겨보세요!" else "내용을 입력하세요.",
+                    hint = if (type == WritePostType.GoodDeed) "따뜻한 흔적을 남겨보세요!" else "내용을 입력하세요.",
                     modifier = Modifier.focusRequester(contentFieldFocusRequester)
                 )
             }
@@ -192,13 +192,9 @@ private fun WritePostScreen(
                 style = TraceTheme.typography.bodyMM,
                 color = if (requestAvailable) PrimaryActive else Gray,
                 modifier = Modifier.clickable(isRipple = true, enabled = requestAvailable) {
-
                 }
-
             )
-
         }
-
 
         Row(
             modifier = Modifier
@@ -256,7 +252,7 @@ private fun WritePostScreen(
 @Composable
 fun WritePostScreenPreview() {
     WritePostScreen(
-        type = PostType.None,
+        type = WritePostType.NONE,
         title = "",
         content = "",
         isVerified = true,
@@ -268,6 +264,5 @@ fun WritePostScreenPreview() {
         images = emptyList(),
         addImage = {},
         removeImage = {}
-
     )
 }

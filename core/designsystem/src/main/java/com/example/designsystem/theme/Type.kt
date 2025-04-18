@@ -9,7 +9,6 @@ import androidx.compose.ui.unit.sp
 import com.example.designsystem.R
 
 
-
 val BookkBold = FontFamily(
     Font(
         resId = R.font.bookk_myungjo_bold,
@@ -19,7 +18,7 @@ val BookkBold = FontFamily(
 
 val PretendardBold = FontFamily(
     Font(
-        resId = R.font.pretendard_semi_bold,
+        resId = R.font.pretendard_bold,
         weight = FontWeight.Bold
     )
 )
@@ -33,8 +32,14 @@ val PretendardSemiBold = FontFamily(
 
 val PretendardMedium = FontFamily(
     Font(
-        resId = R.font.pretendard_semi_bold,
+        resId = R.font.pretendard_medium,
         weight = FontWeight.Medium
+    )
+)
+val PretendardRegular = FontFamily(
+    Font(
+        resId = R.font.pretendard_regular,
+        weight = FontWeight.Normal
     )
 )
 
@@ -51,8 +56,18 @@ data class TraceTypography(
         fontSize = 20.sp,
         lineHeight = 24.sp
     ),
-    val bodyMB : TextStyle = TextStyle(
+    val bodyMB: TextStyle = TextStyle(
         fontFamily = PretendardBold,
+        fontSize = 20.sp,
+        lineHeight = 24.sp
+    ),
+    val bodyLM: TextStyle = TextStyle(
+        fontFamily = PretendardMedium,
+        fontSize = 24.sp,
+        lineHeight = 32.sp
+    ),
+    val bodyXMM: TextStyle = TextStyle(
+        fontFamily = PretendardMedium,
         fontSize = 20.sp,
         lineHeight = 24.sp
     ),
@@ -66,6 +81,16 @@ data class TraceTypography(
         fontSize = 14.sp,
         lineHeight = 18.sp
     ),
+    val bodyXSM: TextStyle = TextStyle(
+        fontFamily = PretendardMedium,
+        fontSize = 11.sp,
+        lineHeight = 15.sp
+    ),
+    val bodyLSB: TextStyle = TextStyle(
+        fontFamily = PretendardSemiBold,
+        fontSize = 24.sp,
+        lineHeight = 32.sp
+    ),
     val bodyMSB: TextStyle = TextStyle(
         fontFamily = PretendardSemiBold,
         fontSize = 20.sp,
@@ -75,7 +100,17 @@ data class TraceTypography(
         fontFamily = PretendardSemiBold,
         fontSize = 14.sp,
         lineHeight = 18.sp
+    ),
+    val bodyMR: TextStyle = TextStyle(
+        fontFamily = PretendardRegular,
+        fontSize = 16.sp,
+        lineHeight = 20.sp
+    ),
+    val bodySR: TextStyle = TextStyle(
+        fontFamily = PretendardRegular,
+        fontSize = 14.sp,
+        lineHeight = 18.sp
+    ),
+
+
     )
-
-
-)
