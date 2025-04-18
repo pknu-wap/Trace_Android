@@ -9,7 +9,6 @@ import androidx.compose.ui.unit.sp
 import com.example.designsystem.R
 
 
-
 val BookkBold = FontFamily(
     Font(
         resId = R.font.bookk_myungjo_bold,
@@ -45,7 +44,6 @@ val PretendardRegular = FontFamily(
 )
 
 
-
 @Immutable
 data class TraceTypography(
     val headingLB: TextStyle = TextStyle(
@@ -58,7 +56,7 @@ data class TraceTypography(
         fontSize = 20.sp,
         lineHeight = 24.sp
     ),
-    val bodyMB : TextStyle = TextStyle(
+    val bodyMB: TextStyle = TextStyle(
         fontFamily = PretendardBold,
         fontSize = 20.sp,
         lineHeight = 24.sp
@@ -68,7 +66,7 @@ data class TraceTypography(
         fontSize = 24.sp,
         lineHeight = 32.sp
     ),
-    val bodyXMM: TextStyle  =TextStyle(
+    val bodyXMM: TextStyle = TextStyle(
         fontFamily = PretendardMedium,
         fontSize = 20.sp,
         lineHeight = 24.sp
@@ -115,5 +113,4 @@ data class TraceTypography(
     ),
 
 
-
-)
+    )

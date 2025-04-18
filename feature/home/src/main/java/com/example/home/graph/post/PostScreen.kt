@@ -55,7 +55,7 @@ import com.example.home.graph.post.component.CommentView
 import com.example.home.graph.post.component.OtherPostDropdownMenu
 import com.example.home.graph.post.component.OwnPostDropdownMenu
 import com.example.home.graph.post.component.PostImageContent
-import com.example.home.graph.post.component.TraceCommnetField
+import com.example.home.graph.post.component.TraceCommentField
 
 
 @Composable
@@ -92,7 +92,6 @@ private fun PostScreen(
     commentInput: String,
     onCommentInputChange: (String) -> Unit
 ) {
-
     var isOwnPostDropDownMenuExpanded by remember { mutableStateOf(false) }
     var isOtherPostDropDownMenuExpanded by remember { mutableStateOf(false) }
 
@@ -183,6 +182,8 @@ private fun PostScreen(
 
                 Spacer(Modifier.height(50.dp))
 
+
+
                 Spacer(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -244,7 +245,7 @@ private fun PostScreen(
                     PrimaryDefault
                 )
                 .padding(horizontal = 20.dp)
-                .size(50.dp),
+                .height(50.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
@@ -297,12 +298,12 @@ private fun PostScreen(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
+                .height(50.dp)
                 .padding(start = 8.dp, end = 8.dp, bottom = 10.dp)
-                .size(50.dp)
                 .clip(RoundedCornerShape(15.dp)),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            TraceCommnetField(
+            TraceCommentField(
                 value = commentInput,
                 onValueChange = onCommentInputChange,
                 onAddComment = {},

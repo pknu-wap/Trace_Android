@@ -26,7 +26,6 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.common.util.clickable
@@ -34,12 +33,10 @@ import com.example.designsystem.R
 import com.example.designsystem.theme.Background
 import com.example.designsystem.theme.GrayLine
 import com.example.designsystem.theme.PrimaryDefault
-import com.example.designsystem.theme.Tab
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.White
 import com.example.domain.model.home.PostFeed
 import com.example.domain.model.home.PostType
-import com.example.domain.model.home.SortType
 import com.example.home.graph.home.HomeViewModel.HomeEvent
 import com.example.home.graph.home.component.PostFeed
 import com.example.home.graph.home.component.TabSelector
@@ -54,7 +51,6 @@ internal fun HomeRoute(
 
     val postFeeds by viewModel.postFeeds.collectAsStateWithLifecycle()
     val tabType by viewModel.tabType.collectAsStateWithLifecycle()
-    val sortBy by viewModel.sortBy.collectAsStateWithLifecycle()
 
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
@@ -68,9 +64,7 @@ internal fun HomeRoute(
     HomeScreen(
         postFeeds = postFeeds,
         tabType = tabType,
-        sortBy = sortBy,
         onTabTypeChange = viewModel::setTabType,
-        onSortByChange = viewModel::setSortBy,
         navigateToPost = { viewModel.onEvent(HomeEvent.NavigateToPost) },
         navigateToWritePost = { viewModel.onEvent(HomeEvent.NavigateToWritePost) })
 }
@@ -80,9 +74,7 @@ internal fun HomeRoute(
 private fun HomeScreen(
     postFeeds: List<PostFeed>,
     tabType: PostType,
-    sortBy: SortType,
     onTabTypeChange: (PostType) -> Unit,
-    onSortByChange: (SortType) -> Unit,
     navigateToPost: () -> Unit,
     navigateToWritePost: () -> Unit,
 ) {
@@ -169,25 +161,6 @@ private fun HomeScreen(
                         if (index != PostType.entries.size - 1) Spacer(Modifier.width(12.dp))
                     }
                 }
-
-                Spacer(Modifier.weight(1f))
-
-                Row(
-                    modifier = Modifier.clickable {
-
-                    },
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Image(painter = painterResource(R.drawable.sort_ic), contentDescription = "정렬")
-
-                    Spacer(Modifier.width(5.dp))
-
-                    Text(
-                        "정렬",
-                        style = TraceTheme.typography.bodySSB.copy(fontSize = 15.sp),
-                        color = Tab
-                    )
-                }
             }
         }
 
@@ -218,9 +191,8 @@ fun HomeScreenPreview() {
         navigateToPost = {},
         navigateToWritePost = {},
         postFeeds = fakePostFeeds,
-        tabType = PostType.All,
-        sortBy = SortType.NewestDate,
+        tabType = PostType.ALL,
         onTabTypeChange = {},
-        onSortByChange = {})
+    )
 }
 

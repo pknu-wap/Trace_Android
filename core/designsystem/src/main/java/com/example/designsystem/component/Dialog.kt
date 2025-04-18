@@ -36,7 +36,7 @@ fun CheckDialog(
 }
 
 @Composable
-fun CheckCancleDialog(
+fun CheckCancelDialog(
     onCheck: () -> Unit, onDismiss: () -> Unit, dialogText: String
 ) {
     AlertDialog(

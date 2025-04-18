@@ -21,7 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.common.util.clickable
 import com.example.designsystem.R
-import com.example.designsystem.component.CheckCancleDialog
+import com.example.designsystem.component.CheckCancelDialog
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.White
 
@@ -35,7 +35,7 @@ internal fun OwnCommentDropdownMenu(
     var showDeleteDialog by remember { mutableStateOf(false) }
 
     if (showDeleteDialog) {
-        CheckCancleDialog(
+        CheckCancelDialog(
             onCheck = {
                 onDelete()
                 showDeleteDialog = false
@@ -62,7 +62,7 @@ internal fun OwnCommentDropdownMenu(
                     .padding(top = 15.dp, bottom = 15.dp, start = 15.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Image(painter = painterResource(R.drawable.edit_ic), contentDescription = "신고하기")
+                Image(painter = painterResource(R.drawable.edit_ic), contentDescription = "수정하기")
 
                 Spacer(Modifier.width(12.dp))
 

@@ -63,14 +63,14 @@ data class PostDetail(
 }
 
 enum class PostType(val label: String) {
-    All("전체"),
-    Free("자유"),
-    GoodDeed("선행"),
-    Mission("미션")
+    ALL("전체"),
+    FREE("자유"),
+    GOOD_DEED("선행"),
+    MISSION("미션")
 }
 
 enum class WritePostType(val label : String) {
-    GoodDeed("선행"),
-    Free("자유"),
+    GOOD_DEED("선행"),
+    FREE("자유"),
     NONE("없음")
 }

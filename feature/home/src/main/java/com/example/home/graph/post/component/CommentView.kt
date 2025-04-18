@@ -36,7 +36,6 @@ import com.example.domain.model.home.Comment
 
 @Composable
 internal fun CommentView(
-    modifier: Modifier = Modifier,
     userId: String = "",
     comment: Comment,
 ) {
@@ -51,35 +50,35 @@ internal fun CommentView(
     )
 
     Row(
-        modifier = modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
             painter = profileImage,
             contentDescription = "프로필 이미지",
-            modifier = modifier
+            modifier = Modifier
                 .size(25.dp)
                 .clip(CircleShape),
             contentScale = ContentScale.Crop
         )
 
-        Spacer(modifier.width(6.dp))
+        Spacer(Modifier.width(6.dp))
 
         Text(comment.nickName, style = TraceTheme.typography.bodySSB)
 
-        Spacer(modifier.width(6.dp))
+        Spacer(Modifier.width(6.dp))
 
         Text(comment.getFormattedTime(), style = TraceTheme.typography.bodyXSM, color = DarkGray)
 
         if (userId.isEmpty()) {
-            Spacer(modifier.weight(1f))
+            Spacer(Modifier.weight(1f))
 
             Box() {
                 Image(
                     painter = painterResource(R.drawable.menu_ic),
                     contentDescription = "댓글 메뉴",
                     colorFilter = ColorFilter.tint(WarmGray),
-                    modifier = modifier
+                    modifier = Modifier
                         .height(15.dp)
                         .clickable {
                             if(userId.isEmpty()) {
@@ -108,7 +107,7 @@ internal fun CommentView(
 
     }
 
-    Spacer(modifier.height(7.dp))
+    Spacer(Modifier.height(7.dp))
 
     Text(comment.content, style = TraceTheme.typography.bodyMM)
 }

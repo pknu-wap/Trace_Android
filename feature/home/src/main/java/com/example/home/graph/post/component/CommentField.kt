@@ -38,7 +38,7 @@ private val customTextSelectionColors = TextSelectionColors(
 )
 
 @Composable
-internal fun TraceCommnetField(
+internal fun TraceCommentField(
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,

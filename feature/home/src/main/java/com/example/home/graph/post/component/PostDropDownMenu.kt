@@ -21,7 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.common.util.clickable
 import com.example.designsystem.R
-import com.example.designsystem.component.CheckCancleDialog
+import com.example.designsystem.component.CheckCancelDialog
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.White
 
@@ -35,7 +35,7 @@ internal fun OwnPostDropdownMenu(
     var showDeleteDialog by remember { mutableStateOf(false) }
 
     if (showDeleteDialog) {
-        CheckCancleDialog(
+        CheckCancelDialog(
             onCheck = {
                 onDelete()
                 showDeleteDialog = false
