@@ -37,7 +37,6 @@ class EditProfileViewModel @Inject constructor(
         _profileImage.value = imageUri
     }
 
-
     internal fun registerUser() = viewModelScope.launch {
         authRepository.registerUser().onSuccess {
 

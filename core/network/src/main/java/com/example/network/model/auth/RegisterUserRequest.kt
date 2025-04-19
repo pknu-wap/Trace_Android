@@ -6,5 +6,4 @@ import kotlinx.serialization.Serializable
 data class RegisterUserRequest(
     val idToken: String,
     val nickname: String,
-    val profileImage: String? = null
 )

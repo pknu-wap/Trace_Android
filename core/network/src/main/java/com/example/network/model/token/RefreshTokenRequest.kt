@@ -1,4 +1,4 @@
-package com.example.network.model.auth
+package com.example.network.model.token
 
 import kotlinx.serialization.Serializable
 

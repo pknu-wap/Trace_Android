@@ -1,6 +1,7 @@
 package com.example.network.di
 
 import com.example.network.BuildConfig
+import com.example.network.adapter.TraceCallAdapterFactory
 import com.example.network.api.TraceApi
 import com.example.network.authenticator.TraceAuthenticator
 import com.example.network.interceptor.TraceInterceptor
@@ -42,11 +43,12 @@ object RetrofitModule {
     fun providesPieceApi(
         json: Json,
         okHttpClient: OkHttpClient,
+        callAdapterFactory : TraceCallAdapterFactory
     ): TraceApi = Retrofit.Builder()
         .client(okHttpClient)
         .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+        .addCallAdapterFactory(callAdapterFactory)
         .baseUrl(BuildConfig.TRACE_BASE_URL)
         .build()
         .create(TraceApi::class.java)
-
 }

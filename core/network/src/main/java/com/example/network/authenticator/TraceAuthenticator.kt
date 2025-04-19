@@ -1,7 +1,7 @@
 package com.example.network.authenticator
 
 import com.example.network.api.TraceApi
-import com.example.network.model.auth.RefreshTokenRequest
+import com.example.network.model.token.RefreshTokenRequest
 import com.example.network.token.TokenManager
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch

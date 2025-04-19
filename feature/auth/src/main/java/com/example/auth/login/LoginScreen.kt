@@ -73,7 +73,7 @@ private fun LoginScreen(
             contentDescription = "카카오 로그인",
             modifier = Modifier.clickable {
                 loginKakao(context, loginKakao, onLoginFailure)
-                navigateToEditProfile()
+              //  navigateToEditProfile()
             }
         )
 
@@ -98,7 +98,6 @@ private fun loginKakao(
         if (error != null) {
             onFailure()
         } else if (token != null) {
-
             onSuccess(token.idToken!!)
         }
     }
