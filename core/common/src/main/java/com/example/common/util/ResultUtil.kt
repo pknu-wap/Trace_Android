@@ -10,7 +10,7 @@ suspend inline fun <T, R> T.suspendRunCatching(crossinline block: suspend T.() -
     } catch (e: CancellationException) {
         throw e
     } catch (t: Throwable) {
-        Log.e("loginException", t.toString())
+        Log.e("RunCatching Exception", t.toString())
         Result.failure(t)
     }
 }

@@ -38,7 +38,7 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
 
-    override suspend fun registerUser(): Result<Unit> {
+    override suspend fun registerUser(idToken: String): Result<Unit> {
         return Result.success(Unit)
     }
 }

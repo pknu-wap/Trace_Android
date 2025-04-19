@@ -1,6 +1,7 @@
 package com.example.auth.editprofile
 
 import android.net.Uri
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.repository.AuthRepository
@@ -14,10 +15,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EditProfileViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _eventChannel = Channel<EditProfileEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
+
+    private val idToken: String = requireNotNull(savedStateHandle["idToken"])
 
     private val _name = MutableStateFlow("")
     val nameText = _name.asStateFlow()
@@ -28,17 +32,17 @@ class EditProfileViewModel @Inject constructor(
     private val _profileImage = MutableStateFlow<Uri?>(null)
     val profileImage = _profileImage.asStateFlow()
 
-    fun setName(name : String) {
+    fun setName(name: String) {
         _name.value = name
         validateName()
     }
 
-    fun setProfileImage(imageUri : Uri?) {
+    fun setProfileImage(imageUri: Uri?) {
         _profileImage.value = imageUri
     }
 
     internal fun registerUser() = viewModelScope.launch {
-        authRepository.registerUser().onSuccess {
+        authRepository.registerUser(idToken).onSuccess {
 
         }.onFailure {
 
@@ -56,6 +60,6 @@ class EditProfileViewModel @Inject constructor(
     }
 
     sealed class EditProfileEvent {
-        data object SignUpSuccess : EditProfileEvent()
+        data object RegisterUserSuccess : EditProfileEvent()
     }
 }

@@ -28,15 +28,16 @@ class LoginViewModel @Inject constructor(
     internal fun loginKakao(idToken: String) = viewModelScope.launch {
         authRepository.loginKakao(idToken).onSuccess { userRole ->
             Log.d("idToken", userRole.toString() + "흠 성공?" )
-            if (userRole == UserRole.NONE) _eventChannel.send(LoginEvent.NavigateEditProfile)
+            if (userRole == UserRole.NONE) _eventChannel.send(LoginEvent.NavigateEditProfile(idToken))
             else _eventChannel.send(LoginEvent.NavigateToHome)
         }.onFailure {
             eventHelper.sendEvent(TraceEvent.ShowSnackBar("로그인에 실패했습니다"))
+            _eventChannel.send(LoginEvent.NavigateEditProfile(idToken))
         }
     }
 
     sealed class LoginEvent {
-        data object NavigateEditProfile : LoginEvent()
+        data class NavigateEditProfile(val idToken: String) : LoginEvent()
         data object NavigateToHome : LoginEvent()
     }
 

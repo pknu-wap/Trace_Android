@@ -26,7 +26,6 @@ import com.example.common.event.TraceEvent
 import com.example.common.ui.TraceBottomBarAnimation
 import com.example.designsystem.component.TraceSnackBar
 import com.example.designsystem.component.TraceSnackBarHost
-import com.example.designsystem.theme.Background
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.White
 import com.example.main.navigation.AppBottomBar
@@ -46,7 +45,6 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
-
             val navController = rememberNavController()
             val currentDestination = navController.currentBackStackEntryAsState()
                 .value?.destination

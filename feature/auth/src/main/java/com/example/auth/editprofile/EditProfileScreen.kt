@@ -80,7 +80,7 @@ internal fun EditProfileRoute(
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
             when (event) {
-                is EditProfileEvent.SignUpSuccess -> {
+                is EditProfileEvent.RegisterUserSuccess -> {
                     navigateToHome()
                 }
             }
@@ -110,6 +110,8 @@ private fun EditProfileScreen(
     registerUser: () -> Unit,
     navigateBack: () -> Unit
 ) {
+
+
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),

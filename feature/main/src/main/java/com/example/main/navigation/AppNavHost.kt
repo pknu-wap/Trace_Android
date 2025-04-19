@@ -22,7 +22,6 @@ fun AppNavHost(
     navController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
-
     NavHost(
         navController = navController,
         startDestination = LoginRoute,
@@ -36,8 +35,8 @@ fun AppNavHost(
                     }
                 )
             },
-            navigateToEditProfile = {
-                navController.navigateToEditProfile()
+            navigateToEditProfile = { idToken ->
+                navController.navigateToEditProfile(idToken)
             }
         )
         editProfileScreen(
