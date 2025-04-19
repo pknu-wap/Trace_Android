@@ -59,7 +59,7 @@ internal fun TraceCommentField(
             decorationBox = { innerTextField ->
                 Box(
                     modifier = Modifier
-                        .padding(top = 14.dp, bottom = 14.dp)
+                        .padding(vertical = 10.dp)
                         .fillMaxWidth(),
                 ) {
                     if (value.isEmpty()) {

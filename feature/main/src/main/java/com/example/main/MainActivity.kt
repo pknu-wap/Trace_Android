@@ -20,28 +20,45 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navOptions
+import com.example.auth.navigation.navigateToLogin
 import com.example.common.event.TraceEvent
 import com.example.common.ui.TraceBottomBarAnimation
 import com.example.designsystem.component.TraceSnackBar
 import com.example.designsystem.component.TraceSnackBarHost
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.White
+import com.example.home.navigation.navigateToHome
+import com.example.main.MainViewModel.MainEvent
 import com.example.main.navigation.AppBottomBar
 import com.example.main.navigation.AppNavHost
 import com.example.navigation.shouldHideBottomBar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels()
+    private var keepOn: Boolean = true
 
     @OptIn(ExperimentalLayoutApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val splashScreen = installSplashScreen()
+        splashScreen.setKeepOnScreenCondition { keepOn }
+
+        lifecycleScope.launch {
+            viewModel.checkSession()
+            delay(125) // 임시
+            keepOn = false
+        }
 
         enableEdgeToEdge()
         setContent {
@@ -50,7 +67,16 @@ class MainActivity : ComponentActivity() {
                 .value?.destination
             val snackBarHostState = remember { SnackbarHostState() }
 
-            LaunchedEffect(true) {
+            LaunchedEffect(Unit) {
+                launch {
+                    viewModel.eventChannel.collect { event ->
+                        when (event) {
+                            is MainEvent.NavigateHome -> navigateToHome(navController)
+                            is MainEvent.NavigateLogin -> navigateToHome(navController)
+                        }
+                    }
+                }
+
                 launch {
                     viewModel.eventHelper.eventChannel.collect { event ->
                         when (event) {
@@ -62,12 +88,18 @@ class MainActivity : ComponentActivity() {
 
             TraceTheme {
                 val imeIsShown = WindowInsets.isImeVisible
-                val statusBarPadding = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
-                val bottomPadding = if (imeIsShown) 0.dp else WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+                val statusBarPadding =
+                    WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
+                val bottomPadding =
+                    if (imeIsShown) 0.dp else WindowInsets.navigationBars.asPaddingValues()
+                        .calculateBottomPadding()
 
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
-                    contentWindowInsets = WindowInsets(top = statusBarPadding, bottom = bottomPadding),
+                    contentWindowInsets = WindowInsets(
+                        top = statusBarPadding,
+                        bottom = bottomPadding
+                    ),
                     snackbarHost = {
                         TraceSnackBarHost(
                             hostState = snackBarHostState,
@@ -83,7 +115,13 @@ class MainActivity : ComponentActivity() {
                             AppBottomBar(
                                 currentDestination = currentDestination,
                                 navigateToBottomNaviDestination = { bottomNaviDestination ->
-                                    navController.navigate(bottomNaviDestination)
+                                    navController.navigate(
+                                        bottomNaviDestination,
+                                        navOptions = navOptions {
+                                            popUpTo(0) { saveState = true }
+                                            launchSingleTop = true
+                                            restoreState = true
+                                        })
                                 }
                             )
                         }
@@ -98,4 +136,27 @@ class MainActivity : ComponentActivity() {
 
     }
 }
+
+private fun navigateToHome(
+    navController: NavController
+) {
+    navController.navigateToHome(
+        navOptions {
+            popUpTo(0) { inclusive = true }
+            launchSingleTop = true
+        }
+    )
+}
+
+private fun navigateToLogin(
+    navController: NavController
+) {
+    navController.navigateToLogin(
+        navOptions {
+            popUpTo(0) { inclusive = true }
+            launchSingleTop = true
+        }
+    )
+}
+
 
