@@ -7,26 +7,6 @@ plugins {
 
 android {
     namespace = "com.example.main"
-
-    defaultConfig {
-        val properties = Properties().apply {
-            load(FileInputStream(rootProject.file("local.properties")))
-        }
-
-        buildConfigField(
-            "String",
-            "KAKAO_NATIVE_APP_KEY",
-            properties["KAKAO_NATIVE_APP_KEY"] as String
-        )
-
-        manifestPlaceholders["KAKAO_NATIVE_APP_KEY"] = properties["KAKAO_NATIVE_APP_KEY"] as String
-    }
-
-    buildFeatures {
-        buildConfig = true
-    }
-
-
 }
 
 dependencies {

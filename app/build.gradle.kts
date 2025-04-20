@@ -1,10 +1,11 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     id("trace.android.application")
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.google.services)
 }
-
-
 
 android {
     namespace = "com.example.trace"
@@ -16,6 +17,20 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
+    }
+
+    defaultConfig {
+        val properties = Properties().apply {
+            load(FileInputStream(rootProject.file("local.properties")))
+        }
+
+        buildConfigField(
+            "String",
+            "KAKAO_NATIVE_APP_KEY",
+            properties["KAKAO_NATIVE_APP_KEY"] as String
+        )
+
+        manifestPlaceholders["KAKAO_NATIVE_APP_KEY"] = properties["KAKAO_NATIVE_APP_KEY"] as String
     }
 
     buildFeatures {

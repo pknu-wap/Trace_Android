@@ -1,7 +1,7 @@
 package com.example.app
 
 import android.app.Application
-import com.example.main.BuildConfig
+import com.example.trace.BuildConfig
 import com.kakao.sdk.common.KakaoSdk
 import dagger.hilt.android.HiltAndroidApp
 

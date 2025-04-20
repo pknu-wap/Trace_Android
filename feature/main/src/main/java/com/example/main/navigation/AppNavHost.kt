@@ -16,6 +16,7 @@ import com.example.home.navigation.postScreen
 import com.example.home.navigation.writePostScreen
 import com.example.navigation.EditProfileRoute
 import com.example.navigation.LoginRoute
+import com.example.navigation.Route
 
 @Composable
 fun AppNavHost(

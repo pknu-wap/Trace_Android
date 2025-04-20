@@ -21,7 +21,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -46,18 +48,19 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels()
-    private var keepOn: Boolean = true
+
 
     @OptIn(ExperimentalLayoutApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val splashScreen = installSplashScreen()
-        splashScreen.setKeepOnScreenCondition { keepOn }
 
-        lifecycleScope.launch {
-            viewModel.checkSession()
-            delay(125) // 임시
-            keepOn = false
+
+        viewModel.checkSession()
+
+        installSplashScreen().apply {
+            setKeepOnScreenCondition {
+               !viewModel.isAppReady.value
+            }
         }
 
         enableEdgeToEdge()
@@ -71,9 +74,12 @@ class MainActivity : ComponentActivity() {
                 launch {
                     viewModel.eventChannel.collect { event ->
                         when (event) {
-                            is MainEvent.NavigateHome -> navigateToHome(navController)
-                            is MainEvent.NavigateLogin -> navigateToHome(navController)
+                            is MainEvent.NavigateHome -> {
+                                navigateToHome(navController)
+                                viewModel.onAppReady()
+                            }
                         }
+
                     }
                 }
 
@@ -138,7 +144,7 @@ class MainActivity : ComponentActivity() {
 }
 
 private fun navigateToHome(
-    navController: NavController
+    navController: NavController,
 ) {
     navController.navigateToHome(
         navOptions {
@@ -146,17 +152,8 @@ private fun navigateToHome(
             launchSingleTop = true
         }
     )
+
 }
 
-private fun navigateToLogin(
-    navController: NavController
-) {
-    navController.navigateToLogin(
-        navOptions {
-            popUpTo(0) { inclusive = true }
-            launchSingleTop = true
-        }
-    )
-}
 
 
