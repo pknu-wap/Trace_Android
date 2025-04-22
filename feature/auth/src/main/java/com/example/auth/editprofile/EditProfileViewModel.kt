@@ -1,6 +1,5 @@
 package com.example.auth.editprofile
 
-import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -29,7 +28,7 @@ class EditProfileViewModel @Inject constructor(
     private val _isNameValid = MutableStateFlow(false)
     val isNameValid = _isNameValid.asStateFlow()
 
-    private val _profileImage = MutableStateFlow<Uri?>(null)
+    private val _profileImage = MutableStateFlow<String?>(null)
     val profileImage = _profileImage.asStateFlow()
 
     fun setName(name: String) {
@@ -37,7 +36,7 @@ class EditProfileViewModel @Inject constructor(
         validateName()
     }
 
-    fun setProfileImage(imageUri: Uri?) {
+    fun setProfileImage(imageUri: String?) {
         _profileImage.value = imageUri
     }
 

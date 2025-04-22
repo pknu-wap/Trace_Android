@@ -6,7 +6,6 @@ import com.example.common.event.EventHelper
 import com.example.domain.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -28,9 +27,8 @@ class MainViewModel @Inject constructor(
     internal fun checkSession() = viewModelScope.launch {
         when {
             userRepository.checkSession() -> { _eventChannel.send(MainEvent.NavigateHome) }
-            else -> { _eventChannel.send(MainEvent.NavigateHome) }
         }
-
+        onAppReady()
     }
 
     fun onAppReady() {
