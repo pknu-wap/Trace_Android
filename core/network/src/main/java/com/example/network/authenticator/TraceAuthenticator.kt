@@ -6,6 +6,8 @@ import com.example.network.token.TokenManager
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import okhttp3.Authenticator
 import okhttp3.Request
 import okhttp3.Response
@@ -17,7 +19,10 @@ class TraceAuthenticator @Inject constructor(
     private val tokenManager: TokenManager,
     private val traceApi: Provider<TraceApi>
 ) : Authenticator {
+    private val refreshMutex = Mutex()
     override fun authenticate(route: Route?, response: Response): Request? {
+
+
         val originRequest = response.request
 
         if (originRequest.header("Authorization").isNullOrEmpty()) {
@@ -42,7 +47,9 @@ class TraceAuthenticator @Inject constructor(
         }
 
         val token = runBlocking {
-            traceApi.get().refreshToken(RefreshTokenRequest(tokenManager.getRefreshToken()))
+            refreshMutex.withLock {
+                traceApi.get().refreshToken(RefreshTokenRequest(tokenManager.getRefreshToken()))
+            }
         }.getOrNull() ?: return null
 
         runBlocking {
