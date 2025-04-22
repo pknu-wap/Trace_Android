@@ -32,7 +32,7 @@ class TraceAuthenticator @Inject constructor(
             return null
         }
 
-        if (response.code != 401 && !originRequest.url.encodedPath.contains("/api/v1/auth/oauth/login")) {
+        if (response.code != 401) {
             return null
         }
 

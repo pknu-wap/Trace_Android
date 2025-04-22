@@ -3,6 +3,7 @@ package com.example.auth.editprofile
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.common.event.EventHelper
 import com.example.domain.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -15,7 +16,8 @@ import javax.inject.Inject
 @HiltViewModel
 class EditProfileViewModel @Inject constructor(
     private val authRepository: AuthRepository,
-    private val savedStateHandle: SavedStateHandle
+    val eventHelper: EventHelper,
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val _eventChannel = Channel<EditProfileEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
@@ -23,7 +25,7 @@ class EditProfileViewModel @Inject constructor(
     private val idToken: String = requireNotNull(savedStateHandle["idToken"])
 
     private val _name = MutableStateFlow("")
-    val nameText = _name.asStateFlow()
+    val name = _name.asStateFlow()
 
     private val _isNameValid = MutableStateFlow(false)
     val isNameValid = _isNameValid.asStateFlow()
@@ -41,10 +43,10 @@ class EditProfileViewModel @Inject constructor(
     }
 
     internal fun registerUser() = viewModelScope.launch {
-        authRepository.registerUser(idToken).onSuccess {
-
+        authRepository.registerUser(idToken, name.value, profileImage.value).onSuccess {
+            _eventChannel.send(EditProfileEvent.RegisterUserSuccess)
         }.onFailure {
-
+            _eventChannel.send(EditProfileEvent.RegisterUserFailure)
         }
     }
 
@@ -60,5 +62,6 @@ class EditProfileViewModel @Inject constructor(
 
     sealed class EditProfileEvent {
         data object RegisterUserSuccess : EditProfileEvent()
+        data object RegisterUserFailure : EditProfileEvent()
     }
 }

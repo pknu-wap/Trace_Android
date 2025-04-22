@@ -6,6 +6,6 @@ import kotlinx.serialization.Serializable
 data class LoginKakaoResponse(
     val userId : String?,
     val accessToken : String?,
-    val refreshToekn : String?
+    val refreshToken : String?
 )
 

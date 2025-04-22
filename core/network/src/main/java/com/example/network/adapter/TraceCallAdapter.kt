@@ -52,7 +52,6 @@ private class TraceCall<T : Any>(
                 } else {
                     callback.onResponse(
                         this@TraceCall,
-
                         Response.success(Result.failure(RuntimeException("HTTP ${response.code()}: ${response.message()} body: ${response.errorBody()?.string()}")))
                     )
                 }
