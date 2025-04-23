@@ -20,7 +20,7 @@ class WritePostViewModel @Inject constructor(
     private val _eventChannel = Channel<WritePostEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
 
-    private val _type : MutableStateFlow<WritePostType> = MutableStateFlow(WritePostType.NONE)
+    private val _type : MutableStateFlow<WritePostType> = MutableStateFlow(WritePostType.GOOD_DEED)
     val type = _type.asStateFlow()
 
     private val _title = MutableStateFlow("")

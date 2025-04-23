@@ -23,6 +23,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -112,7 +113,9 @@ private fun WritePostScreen(
 
     val lazyListState = rememberLazyListState()
 
-    val requestAvailable = title.isNotEmpty() && content.isNotEmpty() && type != WritePostType.NONE
+    val requestAvailable by remember(title, content) {
+        derivedStateOf { title.isNotEmpty() && content.isNotEmpty() }
+    }
 
     Box(
         modifier = Modifier
@@ -130,6 +133,61 @@ private fun WritePostScreen(
         ) {
 
             item {
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    Row(
+                        modifier = Modifier.clickable(isRipple = true) {
+                            onTypeChange(WritePostType.GOOD_DEED)
+                        }
+                    ) {
+                        Image(
+                            painter = if (type == WritePostType.GOOD_DEED) painterResource(R.drawable.checkbox_on) else painterResource(
+                                R.drawable.checkbox_off
+                            ),
+                            contentDescription = "선행 게시글 타입",
+                            modifier = Modifier.size(20.dp)
+                        )
+
+                        Spacer(Modifier.width(2.dp))
+
+
+                        Text(
+                            "선행",
+                            color = if (type == WritePostType.GOOD_DEED) PrimaryActive else TextHint,
+                            style = TraceTheme.typography.bodySSB,
+                        )
+                    }
+
+                    Spacer(Modifier.width(20.dp))
+
+                    Row(
+                        modifier = Modifier.clickable(isRipple = true) {
+                            onTypeChange(WritePostType.FREE)
+                        }
+                    ) {
+                        Image(
+                            painter = if (type == WritePostType.FREE) painterResource(R.drawable.checkbox_on) else painterResource(
+                                R.drawable.checkbox_off
+                            ),
+                            contentDescription = "선행 게시글 타입",
+                            modifier = Modifier.size(20.dp)
+                        )
+
+                        Spacer(Modifier.width(2.dp))
+
+
+                        Text(
+                            "자유",
+                            color = if (type == WritePostType.FREE) PrimaryActive else TextHint,
+                            style = TraceTheme.typography.bodySSB,
+                        )
+                    }
+
+                }
+
+
+
+                Spacer(Modifier.height(28.dp))
+
                 TraceTitleField(
                     value = title,
                     onValueChange = onTitleChange,
@@ -249,7 +307,7 @@ private fun WritePostScreen(
 @Composable
 fun WritePostScreenPreview() {
     WritePostScreen(
-        type = WritePostType.NONE,
+        type = WritePostType.GOOD_DEED,
         title = "",
         content = "",
         isVerified = true,
