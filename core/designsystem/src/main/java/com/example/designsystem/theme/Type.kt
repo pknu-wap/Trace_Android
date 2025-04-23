@@ -43,6 +43,12 @@ val PretendardRegular = FontFamily(
     )
 )
 
+val BagelFatOneRegular = FontFamily(
+    Font(
+        resId = R.font.bagel_fat_one_regular,
+        weight = FontWeight.Normal
+    )
+)
 
 @Immutable
 data class TraceTypography(
@@ -53,6 +59,11 @@ data class TraceTypography(
     ),
     val headingMB: TextStyle = TextStyle(
         fontFamily = BookkBold,
+        fontSize = 20.sp,
+        lineHeight = 24.sp
+    ),
+    val headingMR: TextStyle = TextStyle(
+        fontFamily = BagelFatOneRegular,
         fontSize = 20.sp,
         lineHeight = 24.sp
     ),
@@ -76,8 +87,28 @@ data class TraceTypography(
         fontSize = 18.sp,
         lineHeight = 22.sp
     ),
+    val bodyMSB: TextStyle = TextStyle(
+        fontFamily = PretendardSemiBold,
+        fontSize = 20.sp,
+        lineHeight = 24.sp
+    ),
+    val bodyMR: TextStyle = TextStyle(
+        fontFamily = PretendardRegular,
+        fontSize = 16.sp,
+        lineHeight = 20.sp
+    ),
     val bodySM: TextStyle = TextStyle(
         fontFamily = PretendardMedium,
+        fontSize = 14.sp,
+        lineHeight = 18.sp
+    ),
+    val bodySSB: TextStyle = TextStyle(
+        fontFamily = PretendardSemiBold,
+        fontSize = 14.sp,
+        lineHeight = 18.sp
+    ),
+    val bodySR: TextStyle = TextStyle(
+        fontFamily = PretendardRegular,
         fontSize = 14.sp,
         lineHeight = 18.sp
     ),
@@ -91,26 +122,8 @@ data class TraceTypography(
         fontSize = 24.sp,
         lineHeight = 32.sp
     ),
-    val bodyMSB: TextStyle = TextStyle(
-        fontFamily = PretendardSemiBold,
-        fontSize = 20.sp,
-        lineHeight = 24.sp
-    ),
-    val bodySSB: TextStyle = TextStyle(
-        fontFamily = PretendardSemiBold,
-        fontSize = 14.sp,
-        lineHeight = 18.sp
-    ),
-    val bodyMR: TextStyle = TextStyle(
-        fontFamily = PretendardRegular,
-        fontSize = 16.sp,
-        lineHeight = 20.sp
-    ),
-    val bodySR: TextStyle = TextStyle(
-        fontFamily = PretendardRegular,
-        fontSize = 14.sp,
-        lineHeight = 18.sp
-    ),
+
+
 
 
     )

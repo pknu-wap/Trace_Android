@@ -37,12 +37,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.common.util.clickable
 import com.example.designsystem.R
 import com.example.designsystem.theme.Background
-import com.example.designsystem.theme.Black
-import com.example.designsystem.theme.Gray
 import com.example.designsystem.theme.GrayLine
 import com.example.designsystem.theme.PrimaryActive
+import com.example.designsystem.theme.TextHint
 import com.example.designsystem.theme.TraceTheme
-import com.example.designsystem.theme.White
 import com.example.domain.model.home.WritePostType
 import com.example.home.graph.writepost.WritePostViewModel.WritePostEvent
 import com.example.home.graph.writepost.component.ImageContent
@@ -183,14 +181,14 @@ private fun WritePostScreen(
 
             Spacer(Modifier.width(30.dp))
 
-            Text("글 쓰기", style = TraceTheme.typography.headingMB)
+            Text("글 쓰기", style = TraceTheme.typography.headingMR)
 
             Spacer(Modifier.weight(1f))
 
             Text(
                 "완료",
                 style = TraceTheme.typography.bodyMM,
-                color = if (requestAvailable) PrimaryActive else Gray,
+                color = if (requestAvailable) PrimaryActive else TextHint,
                 modifier = Modifier.clickable(isRipple = true, enabled = requestAvailable) {
                 }
             )
@@ -199,7 +197,6 @@ private fun WritePostScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(White)
                 .height(50.dp)
                 .padding(vertical = 5.dp, horizontal = 15.dp)
                 .align(Alignment.BottomCenter), verticalAlignment = Alignment.CenterVertically
@@ -207,7 +204,7 @@ private fun WritePostScreen(
             Icon(
                 painter = painterResource(R.drawable.add_image_ic),
                 contentDescription = "사진 첨부",
-                tint = Black.copy(alpha = 0.85f),
+                tint = PrimaryActive,
                 modifier = Modifier
                     .size(32.dp)
                     .clickable() {
@@ -217,7 +214,7 @@ private fun WritePostScreen(
 
             Spacer(Modifier.weight(1f))
 
-            if (true) {
+            if (type == WritePostType.GOOD_DEED) {
                 Row(
                     modifier = Modifier.clickable(isRipple = true) {
                         onIsVerifiedChange(!isVerified)
@@ -236,8 +233,8 @@ private fun WritePostScreen(
 
                     Text(
                         "선행 인증",
-                        color = if (isVerified) PrimaryActive else Gray,
-                        style = TraceTheme.typography.bodySM,
+                        color = if (isVerified) PrimaryActive else PrimaryActive.copy(alpha = 0.7f),
+                        style = TraceTheme.typography.bodySSB,
                     )
                 }
             }

@@ -11,6 +11,7 @@ import androidx.exifinterface.media.ExifInterface
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
+import java.io.File
 import java.io.InputStream
 import javax.inject.Inject
 
@@ -42,6 +43,9 @@ class ImageResizer @Inject constructor(
         val bytes = input.readBytes()
         val kb = bytes.size / 1024.0
         Log.d("Imagesize", "Stream size: ${"%.2f".format(kb)} KB")
+
+        val outFile = File(context.cacheDir, "test.jpg")
+        outFile.outputStream().use { it.write(bytes) }
     }
 
 
