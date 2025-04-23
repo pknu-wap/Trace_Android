@@ -173,10 +173,7 @@ private fun WritePostScreen(
                             style = TraceTheme.typography.bodySSB,
                         )
                     }
-
                 }
-
-
 
                 Spacer(Modifier.height(28.dp))
 
@@ -289,13 +286,15 @@ private fun WritePostScreen(
 private fun GalleryPicker(
     modifier: Modifier = Modifier,
     imagesSize: Int,
-    maxSelection : Int = 5,
+    maxSelection: Int = 5,
     addImages: (List<String>) -> Unit,
 ) {
     val remaining = maxSelection - imagesSize
 
     val multipleLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickMultipleVisualMedia(if(remaining < 2) maxSelection else maxSelection - imagesSize)
+        contract = ActivityResultContracts.PickMultipleVisualMedia(
+            maxSelection.coerceAtLeast(2)
+        )
     ) { uris: List<Uri> ->
         addImages(uris.map { it.toString() })
     }
@@ -315,12 +314,12 @@ private fun GalleryPicker(
             tint = PrimaryActive,
             modifier = Modifier
                 .size(32.dp)
-                .clickable {
+                .clickable(enabled = remaining > 0) {
                     if (remaining >= 2) {
                         multipleLauncher.launch(
                             PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                         )
-                    } else if(remaining == 1) {
+                    } else if (remaining == 1) {
                         singleLauncher.launch(
                             PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                         )
@@ -328,11 +327,13 @@ private fun GalleryPicker(
                 }
         )
 
-        if(remaining == 5) {
+        if (remaining == 0) {
             Spacer(Modifier.width(4.dp))
 
-            Text("5장 제한", style = TraceTheme.typography.bodySM,
-                color = PrimaryActive)
+            Text(
+                "5장 제한", style = TraceTheme.typography.bodySM,
+                color = PrimaryActive
+            )
         }
     }
 

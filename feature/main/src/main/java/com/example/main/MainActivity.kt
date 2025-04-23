@@ -28,8 +28,8 @@ import com.example.common.event.TraceEvent
 import com.example.common.ui.TraceBottomBarAnimation
 import com.example.designsystem.component.TraceSnackBar
 import com.example.designsystem.component.TraceSnackBarHost
+import com.example.designsystem.theme.Background
 import com.example.designsystem.theme.TraceTheme
-import com.example.designsystem.theme.White
 import com.example.home.navigation.navigateToHome
 import com.example.main.MainViewModel.MainEvent
 import com.example.main.navigation.AppBottomBar
@@ -104,7 +104,7 @@ class MainActivity : ComponentActivity() {
                             snackbar = { snackBarData -> TraceSnackBar(snackBarData) }
                         )
                     },
-                    containerColor = White,
+                    containerColor = Background,
                     bottomBar = {
                         TraceBottomBarAnimation(
                             visible = currentDestination?.shouldHideBottomBar() == false,
