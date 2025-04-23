@@ -18,6 +18,7 @@ val Black = Color(0xFF000000)
 val White = Color(0xFFFFFFFF)
 
 val Gray = Color(0xFF888888)
+val TextHint = Color(0xFF88887F)
 val DarkGray = Color(0xFF747070)
 val WarmGray = Color(0xFF838080)
 val GrayLine = Color(0xFFADACA0)

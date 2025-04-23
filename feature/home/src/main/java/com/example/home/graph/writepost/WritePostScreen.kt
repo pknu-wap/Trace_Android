@@ -2,6 +2,7 @@ package com.example.home.graph.writepost
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -23,6 +24,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -37,12 +39,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.common.util.clickable
 import com.example.designsystem.R
 import com.example.designsystem.theme.Background
-import com.example.designsystem.theme.Black
-import com.example.designsystem.theme.Gray
 import com.example.designsystem.theme.GrayLine
 import com.example.designsystem.theme.PrimaryActive
+import com.example.designsystem.theme.TextHint
 import com.example.designsystem.theme.TraceTheme
-import com.example.designsystem.theme.White
 import com.example.domain.model.home.WritePostType
 import com.example.home.graph.writepost.WritePostViewModel.WritePostEvent
 import com.example.home.graph.writepost.component.ImageContent
@@ -78,7 +78,7 @@ internal fun WritePostRoute(
         navigateBack = navigateBack,
         onTitleChange = viewModel::setTitle,
         onContentChange = viewModel::setContent,
-        addImage = viewModel::addImage,
+        addImages = viewModel::addImages,
         removeImage = viewModel::removeImage,
         onTypeChange = viewModel::setType,
         onIsVerifiedChange = viewModel::setIsVerified,
@@ -91,30 +91,23 @@ private fun WritePostScreen(
     type: WritePostType,
     title: String,
     content: String,
-    images: List<Uri>,
+    images: List<String>,
     isVerified: Boolean,
     onTypeChange: (WritePostType) -> Unit,
     onTitleChange: (String) -> Unit,
     onContentChange: (String) -> Unit,
-    addImage: (Uri) -> Unit,
-    removeImage: (Uri) -> Unit,
+    addImages: (List<String>) -> Unit,
+    removeImage: (String) -> Unit,
     onIsVerifiedChange: (Boolean) -> Unit,
     navigateBack: () -> Unit,
 ) {
     val contentFieldFocusRequester = remember { FocusRequester() }
 
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent(),
-        onResult = { uri: Uri? ->
-            if (uri != null) {
-                addImage(uri)
-            }
-        }
-    )
-
     val lazyListState = rememberLazyListState()
 
-    val requestAvailable = title.isNotEmpty() && content.isNotEmpty() && type != WritePostType.NONE
+    val requestAvailable by remember(title, content) {
+        derivedStateOf { title.isNotEmpty() && content.isNotEmpty() }
+    }
 
     Box(
         modifier = Modifier
@@ -132,6 +125,58 @@ private fun WritePostScreen(
         ) {
 
             item {
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    Row(
+                        modifier = Modifier.clickable(isRipple = true) {
+                            onTypeChange(WritePostType.GOOD_DEED)
+                        }
+                    ) {
+                        Image(
+                            painter = if (type == WritePostType.GOOD_DEED) painterResource(R.drawable.checkbox_on) else painterResource(
+                                R.drawable.checkbox_off
+                            ),
+                            contentDescription = "선행 게시글 타입",
+                            modifier = Modifier.size(20.dp)
+                        )
+
+                        Spacer(Modifier.width(2.dp))
+
+
+                        Text(
+                            "선행",
+                            color = if (type == WritePostType.GOOD_DEED) PrimaryActive else TextHint,
+                            style = TraceTheme.typography.bodySSB,
+                        )
+                    }
+
+                    Spacer(Modifier.width(20.dp))
+
+                    Row(
+                        modifier = Modifier.clickable(isRipple = true) {
+                            onTypeChange(WritePostType.FREE)
+                        }
+                    ) {
+                        Image(
+                            painter = if (type == WritePostType.FREE) painterResource(R.drawable.checkbox_on) else painterResource(
+                                R.drawable.checkbox_off
+                            ),
+                            contentDescription = "선행 게시글 타입",
+                            modifier = Modifier.size(20.dp)
+                        )
+
+                        Spacer(Modifier.width(2.dp))
+
+
+                        Text(
+                            "자유",
+                            color = if (type == WritePostType.FREE) PrimaryActive else TextHint,
+                            style = TraceTheme.typography.bodySSB,
+                        )
+                    }
+                }
+
+                Spacer(Modifier.height(28.dp))
+
                 TraceTitleField(
                     value = title,
                     onValueChange = onTitleChange,
@@ -183,14 +228,14 @@ private fun WritePostScreen(
 
             Spacer(Modifier.width(30.dp))
 
-            Text("글 쓰기", style = TraceTheme.typography.headingMB)
+            Text("글 쓰기", style = TraceTheme.typography.headingMR)
 
             Spacer(Modifier.weight(1f))
 
             Text(
                 "완료",
                 style = TraceTheme.typography.bodyMM,
-                color = if (requestAvailable) PrimaryActive else Gray,
+                color = if (requestAvailable) PrimaryActive else TextHint,
                 modifier = Modifier.clickable(isRipple = true, enabled = requestAvailable) {
                 }
             )
@@ -199,25 +244,15 @@ private fun WritePostScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(White)
                 .height(50.dp)
                 .padding(vertical = 5.dp, horizontal = 15.dp)
                 .align(Alignment.BottomCenter), verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                painter = painterResource(R.drawable.add_image_ic),
-                contentDescription = "사진 첨부",
-                tint = Black.copy(alpha = 0.85f),
-                modifier = Modifier
-                    .size(32.dp)
-                    .clickable() {
-                        launcher.launch("image/*")
-                    },
-            )
+            GalleryPicker(imagesSize = images.size, addImages = addImages)
 
             Spacer(Modifier.weight(1f))
 
-            if (true) {
+            if (type == WritePostType.GOOD_DEED) {
                 Row(
                     modifier = Modifier.clickable(isRipple = true) {
                         onIsVerifiedChange(!isVerified)
@@ -236,8 +271,8 @@ private fun WritePostScreen(
 
                     Text(
                         "선행 인증",
-                        color = if (isVerified) PrimaryActive else Gray,
-                        style = TraceTheme.typography.bodySM,
+                        color = if (isVerified) PrimaryActive else PrimaryActive.copy(alpha = 0.7f),
+                        style = TraceTheme.typography.bodySSB,
                     )
                 }
             }
@@ -247,12 +282,69 @@ private fun WritePostScreen(
     }
 }
 
+@Composable
+private fun GalleryPicker(
+    modifier: Modifier = Modifier,
+    imagesSize: Int,
+    maxSelection: Int = 5,
+    addImages: (List<String>) -> Unit,
+) {
+    val remaining = maxSelection - imagesSize
+
+    val multipleLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickMultipleVisualMedia(
+            maxSelection.coerceAtLeast(2)
+        )
+    ) { uris: List<Uri> ->
+        addImages(uris.map { it.toString() })
+    }
+
+    val singleLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia()
+    ) { uri: Uri? ->
+        uri?.let { addImages(listOf(it.toString())) }
+    }
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.add_image_ic),
+            contentDescription = "사진 첨부",
+            tint = PrimaryActive,
+            modifier = Modifier
+                .size(32.dp)
+                .clickable(enabled = remaining > 0) {
+                    if (remaining >= 2) {
+                        multipleLauncher.launch(
+                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                        )
+                    } else if (remaining == 1) {
+                        singleLauncher.launch(
+                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                        )
+                    }
+                }
+        )
+
+        if (remaining == 0) {
+            Spacer(Modifier.width(4.dp))
+
+            Text(
+                "5장 제한", style = TraceTheme.typography.bodySM,
+                color = PrimaryActive
+            )
+        }
+    }
+
+}
+
 
 @Preview
 @Composable
 fun WritePostScreenPreview() {
     WritePostScreen(
-        type = WritePostType.NONE,
+        type = WritePostType.GOOD_DEED,
         title = "",
         content = "",
         isVerified = true,
@@ -262,7 +354,7 @@ fun WritePostScreenPreview() {
         onIsVerifiedChange = {},
         navigateBack = {},
         images = emptyList(),
-        addImage = {},
+        addImages = {},
         removeImage = {}
     )
 }

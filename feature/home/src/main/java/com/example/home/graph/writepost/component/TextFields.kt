@@ -22,8 +22,8 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import com.example.designsystem.theme.Gray
 import com.example.designsystem.theme.PrimaryDefault
+import com.example.designsystem.theme.TextHint
 import com.example.designsystem.theme.TraceTheme
 import kotlinx.coroutines.launch
 
@@ -59,16 +59,17 @@ internal fun TraceTitleField(
                     onNext()
                 }
             ),
-            textStyle = TraceTheme.typography.bodyMB,
+            textStyle = TraceTheme.typography.bodyMSB,
             cursorBrush = SolidColor(PrimaryDefault),
             decorationBox = { innerTextField ->
                 if (value.isEmpty()) {
                     Text(
                         text = hint,
-                        style = TraceTheme.typography.bodyMB,
-                        color = Gray,
+                        style = TraceTheme.typography.bodyMSB,
+                        color = TextHint,
                     )
                 }
+
                 innerTextField()
             },
             modifier = modifier
@@ -103,7 +104,7 @@ internal fun TraceContentField(
                     Text(
                         text = hint,
                         style = TraceTheme.typography.bodyMM,
-                        color = Gray,
+                        color = TextHint,
                     )
 
                 }

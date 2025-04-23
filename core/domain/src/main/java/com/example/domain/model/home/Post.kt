@@ -72,5 +72,4 @@ enum class PostType(val label: String) {
 enum class WritePostType(val label : String) {
     GOOD_DEED("선행"),
     FREE("자유"),
-    NONE("없음")
 }
