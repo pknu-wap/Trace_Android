@@ -5,18 +5,13 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
-import com.example.auth.navigation.editProfileScreen
-import com.example.auth.navigation.loginScreen
+import com.example.auth.navigation.authNavGraph
 import com.example.auth.navigation.navigateToEditProfile
-import com.example.home.navigation.homeScreen
+import com.example.home.navigation.homeNavGraph
 import com.example.home.navigation.navigateToHome
 import com.example.home.navigation.navigateToPost
 import com.example.home.navigation.navigateToWritePost
-import com.example.home.navigation.postScreen
-import com.example.home.navigation.writePostScreen
-import com.example.navigation.EditProfileRoute
-import com.example.navigation.LoginRoute
-import com.example.navigation.Route
+import com.example.navigation.AuthGraphBaseRoute
 
 @Composable
 fun AppNavHost(
@@ -25,44 +20,39 @@ fun AppNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = LoginRoute,
+        startDestination = AuthGraphBaseRoute,
         modifier = modifier,
     ) {
-        loginScreen(
+        val currentRoute = navController.currentDestination?.route
+
+        authNavGraph(
             navigateToHome = {
                 navController.navigateToHome(
                     navOptions {
-                        popUpTo<LoginRoute> { inclusive = true }
+                        currentRoute?.let { popUpTo(currentRoute) { inclusive = true } }
                     }
                 )
             },
+            navigateBack = { navigateBack(navController) },
             navigateToEditProfile = { idToken ->
                 navController.navigateToEditProfile(idToken)
             }
         )
-        editProfileScreen(
-            navigateToHome = {
-                navController.navigateToHome(
-                    navOptions {
-                        popUpTo<EditProfileRoute> { inclusive = true }
-                    }
-                )
-            },
-            navigateBack = { navController.popBackStack() }
-        )
-        homeScreen(
+
+        homeNavGraph(
             navigateToPost = {
                 navController.navigateToPost()
             },
             navigateToWritePost = {
                 navController.navigateToWritePost()
-            }
-        )
-        writePostScreen(
-            navigateBack = { navController.popBackStack() }
-        )
-        postScreen(
-            navigateBack = { navController.popBackStack() }
+            },
+            navigateBack = { navigateBack(navController) }
         )
     }
+}
+
+private fun navigateBack(
+    navController: NavHostController
+) {
+    navController.popBackStack()
 }

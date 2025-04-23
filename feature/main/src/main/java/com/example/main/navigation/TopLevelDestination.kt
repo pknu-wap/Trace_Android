@@ -1,10 +1,10 @@
 package com.example.main.navigation
 
 import androidx.annotation.DrawableRes
-import com.example.navigation.HomeRoute
-import com.example.navigation.MissionRoute
-import com.example.navigation.MyPageRoute
 import com.example.designsystem.R
+import com.example.navigation.HomeGraph
+import com.example.navigation.MissionGraph
+import com.example.navigation.MyPageGraph
 import kotlin.reflect.KClass
 
 enum class TopLevelDestination(
@@ -15,21 +15,21 @@ enum class TopLevelDestination(
     val title : String
 ) {
     HOME(
-        route = HomeRoute::class,
+        route = HomeGraph.HomeRoute::class,
         selectedIcon = R.drawable.home_actvie,
         unSelectedIcon = R.drawable.home,
         contentDescription = "홈",
         title = "홈"
     ),
     Mission(
-        route = MissionRoute::class,
+        route = MissionGraph.MissionRoute::class,
         selectedIcon = R.drawable.mission_active,
         unSelectedIcon = R.drawable.mission,
         contentDescription = "미션",
         title = "미션"
     ),
     MyPage(
-        route = MyPageRoute::class,
+        route = MyPageGraph.MyPageRoute::class,
         selectedIcon = R.drawable.my_page_active,
         unSelectedIcon = R.drawable.my_page,
         contentDescription = "마이페이지",

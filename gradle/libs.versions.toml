@@ -81,6 +81,8 @@ kotest = "5.9.0"
 firebaseCommonKtx = "21.0.0"
 foundationAndroid = "1.7.8"
 activityKtx = "1.10.1"
+navigationCompose = "2.8.9"
+navigationComposeVersion = "2.5.1"
 
 [libraries]
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
@@ -166,6 +168,8 @@ mockk-agent = { group = "io.mockk", name = "mockk-agent", version.ref = "mockk" 
 androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-foundation-android = { group = "androidx.compose.foundation", name = "foundation-android", version.ref = "foundationAndroid" }
 androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "activityKtx" }
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
+navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationComposeVersion" }
 
 
 [plugins]

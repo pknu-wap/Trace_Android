@@ -29,9 +29,10 @@ import com.example.common.ui.NoRippleInteractionSource
 import com.example.designsystem.theme.Black
 import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.White
-import com.example.navigation.HomeRoute
+import com.example.navigation.HomeGraph
 import com.example.navigation.Route
 import com.example.navigation.eqaulsRoute
+import com.example.navigation.isRouteInHierarchy
 
 @Composable
 internal fun AppBottomBar(
@@ -96,12 +97,12 @@ internal fun AppBottomBar(
                     },
                     onClick = {
                         when (topLevelRoute) {
-                            TopLevelDestination.HOME -> navigateToBottomNaviDestination(HomeRoute)
-                            TopLevelDestination.Mission -> navigateToBottomNaviDestination(HomeRoute)
-                            TopLevelDestination.MyPage -> navigateToBottomNaviDestination(HomeRoute)
+                            TopLevelDestination.HOME -> navigateToBottomNaviDestination(HomeGraph.HomeRoute)
+                            TopLevelDestination.Mission -> navigateToBottomNaviDestination(HomeGraph.HomeRoute)
+                            TopLevelDestination.MyPage -> navigateToBottomNaviDestination(HomeGraph.HomeRoute)
                         }
                     },
-                    selected = currentDestination.eqaulsRoute(topLevelRoute.route),
+                    selected = currentDestination.isRouteInHierarchy(topLevelRoute.route),
                     interactionSource = remember { NoRippleInteractionSource() },
                     colors = NavigationBarItemDefaults.colors(
                         selectedIconColor = PrimaryDefault,
