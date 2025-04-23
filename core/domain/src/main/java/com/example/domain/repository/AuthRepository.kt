@@ -1,8 +1,10 @@
 package com.example.domain.repository
 
+import com.example.domain.model.auth.UserRole
+
 interface AuthRepository {
-    suspend fun loginKakao(idToken : String) : Result<Unit>
-    suspend fun registerUser() : Result<Unit>
+    suspend fun loginKakao(idToken : String) : Result<UserRole>
+    suspend fun registerUser(idToken: String, nickName : String, profileImageUrl : String?) : Result<Unit>
 //    suspend fun logOut() : Result<Unit>
 //    suspend fun withdraw() : Result<Unit>
 }

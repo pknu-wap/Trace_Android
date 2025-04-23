@@ -3,7 +3,6 @@ package com.example.auth.login
 import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.Image
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -16,26 +15,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.auth.login.LoginViewModel.LoginEvent
+import com.example.common.event.TraceEvent
+import com.example.common.util.clickable
 import com.example.designsystem.R
+import com.example.designsystem.theme.TraceTheme
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
-import com.example.auth.login.LoginViewModel.LoginEvent
-import com.example.common.event.TraceEvent
-import com.example.common.util.clickable
-import com.example.designsystem.theme.TraceTheme
 
 
 @Composable
 internal fun LoginRoute(
     navigateToHome: () -> Unit,
-    navigateToEditProfile: () -> Unit,
+    navigateToEditProfile: (String) -> Unit,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
 
@@ -43,7 +40,7 @@ internal fun LoginRoute(
         viewModel.eventChannel.collect { event ->
             when (event) {
                 is LoginEvent.NavigateToHome -> navigateToHome()
-                is LoginEvent.NavigateEditProfile -> navigateToEditProfile()
+                is LoginEvent.NavigateEditProfile -> navigateToEditProfile(event.idToken)
             }
         }
     }
@@ -52,7 +49,7 @@ internal fun LoginRoute(
         viewModel::loginKakao,
         onLoginFailure = { viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("로그인에 실패했습니다")) },
         navigateToHome = { viewModel.onEvent(LoginEvent.NavigateToHome) },
-        navigateToEditProfile = { viewModel.onEvent(LoginEvent.NavigateEditProfile) }
+        navigateToEditProfile = { viewModel.onEvent(LoginEvent.NavigateEditProfile(idToken = "")) }
     )
 }
 
@@ -75,9 +72,8 @@ private fun LoginScreen(
             painter = painterResource(id = R.drawable.kakao_login),
             contentDescription = "카카오 로그인",
             modifier = Modifier.clickable {
-                onLoginFailure()
                 loginKakao(context, loginKakao, onLoginFailure)
-                navigateToEditProfile()
+//                navigateToEditProfile()
             }
         )
 
@@ -102,7 +98,6 @@ private fun loginKakao(
         if (error != null) {
             onFailure()
         } else if (token != null) {
-
             onSuccess(token.idToken!!)
         }
     }

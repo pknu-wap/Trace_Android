@@ -16,13 +16,13 @@ import com.example.home.navigation.postScreen
 import com.example.home.navigation.writePostScreen
 import com.example.navigation.EditProfileRoute
 import com.example.navigation.LoginRoute
+import com.example.navigation.Route
 
 @Composable
 fun AppNavHost(
     navController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
-
     NavHost(
         navController = navController,
         startDestination = LoginRoute,
@@ -36,8 +36,8 @@ fun AppNavHost(
                     }
                 )
             },
-            navigateToEditProfile = {
-                navController.navigateToEditProfile()
+            navigateToEditProfile = { idToken ->
+                navController.navigateToEditProfile(idToken)
             }
         )
         editProfileScreen(

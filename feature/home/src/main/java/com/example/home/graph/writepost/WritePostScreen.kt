@@ -155,7 +155,7 @@ private fun WritePostScreen(
                     value = content,
                     onValueChange = onContentChange,
                     lazyListState = lazyListState,
-                    hint = if (type == WritePostType.GoodDeed) "따뜻한 흔적을 남겨보세요!" else "내용을 입력하세요.",
+                    hint = if (type == WritePostType.GOOD_DEED) "따뜻한 흔적을 남겨보세요!" else "내용을 입력하세요.",
                     modifier = Modifier.focusRequester(contentFieldFocusRequester)
                 )
             }

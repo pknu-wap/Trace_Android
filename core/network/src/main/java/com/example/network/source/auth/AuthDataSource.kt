@@ -1,6 +1,15 @@
 package com.example.network.source.auth
 
+import com.example.network.model.auth.LoginKakaoResponse
+import com.example.network.model.auth.TokenResponse
+import java.io.InputStream
+
 interface AuthDataSource {
-    suspend fun loginKakao() : Result<Unit>
-    suspend fun registerUser() : Result<Unit>
+    suspend fun loginKakao(idToken: String): Result<LoginKakaoResponse>
+
+    suspend fun registerUser(
+        idToken: String,
+        nickname: String,
+        profileImage: InputStream? = null
+    ): Result<TokenResponse>
 }

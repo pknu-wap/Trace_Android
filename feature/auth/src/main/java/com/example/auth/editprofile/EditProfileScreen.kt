@@ -3,6 +3,7 @@ package com.example.auth.graph.editProfile
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -31,6 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -55,6 +57,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.rememberAsyncImagePainter
 import com.example.auth.editprofile.EditProfileViewModel
 import com.example.auth.editprofile.EditProfileViewModel.EditProfileEvent
+import com.example.common.event.TraceEvent
 import com.example.common.util.clickable
 import com.example.designsystem.R
 import com.example.designsystem.theme.Background
@@ -73,15 +76,18 @@ internal fun EditProfileRoute(
     viewModel: EditProfileViewModel = hiltViewModel(),
 ) {
 
-    val name by viewModel.nameText.collectAsStateWithLifecycle()
+    val name by viewModel.name.collectAsStateWithLifecycle()
     val isNameValid by viewModel.isNameValid.collectAsStateWithLifecycle()
     val profileImage by viewModel.profileImage.collectAsStateWithLifecycle()
 
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
             when (event) {
-                is EditProfileEvent.SignUpSuccess -> {
+                is EditProfileEvent.RegisterUserSuccess -> {
                     navigateToHome()
+                }
+                is EditProfileEvent.RegisterUserFailure -> {
+                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("프로필 설정에 실패했습니다"))
                 }
             }
         }
@@ -103,19 +109,19 @@ internal fun EditProfileRoute(
 @Composable
 private fun EditProfileScreen(
     name: String,
-    profileImage: Uri?,
+    profileImage: String?,
     isNameValid: Boolean,
     onNameChange: (String) -> Unit,
-    onProfileImageChange: (Uri?) -> Unit,
+    onProfileImageChange: (String?) -> Unit,
     registerUser: () -> Unit,
     navigateBack: () -> Unit
 ) {
 
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent(),
+    val imageLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri: Uri? ->
             if (uri != null) {
-                onProfileImageChange(uri)
+                onProfileImageChange(uri.toString())
             }
         }
     )
@@ -127,6 +133,12 @@ private fun EditProfileScreen(
         listOf("사진/앨범에서 불러오기")
     }
 
+    val signUpAvailability by remember(name, isNameValid) {
+        derivedStateOf {
+            name.isNotEmpty() && isNameValid
+        }
+    }
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     Column(
         modifier = Modifier
@@ -134,12 +146,7 @@ private fun EditProfileScreen(
             .background(Background),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-
-        val signUpAvailability = name.isNotEmpty() && isNameValid
-        val keyboardController = LocalSoftwareKeyboardController.current
-
         Spacer(Modifier.height(16.dp))
-
 
         Icon(
             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -161,7 +168,7 @@ private fun EditProfileScreen(
                 withStyle(style = SpanStyle(color = PrimaryDefault)) {
                     append("프로필")
                 }
-                append(" 설정")
+                append("설정")
             },
             style = TraceTheme.typography.headingLB,
             modifier = Modifier
@@ -217,7 +224,10 @@ private fun EditProfileScreen(
                                 onClick = {
                                     expanded = false
                                     when (option) {
-                                        "사진/앨범에서 불러오기" -> launcher.launch("image/*")
+                                        "사진/앨범에서 불러오기" -> imageLauncher.launch(
+                                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                        )
+
                                         "기본 이미지 적용" -> onProfileImageChange(null)
                                     }
                                 },
@@ -318,7 +328,7 @@ private fun EditProfileScreen(
 }
 
 @Composable
-private fun ProfileImage(imageUri: Uri?) {
+private fun ProfileImage(imageUri: String?) {
     val profileImage = rememberAsyncImagePainter(imageUri ?: R.drawable.default_profile)
     val imageSize = if (imageUri != null) 129.dp else 115.dp
     val paddingValue = if (imageUri != null) 2.dp else 9.dp

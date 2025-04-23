@@ -8,7 +8,7 @@ sealed interface Route
 data object LoginRoute : Route
 
 @Serializable
-data object EditProfileRoute : Route
+data class EditProfileRoute(val idToken : String) : Route
 
 @Serializable
 data object HomeRoute : Route
