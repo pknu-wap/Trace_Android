@@ -2,6 +2,7 @@ package com.example.home.graph.writepost
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -77,7 +78,7 @@ internal fun WritePostRoute(
         navigateBack = navigateBack,
         onTitleChange = viewModel::setTitle,
         onContentChange = viewModel::setContent,
-        addImage = viewModel::addImage,
+        addImages = viewModel::addImages,
         removeImage = viewModel::removeImage,
         onTypeChange = viewModel::setType,
         onIsVerifiedChange = viewModel::setIsVerified,
@@ -90,26 +91,17 @@ private fun WritePostScreen(
     type: WritePostType,
     title: String,
     content: String,
-    images: List<Uri>,
+    images: List<String>,
     isVerified: Boolean,
     onTypeChange: (WritePostType) -> Unit,
     onTitleChange: (String) -> Unit,
     onContentChange: (String) -> Unit,
-    addImage: (Uri) -> Unit,
-    removeImage: (Uri) -> Unit,
+    addImages: (List<String>) -> Unit,
+    removeImage: (String) -> Unit,
     onIsVerifiedChange: (Boolean) -> Unit,
     navigateBack: () -> Unit,
 ) {
     val contentFieldFocusRequester = remember { FocusRequester() }
-
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent(),
-        onResult = { uri: Uri? ->
-            if (uri != null) {
-                addImage(uri)
-            }
-        }
-    )
 
     val lazyListState = rememberLazyListState()
 
@@ -259,16 +251,7 @@ private fun WritePostScreen(
                 .padding(vertical = 5.dp, horizontal = 15.dp)
                 .align(Alignment.BottomCenter), verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                painter = painterResource(R.drawable.add_image_ic),
-                contentDescription = "사진 첨부",
-                tint = PrimaryActive,
-                modifier = Modifier
-                    .size(32.dp)
-                    .clickable() {
-                        launcher.launch("image/*")
-                    },
-            )
+            GalleryPicker(imagesSize = images.size, addImages = addImages)
 
             Spacer(Modifier.weight(1f))
 
@@ -302,6 +285,59 @@ private fun WritePostScreen(
     }
 }
 
+@Composable
+private fun GalleryPicker(
+    modifier: Modifier = Modifier,
+    imagesSize: Int,
+    maxSelection : Int = 5,
+    addImages: (List<String>) -> Unit,
+) {
+    val remaining = maxSelection - imagesSize
+
+    val multipleLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickMultipleVisualMedia(if(remaining < 2) maxSelection else maxSelection - imagesSize)
+    ) { uris: List<Uri> ->
+        addImages(uris.map { it.toString() })
+    }
+
+    val singleLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia()
+    ) { uri: Uri? ->
+        uri?.let { addImages(listOf(it.toString())) }
+    }
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.add_image_ic),
+            contentDescription = "사진 첨부",
+            tint = PrimaryActive,
+            modifier = Modifier
+                .size(32.dp)
+                .clickable {
+                    if (remaining >= 2) {
+                        multipleLauncher.launch(
+                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                        )
+                    } else if(remaining == 1) {
+                        singleLauncher.launch(
+                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                        )
+                    }
+                }
+        )
+
+        if(remaining == 5) {
+            Spacer(Modifier.width(4.dp))
+
+            Text("5장 제한", style = TraceTheme.typography.bodySM,
+                color = PrimaryActive)
+        }
+    }
+
+}
+
 
 @Preview
 @Composable
@@ -317,7 +353,7 @@ fun WritePostScreenPreview() {
         onIsVerifiedChange = {},
         navigateBack = {},
         images = emptyList(),
-        addImage = {},
+        addImages = {},
         removeImage = {}
     )
 }
