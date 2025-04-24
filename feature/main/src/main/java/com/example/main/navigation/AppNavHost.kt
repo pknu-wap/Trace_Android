@@ -11,6 +11,10 @@ import com.example.home.navigation.homeNavGraph
 import com.example.home.navigation.navigateToHome
 import com.example.home.navigation.navigateToPost
 import com.example.home.navigation.navigateToWritePost
+import com.example.mission.navigation.missionNavGraph
+import com.example.mypage.navigation.myPageNavGraph
+import com.example.mypage.navigation.navigateToEditProfile
+import com.example.mypage.navigation.navigateToSetting
 import com.example.navigation.AuthGraphBaseRoute
 
 @Composable
@@ -48,6 +52,17 @@ fun AppNavHost(
             },
             navigateBack = { navigateBack(navController) }
         )
+
+        missionNavGraph()
+
+        myPageNavGraph(
+            navigateToEditProfile = { navController.navigateToEditProfile() },
+            navigateToSetting = { navController.navigateToSetting() },
+            navigateBack = { navigateBack(navController) }
+        )
+
+
+
     }
 }
 

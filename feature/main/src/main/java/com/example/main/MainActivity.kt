@@ -116,7 +116,9 @@ class MainActivity : ComponentActivity() {
                                     navController.navigate(
                                         bottomNaviDestination,
                                         navOptions = navOptions {
-                                            popUpTo(0) { saveState = true }
+                                            popUpTo(0) {
+                                                saveState = true
+                                            }
                                             launchSingleTop = true
                                             restoreState = true
                                         })

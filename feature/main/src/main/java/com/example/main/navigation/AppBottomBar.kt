@@ -29,9 +29,10 @@ import com.example.common.ui.NoRippleInteractionSource
 import com.example.designsystem.theme.Black
 import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.White
-import com.example.navigation.HomeGraph
+import com.example.navigation.HomeBaseRoute
+import com.example.navigation.MissionBaseRoute
+import com.example.navigation.MyPageBaseRoute
 import com.example.navigation.Route
-import com.example.navigation.eqaulsRoute
 import com.example.navigation.isRouteInHierarchy
 
 @Composable
@@ -68,7 +69,7 @@ internal fun AppBottomBar(
         ) {
             TopLevelDestination.entries.forEach { topLevelRoute ->
                 val icon =
-                    if (currentDestination.eqaulsRoute(topLevelRoute.route)) topLevelRoute.selectedIcon else topLevelRoute.unSelectedIcon
+                    if (currentDestination.isRouteInHierarchy(topLevelRoute.route)) topLevelRoute.selectedIcon else topLevelRoute.unSelectedIcon
 
                 NavigationBarItem(
                     icon = {
@@ -97,9 +98,9 @@ internal fun AppBottomBar(
                     },
                     onClick = {
                         when (topLevelRoute) {
-                            TopLevelDestination.HOME -> navigateToBottomNaviDestination(HomeGraph.HomeRoute)
-                            TopLevelDestination.Mission -> navigateToBottomNaviDestination(HomeGraph.HomeRoute)
-                            TopLevelDestination.MyPage -> navigateToBottomNaviDestination(HomeGraph.HomeRoute)
+                            TopLevelDestination.HOME -> navigateToBottomNaviDestination(HomeBaseRoute)
+                            TopLevelDestination.Mission -> navigateToBottomNaviDestination(MissionBaseRoute)
+                            TopLevelDestination.MyPage -> navigateToBottomNaviDestination(MyPageBaseRoute)
                         }
                     },
                     selected = currentDestination.isRouteInHierarchy(topLevelRoute.route),
