@@ -20,7 +20,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
@@ -30,8 +30,6 @@ import com.example.designsystem.component.TraceSnackBar
 import com.example.designsystem.component.TraceSnackBarHost
 import com.example.designsystem.theme.Background
 import com.example.designsystem.theme.TraceTheme
-import com.example.home.navigation.navigateToHome
-import com.example.main.MainViewModel.MainEvent
 import com.example.main.navigation.AppBottomBar
 import com.example.main.navigation.AppNavHost
 import com.example.navigation.shouldHideBottomBar
@@ -43,18 +41,11 @@ class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels()
 
-
     @OptIn(ExperimentalLayoutApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//          viewModel.checkSession()
-//
-//        installSplashScreen().apply {
-//            setKeepOnScreenCondition {
-//               !viewModel.isAppReady.value
-//            }
-//        }
+        installSplashScreen()
 
         enableEdgeToEdge()
         setContent {
@@ -64,17 +55,6 @@ class MainActivity : ComponentActivity() {
             val snackBarHostState = remember { SnackbarHostState() }
 
             LaunchedEffect(Unit) {
-                launch {
-                    viewModel.eventChannel.collect { event ->
-                        when (event) {
-                            is MainEvent.NavigateHome -> {
-                                navigateToHome(navController)
-                            }
-                        }
-
-                    }
-                }
-
                 launch {
                     viewModel.eventHelper.eventChannel.collect { event ->
                         when (event) {
@@ -134,18 +114,5 @@ class MainActivity : ComponentActivity() {
 
     }
 }
-
-private fun navigateToHome(
-    navController: NavController,
-) {
-    navController.navigateToHome(
-        navOptions {
-            popUpTo(0) { inclusive = true }
-            launchSingleTop = true
-        }
-    )
-
-}
-
 
 

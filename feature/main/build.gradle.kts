@@ -1,6 +1,3 @@
-import java.io.FileInputStream
-import java.util.Properties
-
 plugins {
     id("trace.android.feature")
 }
@@ -12,6 +9,7 @@ android {
 dependencies {
     implementation(projects.feature.auth)
     implementation(projects.feature.home)
+    implementation(projects.feature.splash)
 
     implementation(libs.kakao.user)
 
