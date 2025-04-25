@@ -13,10 +13,12 @@ fun NavController.navigateToSplash(navOptions: NavOptions? = null) {
 
 fun NavGraphBuilder.splashScreen(
     navigateToHome: () -> Unit,
+    navigateToLogin: () -> Unit
 ) {
     composable<SplashRoute> {
         SplashRoute(
             navigateToHome = navigateToHome,
+            navigateToLogin = navigateToLogin
         )
     }
 }

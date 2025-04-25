@@ -21,12 +21,12 @@ class SplashViewModel @Inject constructor(
     }
 
     private fun checkSession() = viewModelScope.launch {
-        when {
-            userRepository.checkSession() -> { _eventChannel.send(SplashEvent.NavigateToHome) }
-        }
+        if (userRepository.checkSession()) _eventChannel.send(SplashEvent.NavigateToHome)
+        else _eventChannel.send(SplashEvent.NavigateToLogin)
     }
 
     sealed class SplashEvent {
         data object NavigateToHome : SplashEvent()
+        data object NavigateToLogin : SplashEvent()
     }
 }

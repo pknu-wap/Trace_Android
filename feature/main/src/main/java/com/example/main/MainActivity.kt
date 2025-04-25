@@ -21,7 +21,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
@@ -34,7 +33,6 @@ import com.example.designsystem.theme.TraceTheme
 import com.example.main.navigation.AppBottomBar
 import com.example.main.navigation.AppNavHost
 import com.example.navigation.shouldHideBottomBar
-import com.example.splash.navigation.navigateToSplash
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -43,13 +41,11 @@ class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels()
 
-
     @OptIn(ExperimentalLayoutApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val splash = installSplashScreen()
-        splash.setKeepOnScreenCondition { false }
+        installSplashScreen()
 
         enableEdgeToEdge()
         setContent {
@@ -118,12 +114,5 @@ class MainActivity : ComponentActivity() {
 
     }
 }
-
-private fun navigateToSplash(
-    navController: NavController,
-) {
-    navController.navigateToSplash()
-}
-
 
 

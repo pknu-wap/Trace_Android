@@ -8,6 +8,7 @@ import androidx.navigation.navOptions
 import com.example.auth.navigation.editProfileScreen
 import com.example.auth.navigation.loginScreen
 import com.example.auth.navigation.navigateToEditProfile
+import com.example.auth.navigation.navigateToLogin
 import com.example.home.navigation.homeScreen
 import com.example.home.navigation.navigateToHome
 import com.example.home.navigation.navigateToPost
@@ -32,6 +33,13 @@ fun AppNavHost(
         splashScreen(
             navigateToHome = {
                 navController.navigateToHome(
+                    navOptions {
+                        popUpTo(0) { inclusive = true }
+                    }
+                )
+            },
+            navigateToLogin = {
+                navController.navigateToLogin(
                     navOptions {
                         popUpTo(0) { inclusive = true }
                     }
