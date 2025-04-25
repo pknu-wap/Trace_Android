@@ -48,13 +48,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//          viewModel.checkSession()
-//
-//        installSplashScreen().apply {
-//            setKeepOnScreenCondition {
-//               !viewModel.isAppReady.value
-//            }
-//        }
+
 
         enableEdgeToEdge()
         setContent {

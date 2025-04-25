@@ -21,22 +21,5 @@ class MainViewModel @Inject constructor(
     private val _eventChannel = Channel<MainEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
 
-    private val _isAppReady = MutableStateFlow(false)
-    val isAppReady: StateFlow<Boolean> = _isAppReady.asStateFlow()
-
-    internal fun checkSession() = viewModelScope.launch {
-        when {
-            userRepository.checkSession() -> { _eventChannel.send(MainEvent.NavigateHome) }
-        }
-        onAppReady()
-    }
-
-    fun onAppReady() {
-        _isAppReady.value = true
-    }
-
-    sealed class MainEvent {
-        data object NavigateHome : MainEvent()
-    }
 
 }

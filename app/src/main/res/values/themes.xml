@@ -3,7 +3,9 @@
     <style name="Theme.Trace" parent="android:Theme.Material.Light.NoActionBar" />
 
     <style name="Theme.Trace.Splash" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="windowSplashScreenBackground">@color/transparent</item>
+        <item name="windowSplashScreenIconBackgroundColor">@color/transparent</item>
+        <item name="windowSplashScreenAnimatedIcon">@color/transparent</item>
         <item name="postSplashScreenTheme">@style/Theme.Trace</item>
     </style>
 </resources>
