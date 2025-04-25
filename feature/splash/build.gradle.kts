@@ -4,5 +4,4 @@ plugins {
 
 android {
     namespace = "com.example.splash"
-
 }

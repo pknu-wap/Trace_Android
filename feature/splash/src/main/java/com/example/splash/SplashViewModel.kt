@@ -2,7 +2,6 @@ package com.example.splash
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.common.event.EventHelper
 import com.example.domain.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -13,7 +12,6 @@ import javax.inject.Inject
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    internal val eventHelper: EventHelper
 ) : ViewModel() {
     private val _eventChannel = Channel<SplashEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()

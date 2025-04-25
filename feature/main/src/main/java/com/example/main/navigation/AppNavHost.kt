@@ -17,6 +17,7 @@ import com.example.home.navigation.writePostScreen
 import com.example.navigation.EditProfileRoute
 import com.example.navigation.LoginRoute
 import com.example.navigation.SplashRoute
+import com.example.splash.navigation.splashScreen
 
 @Composable
 fun AppNavHost(
@@ -28,6 +29,16 @@ fun AppNavHost(
         startDestination = SplashRoute,
         modifier = modifier,
     ) {
+        splashScreen(
+            navigateToHome = {
+                navController.navigateToHome(
+                    navOptions {
+                        popUpTo(0) { inclusive = true }
+                    }
+                )
+            }
+        )
+
         loginScreen(
             navigateToHome = {
                 navController.navigateToHome(

@@ -8,6 +8,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.designsystem.theme.TraceTheme
 
 @Composable
 internal fun SplashRoute(
@@ -33,7 +34,7 @@ private fun SplashScreen() {
     ) {
         Spacer(Modifier.weight(1f))
 
-        Text("스플래시")
+        Text("스플래시", style = TraceTheme.typography.headingLB)
 
         Spacer(Modifier.weight(1f))
     }
