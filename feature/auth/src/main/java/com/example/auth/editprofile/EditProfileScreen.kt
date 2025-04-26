@@ -78,7 +78,7 @@ internal fun EditProfileRoute(
 
     val name by viewModel.name.collectAsStateWithLifecycle()
     val isNameValid by viewModel.isNameValid.collectAsStateWithLifecycle()
-    val profileImage by viewModel.profileImage.collectAsStateWithLifecycle()
+    val profileImageUrl by viewModel.profileImage.collectAsStateWithLifecycle()
 
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
@@ -86,6 +86,7 @@ internal fun EditProfileRoute(
                 is EditProfileEvent.RegisterUserSuccess -> {
                     navigateToHome()
                 }
+
                 is EditProfileEvent.RegisterUserFailure -> {
                     viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("프로필 설정에 실패했습니다"))
                 }
@@ -94,13 +95,13 @@ internal fun EditProfileRoute(
     }
 
     EditProfileScreen(
-        name,
-        profileImage,
-        isNameValid,
-        viewModel::setName,
-        viewModel::setProfileImage,
-        viewModel::registerUser,
-        navigateBack,
+        navigateBack = navigateBack,
+        name = name,
+        isNameValid = isNameValid,
+        profileImageUrl = profileImageUrl,
+        onNameChange = viewModel::setName,
+        onProfileImageUrlChange = viewModel::setProfileImageUrl,
+        registerUser = viewModel::registerUser,
     )
 
 }
@@ -109,10 +110,10 @@ internal fun EditProfileRoute(
 @Composable
 private fun EditProfileScreen(
     name: String,
-    profileImage: String?,
+    profileImageUrl: String?,
     isNameValid: Boolean,
     onNameChange: (String) -> Unit,
-    onProfileImageChange: (String?) -> Unit,
+    onProfileImageUrlChange: (String?) -> Unit,
     registerUser: () -> Unit,
     navigateBack: () -> Unit
 ) {
@@ -121,13 +122,14 @@ private fun EditProfileScreen(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri: Uri? ->
             if (uri != null) {
-                onProfileImageChange(uri.toString())
+                onProfileImageUrlChange(uri.toString())
             }
         }
     )
 
     var expanded by remember { mutableStateOf(false) }
-    val options = if (profileImage != null) {
+
+    val options = if (profileImageUrl != null) {
         listOf("사진/앨범에서 불러오기", "기본 이미지 적용")
     } else {
         listOf("사진/앨범에서 불러오기")
@@ -192,7 +194,7 @@ private fun EditProfileScreen(
                 )
             }
 
-            ProfileImage(profileImage)
+            ProfileImage(profileImageUrl)
 
             Box(
                 modifier = Modifier.align(Alignment.BottomEnd)
@@ -228,7 +230,7 @@ private fun EditProfileScreen(
                                             PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                                         )
 
-                                        "기본 이미지 적용" -> onProfileImageChange(null)
+                                        "기본 이미지 적용" -> onProfileImageUrlChange(null)
                                     }
                                 },
                             )

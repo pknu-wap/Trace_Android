@@ -14,8 +14,8 @@ import com.example.home.navigation.navigateToPost
 import com.example.home.navigation.navigateToWritePost
 import com.example.mission.navigation.missionNavGraph
 import com.example.mypage.navigation.myPageNavGraph
-import com.example.mypage.navigation.navigateToEditProfile
 import com.example.mypage.navigation.navigateToSetting
+import com.example.mypage.navigation.navigateToUpdateProfile
 import com.example.navigation.AuthGraphBaseRoute
 
 @Composable
@@ -58,7 +58,7 @@ fun AppNavHost(
 
         myPageNavGraph(
             navigateToPost = { navController.navigateToPost() },
-            navigateToEditProfile = { navController.navigateToEditProfile() },
+            navigateToUpdateProfile = { navController.navigateToUpdateProfile() },
             navigateToSetting = { navController.navigateToSetting() },
             navigateBack = { navigateBack(navController) },
             navigateToLogin = {
