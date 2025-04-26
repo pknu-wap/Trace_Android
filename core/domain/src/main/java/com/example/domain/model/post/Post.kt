@@ -51,6 +51,7 @@ data class PostDetail(
     val nickname: String,
     val profileImageUrl : String? = null,
     val createdAt: LocalDateTime,
+    val isVerified: Boolean = false,
     val viewCount : Int,
     val comments: List<Comment>,
     val feelingCount : FeelingCount,

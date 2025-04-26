@@ -93,6 +93,7 @@ val fakePostDetail = PostDetail(
     ),
     profileImageUrl = "https://picsum.photos/200/300?random=1",
     createdAt = LocalDateTime.now().minusDays(3),
+    isVerified = true,
     images = listOf(
         "https://picsum.photos/200/300?random=1",
         "https://picsum.photos/200/300?random=2",
