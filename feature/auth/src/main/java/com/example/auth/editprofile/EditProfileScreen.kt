@@ -328,10 +328,10 @@ private fun EditProfileScreen(
 }
 
 @Composable
-private fun ProfileImage(imageUri: String?) {
-    val profileImage = rememberAsyncImagePainter(imageUri ?: R.drawable.default_profile)
-    val imageSize = if (imageUri != null) 129.dp else 115.dp
-    val paddingValue = if (imageUri != null) 2.dp else 9.dp
+private fun ProfileImage(imageUrl: String?) {
+    val profileImage = rememberAsyncImagePainter(imageUrl ?: R.drawable.default_profile)
+    val imageSize = if (imageUrl != null) 129.dp else 115.dp
+    val paddingValue = if (imageUrl != null) 2.dp else 9.dp
 
     Box(Modifier.padding(paddingValue)) {
         Image(

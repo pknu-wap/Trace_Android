@@ -49,7 +49,7 @@ import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.WarmGray
 import com.example.designsystem.theme.White
-import com.example.domain.model.home.PostDetail
+import com.example.domain.model.post.PostDetail
 import com.example.home.graph.post.PostViewModel.PostEvent
 import com.example.home.graph.post.component.CommentView
 import com.example.home.graph.post.component.OtherPostDropdownMenu

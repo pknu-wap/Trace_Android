@@ -1,4 +1,4 @@
-package com.example.domain.model.home
+package com.example.domain.model.post
 
 import java.time.Duration
 import java.time.LocalDateTime
@@ -15,7 +15,7 @@ data class PostFeed(
     val isVerified : Boolean = false,
     val imageUri: String = "",
 ) {
-     fun getFormattedTime(): String {
+    fun getFormattedTime(): String {
         val now = LocalDateTime.now()
         val duration = Duration.between(createdAt, now)
 

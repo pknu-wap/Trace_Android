@@ -9,7 +9,9 @@ private val HIDDEN_BOTTOM_BAR_ROUTES = setOf(
     AuthGraph.LoginRoute::class,
     AuthGraph.EditProfileRoute::class,
     HomeGraph.WritePostRoute::class,
-    HomeGraph.PostRoute::class
+    HomeGraph.PostRoute::class,
+    MyPageGraph.EditProfileRoute::class,
+    MyPageGraph.SettingRoute::class
 )
 
 fun NavDestination?.shouldHideBottomBar(): Boolean =

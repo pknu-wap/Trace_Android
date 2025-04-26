@@ -1,4 +1,4 @@
-package com.example.home.graph.home.component
+package com.example.mypage.graph.mypage.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box

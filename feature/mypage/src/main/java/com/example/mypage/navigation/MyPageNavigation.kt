@@ -24,6 +24,7 @@ fun NavController.navigateToSetting(navOptions: NavOptions? = null) {
 }
 
 fun NavGraphBuilder.myPageNavGraph(
+    navigateToPost: () -> Unit,
     navigateToEditProfile: () -> Unit,
     navigateToSetting: () -> Unit,
     navigateBack: () -> Unit
@@ -31,6 +32,7 @@ fun NavGraphBuilder.myPageNavGraph(
     navigation<MyPageBaseRoute>(startDestination = MyPageGraph.MyPageRoute) {
         composable<MyPageGraph.MyPageRoute> {
             MyPageRoute(
+                navigateToPost = navigateToPost,
                 navigateToEditProfile = navigateToEditProfile,
                 navigateToSetting = navigateToSetting
             )

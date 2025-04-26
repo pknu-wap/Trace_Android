@@ -56,12 +56,11 @@ fun AppNavHost(
         missionNavGraph()
 
         myPageNavGraph(
+            navigateToPost = { navController.navigateToPost() },
             navigateToEditProfile = { navController.navigateToEditProfile() },
             navigateToSetting = { navController.navigateToSetting() },
             navigateBack = { navigateBack(navController) }
         )
-
-
 
     }
 }

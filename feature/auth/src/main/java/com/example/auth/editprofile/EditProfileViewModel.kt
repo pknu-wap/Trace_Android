@@ -38,8 +38,8 @@ class EditProfileViewModel @Inject constructor(
         validateName()
     }
 
-    fun setProfileImage(imageUri: String?) {
-        _profileImage.value = imageUri
+    fun setProfileImage(imageUrl: String?) {
+        _profileImage.value = imageUrl
     }
 
     internal fun registerUser() = viewModelScope.launch {
