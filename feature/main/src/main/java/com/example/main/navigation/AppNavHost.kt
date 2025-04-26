@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
 import com.example.auth.navigation.authNavGraph
 import com.example.auth.navigation.navigateToEditProfile
+import com.example.auth.navigation.navigateToLogin
 import com.example.home.navigation.homeNavGraph
 import com.example.home.navigation.navigateToHome
 import com.example.home.navigation.navigateToPost
@@ -59,7 +60,12 @@ fun AppNavHost(
             navigateToPost = { navController.navigateToPost() },
             navigateToEditProfile = { navController.navigateToEditProfile() },
             navigateToSetting = { navController.navigateToSetting() },
-            navigateBack = { navigateBack(navController) }
+            navigateBack = { navigateBack(navController) },
+            navigateToLogin = {
+                navController.navigateToLogin(navOptions {
+                    popUpTo(0) { inclusive = true }
+                })
+            }
         )
 
     }
