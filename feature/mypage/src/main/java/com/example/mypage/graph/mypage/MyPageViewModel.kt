@@ -3,7 +3,7 @@ package com.example.mypage.graph.mypage
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.model.mypage.MyPageTab
-import com.example.domain.model.mypage.UserInfo
+import com.example.domain.user.UserInfo
 import com.example.domain.model.post.PostFeed
 import com.example.domain.model.post.PostType
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,9 +30,11 @@ class MyPageViewModel @Inject constructor(
 
     }
 
-    private val _userInfo = MutableStateFlow(UserInfo(
+    private val _userInfo = MutableStateFlow(
+        UserInfo(
         "닉네임", null, 0, 0
-    ))
+    )
+    )
     val userInfo = _userInfo.asStateFlow()
 
     private val _tapType = MutableStateFlow(MyPageTab.WRITTEN_POSTS)

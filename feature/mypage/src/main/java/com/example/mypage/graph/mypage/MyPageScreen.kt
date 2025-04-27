@@ -44,7 +44,7 @@ import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.TabIndicator
 import com.example.designsystem.theme.TraceTheme
 import com.example.domain.model.mypage.MyPageTab
-import com.example.domain.model.mypage.UserInfo
+import com.example.domain.user.UserInfo
 import com.example.domain.model.post.PostFeed
 import com.example.mypage.graph.mypage.MyPageViewModel.MyPageEvent
 import com.example.mypage.graph.mypage.component.PostFeed
@@ -165,12 +165,12 @@ private fun MyPageScreen(
 
                     Spacer(Modifier.height(10.dp))
 
-                    Text("선행 점수 ${userInfo.GoodDeedScore}", style = TraceTheme.typography.bodyML)
+                    Text("선행 점수 ${userInfo.goodDeedScore}", style = TraceTheme.typography.bodyML)
 
                     Spacer(Modifier.height(5.dp))
 
                     Text(
-                        "선행 마크 ${userInfo.GoodDeedMarkCount}",
+                        "선행 마크 ${userInfo.goodDeedMarkCount}",
                         style = TraceTheme.typography.bodyML
                     )
                 }
