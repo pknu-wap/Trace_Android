@@ -35,11 +35,14 @@ include(":core:network")
 include(":core:navigation")
 include(":core:domain")
 include(":core:analytics")
+include(":core:datastore")
 
 include(":feature")
+include(":feature:splash")
 include(":feature:main")
 include(":feature:auth")
 include(":feature:home")
-include(":core:datastore")
 include(":feature:mission")
 include(":feature:mypage")
+
+

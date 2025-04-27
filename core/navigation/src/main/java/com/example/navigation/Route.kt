@@ -4,6 +4,8 @@ import kotlinx.serialization.Serializable
 
 sealed interface Route
 
+data object SplashRoute : Route
+
 @Serializable
 data object AuthGraphBaseRoute : Route
 

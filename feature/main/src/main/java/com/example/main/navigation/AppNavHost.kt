@@ -29,6 +29,23 @@ fun AppNavHost(
         modifier = modifier,
     ) {
         val currentRoute = navController.currentDestination?.route
+      
+        splashScreen(
+            navigateToHome = {
+                navController.navigateToHome(
+                    navOptions {
+                        popUpTo(0) { inclusive = true }
+                    }
+                )
+            },
+            navigateToLogin = {
+                navController.navigateToLogin(
+                    navOptions {
+                        popUpTo(0) { inclusive = true }
+                    }
+                )
+            }
+        )
 
         authNavGraph(
             navigateToHome = {
@@ -76,3 +93,4 @@ private fun navigateBack(
 ) {
     navController.popBackStack()
 }
+ 

@@ -31,8 +31,6 @@ import com.example.designsystem.component.TraceSnackBar
 import com.example.designsystem.component.TraceSnackBarHost
 import com.example.designsystem.theme.Background
 import com.example.designsystem.theme.TraceTheme
-import com.example.home.navigation.navigateToHome
-import com.example.main.MainViewModel.MainEvent
 import com.example.main.navigation.AppBottomBar
 import com.example.main.navigation.AppNavHost
 import com.example.navigation.shouldHideBottomBar
@@ -43,7 +41,6 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels()
-
 
     @OptIn(ExperimentalLayoutApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,17 +56,6 @@ class MainActivity : ComponentActivity() {
             val snackBarHostState = remember { SnackbarHostState() }
 
             LaunchedEffect(Unit) {
-                launch {
-                    viewModel.eventChannel.collect { event ->
-                        when (event) {
-                            is MainEvent.NavigateHome -> {
-                                navigateToHome(navController)
-                            }
-                        }
-
-                    }
-                }
-
                 launch {
                     viewModel.eventHelper.eventChannel.collect { event ->
                         when (event) {
@@ -131,18 +117,5 @@ class MainActivity : ComponentActivity() {
 
     }
 }
-
-private fun navigateToHome(
-    navController: NavController,
-) {
-    navController.navigateToHome(
-        navOptions {
-            popUpTo(0) { inclusive = true }
-            launchSingleTop = true
-        }
-    )
-
-}
-
 
 
