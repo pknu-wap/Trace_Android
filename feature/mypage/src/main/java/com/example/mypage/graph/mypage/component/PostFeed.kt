@@ -59,12 +59,23 @@ internal fun PostFeed(
                     .padding(end = 95.dp)
                     .align(Alignment.CenterStart)
             ) {
-                Text(
-                    postFeed.title,
-                    style = TraceTheme.typography.bodyMSB.copy(fontSize = 16.sp),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        postFeed.title,
+                        style = TraceTheme.typography.bodyMSB.copy(fontSize = 16.sp),
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+
+                    if(postFeed.postType == PostType.GOOD_DEED && postFeed.isVerified) {
+                        Spacer(Modifier.width(4.dp))
+
+                        Image(
+                            painter = painterResource(R.drawable.verification_mark),
+                            contentDescription = "선행 인증 마크"
+                        )
+                    }
+                }
 
                 Spacer(Modifier.height(3.dp))
 
