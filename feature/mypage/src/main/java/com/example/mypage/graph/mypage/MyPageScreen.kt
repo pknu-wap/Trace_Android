@@ -80,7 +80,7 @@ internal fun MyPageRoute(
             MyPageTab.COMMENTED_POSTS -> commentedPosts
             MyPageTab.REACTED_POSTS -> reactedPosts
         },
-        onTabTyhpeChange = viewModel::setTabType,
+        onTabTypeChange = viewModel::setTabType,
         navigateToPost = { viewModel.onEvent(MyPageEvent.NavigateToPost) },
         navigateToEditProfile = { viewModel.onEvent(MyPageEvent.NavigateToEditProfile) },
         navigateToSetting = { viewModel.onEvent(MyPageEvent.NavigateToSetting) }
@@ -93,7 +93,7 @@ private fun MyPageScreen(
     userInfo: UserInfo,
     tabType: MyPageTab,
     displayedPosts: List<PostFeed>,
-    onTabTyhpeChange: (MyPageTab) -> Unit,
+    onTabTypeChange: (MyPageTab) -> Unit,
     navigateToPost: () -> Unit,
     navigateToEditProfile: () -> Unit,
     navigateToSetting: () -> Unit,
@@ -193,7 +193,7 @@ private fun MyPageScreen(
                 tabs.forEach { tab ->
                     Tab(
                         selected = tab == tabType,
-                        onClick = { onTabTyhpeChange(tab) },
+                        onClick = { onTabTypeChange(tab) },
                         text = {
                             Text(
                                 tab.label,
@@ -258,6 +258,6 @@ fun MyPageScreenPreview() {
         displayedPosts = emptyList(),
         tabType = MyPageTab.WRITTEN_POSTS,
         navigateToPost = {},
-        onTabTyhpeChange = {}
+        onTabTypeChange = {}
     )
 }
