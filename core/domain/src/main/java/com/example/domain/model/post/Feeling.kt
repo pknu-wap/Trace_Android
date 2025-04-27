@@ -1,4 +1,4 @@
-package com.example.domain.model.home
+package com.example.domain.model.post
 
 enum class Feeling(val label: String) {
     HeartWarming("따뜻해요"),

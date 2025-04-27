@@ -9,6 +9,8 @@ android {
 dependencies {
     implementation(projects.feature.auth)
     implementation(projects.feature.home)
+    implementation(projects.feature.mypage)
+    implementation(projects.feature.mission)
     implementation(projects.feature.splash)
 
     implementation(libs.kakao.user)

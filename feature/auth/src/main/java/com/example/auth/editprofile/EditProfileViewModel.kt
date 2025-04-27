@@ -30,16 +30,16 @@ class EditProfileViewModel @Inject constructor(
     private val _isNameValid = MutableStateFlow(false)
     val isNameValid = _isNameValid.asStateFlow()
 
-    private val _profileImage = MutableStateFlow<String?>(null)
-    val profileImage = _profileImage.asStateFlow()
+    private val _profileImageUrl = MutableStateFlow<String?>(null)
+    val profileImage = _profileImageUrl.asStateFlow()
 
     fun setName(name: String) {
         _name.value = name
         validateName()
     }
 
-    fun setProfileImage(imageUri: String?) {
-        _profileImage.value = imageUri
+    fun setProfileImageUrl(imageUrl: String?) {
+        _profileImageUrl.value = imageUrl
     }
 
     internal fun registerUser() = viewModelScope.launch {

@@ -43,7 +43,7 @@ import com.example.designsystem.theme.GrayLine
 import com.example.designsystem.theme.PrimaryActive
 import com.example.designsystem.theme.TextHint
 import com.example.designsystem.theme.TraceTheme
-import com.example.domain.model.home.WritePostType
+import com.example.domain.model.post.WritePostType
 import com.example.home.graph.writepost.WritePostViewModel.WritePostEvent
 import com.example.home.graph.writepost.component.ImageContent
 import com.example.home.graph.writepost.component.TraceContentField

@@ -6,6 +6,7 @@ import androidx.compose.ui.graphics.Color
 
 val PrimaryDefault = Color(0xFF419A78)
 val PrimaryActive = Color(0xFF235240)
+val TabIndicator = Color(0xFF429474)
 
 val Background = Color(0xFFFFFEEE)
 

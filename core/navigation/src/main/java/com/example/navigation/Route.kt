@@ -4,26 +4,56 @@ import kotlinx.serialization.Serializable
 
 sealed interface Route
 
-@Serializable
 data object SplashRoute : Route
 
 @Serializable
-data object LoginRoute : Route
+data object AuthGraphBaseRoute : Route
+
+sealed class AuthGraph : Route {
+    @Serializable
+    data object LoginRoute : AuthGraph()
+
+    @Serializable
+    data class EditProfileRoute(val idToken : String) : AuthGraph()
+}
 
 @Serializable
-data class EditProfileRoute(val idToken : String) : Route
+data object HomeBaseRoute : Route
+
+sealed class HomeGraph : Route {
+    @Serializable
+    data object HomeRoute : HomeGraph()
+
+    @Serializable
+    data object PostRoute :  HomeGraph()
+
+    @Serializable
+    data object WritePostRoute :  HomeGraph()
+}
+
 
 @Serializable
-data object HomeRoute : Route
+data object MissionBaseRoute : Route
+
+sealed class MissionGraph : Route {
+    @Serializable
+    data object MissionRoute : MissionGraph()
+}
 
 @Serializable
-data object MissionRoute : Route
+data object MyPageBaseRoute : Route
 
-@Serializable
-data object MyPageRoute : Route
+sealed class  MyPageGraph : Route {
+    @Serializable
+    data object MyPageRoute : MyPageGraph()
 
-@Serializable
-data object PostRoute : Route
+    @Serializable
+    data object UpdateProfileRoute : MyPageGraph()
 
-@Serializable
-data object WritePostRoute : Route
+    @Serializable
+    data object SettingRoute : MyPageGraph()
+}
+
+
+
+

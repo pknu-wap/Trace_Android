@@ -21,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
@@ -96,7 +97,9 @@ class MainActivity : ComponentActivity() {
                                     navController.navigate(
                                         bottomNaviDestination,
                                         navOptions = navOptions {
-                                            popUpTo(0) { saveState = true }
+                                            popUpTo(0) {
+                                                saveState = true
+                                            }
                                             launchSingleTop = true
                                             restoreState = true
                                         })

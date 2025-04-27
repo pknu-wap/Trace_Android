@@ -43,6 +43,13 @@ val PretendardRegular = FontFamily(
     )
 )
 
+val PretendardLight = FontFamily(
+    Font(
+        resId = R.font.pretendard_light,
+        weight = FontWeight.Light
+    )
+)
+
 val BagelFatOneRegular = FontFamily(
     Font(
         resId = R.font.bagel_fat_one_regular,
@@ -97,6 +104,11 @@ data class TraceTypography(
         fontSize = 16.sp,
         lineHeight = 20.sp
     ),
+    val bodyML: TextStyle = TextStyle(
+        fontFamily = PretendardLight,
+        fontSize = 15.sp,
+        lineHeight = 19.sp
+    ),
     val bodySM: TextStyle = TextStyle(
         fontFamily = PretendardMedium,
         fontSize = 14.sp,
@@ -122,8 +134,4 @@ data class TraceTypography(
         fontSize = 24.sp,
         lineHeight = 32.sp
     ),
-
-
-
-
-    )
+)
