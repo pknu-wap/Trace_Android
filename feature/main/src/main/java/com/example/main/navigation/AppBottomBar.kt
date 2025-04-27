@@ -99,8 +99,8 @@ internal fun AppBottomBar(
                     onClick = {
                         when (topLevelRoute) {
                             TopLevelDestination.HOME -> navigateToBottomNaviDestination(HomeBaseRoute)
-                            TopLevelDestination.Mission -> navigateToBottomNaviDestination(MissionBaseRoute)
-                            TopLevelDestination.MyPage -> navigateToBottomNaviDestination(MyPageBaseRoute)
+                            TopLevelDestination.MISSION -> navigateToBottomNaviDestination(MissionBaseRoute)
+                            TopLevelDestination.MY_Page -> navigateToBottomNaviDestination(MyPageBaseRoute)
                         }
                     },
                     selected = currentDestination.isRouteInHierarchy(topLevelRoute.route),
