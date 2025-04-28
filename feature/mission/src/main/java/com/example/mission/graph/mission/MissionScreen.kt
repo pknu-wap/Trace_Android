@@ -39,6 +39,7 @@ import com.example.designsystem.theme.VerificationButton
 import com.example.designsystem.theme.White
 import com.example.domain.model.mission.DailyMission
 import com.example.domain.model.mission.MAX_MISSION_CHANGE_COUNT
+import com.example.domain.model.mission.Mission
 
 @Composable
 internal fun MissionRoute(
@@ -114,23 +115,25 @@ private fun MissionScreen(
                             modifier = Modifier.align(Alignment.Center)
                         )
 
-                    Text(
-                        "${dailyMission.changeCount}/${MAX_MISSION_CHANGE_COUNT}",
-                        style = TraceTheme.typography.bodySR.copy(
-                            fontSize = 12.sp,
-                            lineHeight = 16.sp
-                        ),
-                        color = MissionHeader,
-                        modifier = Modifier.align(Alignment.BottomCenter).padding(top = 1.dp)
-                    )
+                        Text(
+                            "${dailyMission.changeCount}/${MAX_MISSION_CHANGE_COUNT}",
+                            style = TraceTheme.typography.bodySR.copy(
+                                fontSize = 12.sp,
+                                lineHeight = 16.sp
+                            ),
+                            color = MissionHeader,
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .padding(top = 1.dp)
+                        )
+                    }
                 }
-            }
 
                 Spacer(Modifier.height(38.dp))
 
                 Box(modifier = Modifier.fillMaxWidth()) {
                     Text(
-                        "길거리에서 쓰레기 줍기",
+                        dailyMission.mission.description,
                         style = TraceTheme.typography.missionTitle,
                         color = Black,
                         modifier = Modifier.align(Alignment.Center)
@@ -189,8 +192,11 @@ private fun MissionScreen(
 fun MissionScreenPreview() {
     MissionScreen(
         dailyMission = DailyMission(
-            mission = "길거리에서 쓰레기 줍기",
-            isVerficated = false,
+            mission = Mission(
+                description = "길거리에서 쓰레기 줍기",
+                isVerficated = false,
+            ),
+
             changeCount = 0
         ),
         changeMission = {},
