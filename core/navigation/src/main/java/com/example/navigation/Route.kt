@@ -39,6 +39,9 @@ data object MissionBaseRoute : Route
 sealed class MissionGraph : Route {
     @Serializable
     data object MissionRoute : MissionGraph()
+
+    @Serializable
+    data object SubmitMissionRoute : MissionGraph()
 }
 
 @Serializable

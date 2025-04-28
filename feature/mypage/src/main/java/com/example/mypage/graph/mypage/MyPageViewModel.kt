@@ -3,9 +3,9 @@ package com.example.mypage.graph.mypage
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.model.mypage.MyPageTab
-import com.example.domain.user.UserInfo
 import com.example.domain.model.post.PostFeed
 import com.example.domain.model.post.PostType
+import com.example.domain.user.UserInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,21 +32,21 @@ class MyPageViewModel @Inject constructor(
 
     private val _userInfo = MutableStateFlow(
         UserInfo(
-        "닉네임", null, 0, 0
-    )
+            "닉네임", null, 0, 0
+        )
     )
     val userInfo = _userInfo.asStateFlow()
 
     private val _tapType = MutableStateFlow(MyPageTab.WRITTEN_POSTS)
     val tabType = _tapType.asStateFlow()
 
-    private val _writtenPosts : MutableStateFlow<List<PostFeed>> = MutableStateFlow(fakePostFeeds)
+    private val _writtenPosts: MutableStateFlow<List<PostFeed>> = MutableStateFlow(fakePostFeeds)
     val writtenPosts = _writtenPosts.asStateFlow()
 
-    private val _commentedPosts : MutableStateFlow<List<PostFeed>> = MutableStateFlow(emptyList())
+    private val _commentedPosts: MutableStateFlow<List<PostFeed>> = MutableStateFlow(emptyList())
     val commentedPosts = _commentedPosts.asStateFlow()
 
-    private val _reactedPosts : MutableStateFlow<List<PostFeed>> = MutableStateFlow(fakePostFeeds)
+    private val _reactedPosts: MutableStateFlow<List<PostFeed>> = MutableStateFlow(fakePostFeeds)
     val reactedPosts = _reactedPosts.asStateFlow()
 
     private fun setUserInfo(newInfo: UserInfo) {
