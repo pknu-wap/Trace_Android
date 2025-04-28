@@ -11,7 +11,7 @@ private val HIDDEN_BOTTOM_BAR_ROUTES = setOf(
     HomeGraph.WritePostRoute::class,
     HomeGraph.PostRoute::class,
     MyPageGraph.UpdateProfileRoute::class,
-    MyPageGraph.SettingRoute::class
+    MyPageGraph.SettingRoute::class,
     SplashRoute::class
 )
 

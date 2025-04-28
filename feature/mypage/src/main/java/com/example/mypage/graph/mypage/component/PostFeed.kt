@@ -129,7 +129,7 @@ internal fun PostFeed(
                     Text(
                         "${postFeed.commentCount}",
                         style = TraceTheme.typography.bodySSB.copy(fontSize = 11.sp),
-                        color = WarmGray
+                        color = PrimaryDefault
                     )
                 }
 

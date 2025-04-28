@@ -17,6 +17,7 @@ import com.example.mypage.navigation.myPageNavGraph
 import com.example.mypage.navigation.navigateToSetting
 import com.example.mypage.navigation.navigateToUpdateProfile
 import com.example.navigation.AuthGraphBaseRoute
+import com.example.splash.navigation.splashScreen
 
 @Composable
 fun AppNavHost(
