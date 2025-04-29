@@ -18,7 +18,6 @@ internal fun SplashRoute(
     navigateToLogin: () -> Unit,
     viewModel: SplashViewModel = hiltViewModel(),
 ) {
-
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
             when (event) {

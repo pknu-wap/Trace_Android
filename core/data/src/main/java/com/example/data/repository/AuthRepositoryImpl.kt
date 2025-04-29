@@ -42,12 +42,12 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun registerUser(
        signUpToken: String, 
-      providerId: String
+      providerId: String,
         nickName: String,
         profileImageUrl: String?
     ): Result<Unit> = suspendRunCatching {
         val uploadImageUrl = profileImageUrl?.let { imageResizer.resizeImage(profileImageUrl) }
-        val response = authDataSource.registerUser(idToken, nickName, uploadImageUrl).getOrThrow()
+        val response = authDataSource.registerUser(signUpToken, providerId, nickName, uploadImageUrl).getOrThrow()
 
         coroutineScope {
             val accessTokenJob = launch {

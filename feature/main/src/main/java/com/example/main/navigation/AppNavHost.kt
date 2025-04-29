@@ -12,8 +12,6 @@ import com.example.home.navigation.homeNavGraph
 import com.example.home.navigation.navigateToHome
 import com.example.home.navigation.navigateToPost
 import com.example.home.navigation.navigateToWritePost
-import com.example.home.navigation.postScreen
-import com.example.home.navigation.writePostScreen
 import com.example.mission.navigation.missionNavGraph
 import com.example.mypage.navigation.myPageNavGraph
 import com.example.mypage.navigation.navigateToSetting
@@ -31,8 +29,6 @@ fun AppNavHost(
         startDestination = AuthGraphBaseRoute,
         modifier = modifier,
     ) {
-        val currentRoute = navController.currentDestination?.route
-      
         splashScreen(
             navigateToHome = {
                 navController.navigateToHome(
@@ -54,7 +50,7 @@ fun AppNavHost(
             navigateToHome = {
                 navController.navigateToHome(
                     navOptions {
-                        currentRoute?.let { popUpTo(currentRoute) { inclusive = true } }
+                         popUpTo(0) { inclusive = true }
                     }
                 )
             },

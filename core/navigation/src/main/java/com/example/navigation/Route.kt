@@ -7,6 +7,7 @@ sealed interface Route
 @Serializable
 data object SplashRoute : Route
 
+@Serializable
 data object AuthGraphBaseRoute : Route
 
 sealed class AuthGraph : Route {
