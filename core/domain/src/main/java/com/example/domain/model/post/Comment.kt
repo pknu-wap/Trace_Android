@@ -1,4 +1,4 @@
-package com.example.domain.model.home
+package com.example.domain.model.post
 
 import java.time.Duration
 import java.time.LocalDateTime

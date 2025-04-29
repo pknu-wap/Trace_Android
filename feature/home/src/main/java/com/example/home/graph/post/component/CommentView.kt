@@ -32,7 +32,7 @@ import com.example.designsystem.R
 import com.example.designsystem.theme.DarkGray
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.WarmGray
-import com.example.domain.model.home.Comment
+import com.example.domain.model.post.Comment
 
 @Composable
 internal fun CommentView(

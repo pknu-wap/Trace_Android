@@ -1,6 +1,7 @@
 package com.example.data.repository
 
 import com.example.common.util.suspendRunCatching
+import com.example.data.image.ImageResizer
 import com.example.datastore.datasource.token.LocalTokenDataSource
 import com.example.domain.model.auth.User
 import com.example.domain.model.auth.UserRole
@@ -13,6 +14,7 @@ import javax.inject.Inject
 class AuthRepositoryImpl @Inject constructor(
     private val authDataSource: AuthDataSource,
     private val localTokenDataSource: LocalTokenDataSource,
+    private val imageResizer : ImageResizer
 ) : AuthRepository {
     override suspend fun loginKakao(idToken: String): Result<User> = suspendRunCatching {
         val response = authDataSource.loginKakao(idToken).getOrThrow()
@@ -38,8 +40,27 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun registerUser(
+       signUpToken: String, 
+      providerId: String
+        nickName: String,
+        profileImageUrl: String?
+    ): Result<Unit> = suspendRunCatching {
+        val uploadImageUrl = profileImageUrl?.let { imageResizer.resizeImage(profileImageUrl) }
+        val response = authDataSource.registerUser(idToken, nickName, uploadImageUrl).getOrThrow()
 
-    override suspend fun registerUser(signUpToken: String, providerId: String): Result<Unit> {
-        return Result.success(Unit)
+        coroutineScope {
+            val accessTokenJob = launch {
+                response.accessToken.let { localTokenDataSource.setAccessToken(it) }
+            }
+
+            val refreshTokenJob = launch {
+                response.refreshToken.let { localTokenDataSource.setRefreshToken(it) }
+            }
+
+            accessTokenJob.join()
+            refreshTokenJob.join()
+        }
     }
+
 }

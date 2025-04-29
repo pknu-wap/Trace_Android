@@ -33,10 +33,8 @@ import com.example.designsystem.theme.DarkGray
 import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.WarmGray
-import com.example.domain.model.home.PostFeed
-import java.time.Duration
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import com.example.domain.model.post.PostFeed
+import com.example.domain.model.post.PostType
 
 @Composable
 internal fun PostFeed(
@@ -61,12 +59,23 @@ internal fun PostFeed(
                     .padding(end = 95.dp)
                     .align(Alignment.CenterStart)
             ) {
-                Text(
-                    postFeed.title,
-                    style = TraceTheme.typography.bodyMSB.copy(fontSize = 16.sp),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        postFeed.title,
+                        style = TraceTheme.typography.bodyMSB.copy(fontSize = 16.sp),
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+
+                    if(postFeed.postType == PostType.GOOD_DEED && postFeed.isVerified) {
+                        Spacer(Modifier.width(4.dp))
+
+                        Image(
+                            painter = painterResource(R.drawable.verification_mark),
+                            contentDescription = "선행 인증 마크"
+                        )
+                    }
+                }
 
                 Spacer(Modifier.height(3.dp))
 
@@ -120,7 +129,7 @@ internal fun PostFeed(
                     Text(
                         "${postFeed.commentCount}",
                         style = TraceTheme.typography.bodySSB.copy(fontSize = 11.sp),
-                        color = WarmGray
+                        color = PrimaryDefault
                     )
                 }
 
@@ -207,7 +216,7 @@ internal fun PostFeed(
                 Text(
                     "${postFeed.commentCount}",
                     style = TraceTheme.typography.bodySSB.copy(fontSize = 11.sp),
-                    color = WarmGray
+                    color = PrimaryDefault
                 )
             }
 

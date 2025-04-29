@@ -49,7 +49,8 @@ import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.WarmGray
 import com.example.designsystem.theme.White
-import com.example.domain.model.home.PostDetail
+import com.example.domain.model.post.PostDetail
+import com.example.domain.model.post.PostType
 import com.example.home.graph.post.PostViewModel.PostEvent
 import com.example.home.graph.post.component.CommentView
 import com.example.home.graph.post.component.OtherPostDropdownMenu
@@ -108,7 +109,20 @@ private fun PostScreen(
                 .padding(top = 75.dp, start = 20.dp, end = 20.dp, bottom = 50.dp)
         ) {
             item {
-                Text(postDetail.title, style = TraceTheme.typography.bodyLSB)
+                Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    Text(postDetail.title, style = TraceTheme.typography.bodyLSB)
+
+                    if(postDetail.postType == PostType.GOOD_DEED && postDetail.isVerified ) {
+                        Spacer(Modifier.width(8.dp))
+
+                        Image(
+                            painter = painterResource(R.drawable.verification_mark),
+                            contentDescription = "선행 인증 마크",
+                            modifier = Modifier.size(22.dp)
+                        )
+                    }
+                }
+
 
                 Spacer(Modifier.height(10.dp))
 

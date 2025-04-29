@@ -9,6 +9,7 @@
   
 ### UI
 - Compose
+- Coil
 
 ### DI
 - Hilt
@@ -16,7 +17,11 @@
 ### Data
 - Retrofit2
 - Okhttp3
-- Gson
+- KotlinxSerilization
+- DataStore
+
+### Logging
+- Firebase Analytics & Crashlytics
 
 <br><br>
 

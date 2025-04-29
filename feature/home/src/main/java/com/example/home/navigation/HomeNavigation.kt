@@ -4,53 +4,49 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import androidx.navigation.navigation
 import com.example.home.graph.home.HomeRoute
 import com.example.home.graph.post.PostRoute
 import com.example.home.graph.writepost.WritePostRoute
-import com.example.navigation.HomeRoute
-import com.example.navigation.PostRoute
-import com.example.navigation.WritePostRoute
+import com.example.navigation.HomeBaseRoute
+import com.example.navigation.HomeGraph
 
 fun NavController.navigateToHome(navOptions: NavOptions? = null) {
-    navigate(HomeRoute, navOptions)
+    navigate(HomeGraph.HomeRoute, navOptions)
 }
 
 fun NavController.navigateToWritePost(navOptions: NavOptions? = null) {
-    navigate(WritePostRoute, navOptions)
+    navigate(HomeGraph.WritePostRoute, navOptions)
 }
 
 fun NavController.navigateToPost(navOptions: NavOptions? = null) {
-    navigate(PostRoute, navOptions)
+    navigate(HomeGraph.PostRoute, navOptions)
 }
 
-fun NavGraphBuilder.homeScreen(
+fun NavGraphBuilder.homeNavGraph(
     navigateToPost: () -> Unit,
-    navigateToWritePost: () -> Unit
+    navigateToWritePost: () -> Unit,
+    navigateBack: () -> Unit
 ) {
-    composable<HomeRoute> {
-        HomeRoute(
-            navigateToPost = navigateToPost,
-            navigateToWritePost = navigateToWritePost
-        )
+    navigation<HomeBaseRoute>(startDestination = HomeGraph.HomeRoute) {
+        composable<HomeGraph.HomeRoute> {
+            HomeRoute(
+                navigateToPost = navigateToPost,
+                navigateToWritePost = navigateToWritePost
+            )
+        }
+
+        composable<HomeGraph.WritePostRoute> {
+            WritePostRoute(
+                navigateBack = navigateBack
+            )
+        }
+
+        composable<HomeGraph.PostRoute> {
+            PostRoute(
+                navigateBack = navigateBack
+            )
+        }
     }
 }
 
-fun NavGraphBuilder.writePostScreen(
-    navigateBack: () -> Unit,
-) {
-    composable<WritePostRoute> {
-        WritePostRoute(
-            navigateBack = navigateBack
-        )
-    }
-}
-
-fun NavGraphBuilder.postScreen(
-    navigateBack: () -> Unit,
-) {
-    composable<PostRoute> {
-        PostRoute(
-            navigateBack = navigateBack
-        )
-    }
-}

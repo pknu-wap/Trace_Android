@@ -1,9 +1,9 @@
 package com.example.auth.editprofile
 
-import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.common.event.EventHelper
 import com.example.domain.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -16,7 +16,8 @@ import javax.inject.Inject
 @HiltViewModel
 class EditProfileViewModel @Inject constructor(
     private val authRepository: AuthRepository,
-    private val savedStateHandle: SavedStateHandle
+    val eventHelper: EventHelper,
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val _eventChannel = Channel<EditProfileEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
@@ -25,28 +26,27 @@ class EditProfileViewModel @Inject constructor(
     private val providerId: String = requireNotNull(savedStateHandle["providerId"])
 
     private val _name = MutableStateFlow("")
-    val nameText = _name.asStateFlow()
+    val name = _name.asStateFlow()
 
     private val _isNameValid = MutableStateFlow(false)
     val isNameValid = _isNameValid.asStateFlow()
 
-    private val _profileImage = MutableStateFlow<Uri?>(null)
-    val profileImage = _profileImage.asStateFlow()
+    private val _profileImageUrl = MutableStateFlow<String?>(null)
+    val profileImage = _profileImageUrl.asStateFlow()
 
     fun setName(name: String) {
         _name.value = name
         validateName()
     }
 
-    fun setProfileImage(imageUri: Uri?) {
-        _profileImage.value = imageUri
+    fun setProfileImageUrl(imageUrl: String?) {
+        _profileImageUrl.value = imageUrl
     }
 
     internal fun registerUser() = viewModelScope.launch {
-        authRepository.registerUser(signUpToken, providerId).onSuccess {
-
+        authRepository.registerUser(signUpToken, providerId, name.value, profileImage.value).onSuccess {
         }.onFailure {
-
+            _eventChannel.send(EditProfileEvent.RegisterUserFailure)
         }
     }
 
@@ -62,5 +62,6 @@ class EditProfileViewModel @Inject constructor(
 
     sealed class EditProfileEvent {
         data object RegisterUserSuccess : EditProfileEvent()
+        data object RegisterUserFailure : EditProfileEvent()
     }
 }

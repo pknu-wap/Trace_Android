@@ -20,6 +20,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -28,10 +29,8 @@ import com.example.common.event.TraceEvent
 import com.example.common.ui.TraceBottomBarAnimation
 import com.example.designsystem.component.TraceSnackBar
 import com.example.designsystem.component.TraceSnackBarHost
+import com.example.designsystem.theme.Background
 import com.example.designsystem.theme.TraceTheme
-import com.example.designsystem.theme.White
-import com.example.home.navigation.navigateToHome
-import com.example.main.MainViewModel.MainEvent
 import com.example.main.navigation.AppBottomBar
 import com.example.main.navigation.AppNavHost
 import com.example.navigation.shouldHideBottomBar
@@ -43,12 +42,12 @@ class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels()
 
-
     @OptIn(ExperimentalLayoutApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
 
+        installSplashScreen()
 
 
         enableEdgeToEdge()
@@ -99,7 +98,7 @@ class MainActivity : ComponentActivity() {
                             snackbar = { snackBarData -> TraceSnackBar(snackBarData) }
                         )
                     },
-                    containerColor = White,
+                    containerColor = Background,
                     bottomBar = {
                         TraceBottomBarAnimation(
                             visible = currentDestination?.shouldHideBottomBar() == false,
@@ -111,7 +110,9 @@ class MainActivity : ComponentActivity() {
                                     navController.navigate(
                                         bottomNaviDestination,
                                         navOptions = navOptions {
-                                            popUpTo(0) { saveState = true }
+                                            popUpTo(0) {
+                                                saveState = true
+                                            }
                                             launchSingleTop = true
                                             restoreState = true
                                         })
@@ -129,18 +130,5 @@ class MainActivity : ComponentActivity() {
 
     }
 }
-
-private fun navigateToHome(
-    navController: NavController,
-) {
-    navController.navigateToHome(
-        navOptions {
-            popUpTo(0) { inclusive = true }
-            launchSingleTop = true
-        }
-    )
-
-}
-
 
 

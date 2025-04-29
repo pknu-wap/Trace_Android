@@ -30,13 +30,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.common.util.clickable
 import com.example.designsystem.R
-import com.example.designsystem.theme.Background
 import com.example.designsystem.theme.GrayLine
 import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.White
-import com.example.domain.model.home.PostFeed
-import com.example.domain.model.home.PostType
+import com.example.domain.model.post.PostFeed
+import com.example.domain.model.post.PostType
 import com.example.home.graph.home.HomeViewModel.HomeEvent
 import com.example.home.graph.home.component.PostFeed
 import com.example.home.graph.home.component.TabSelector
@@ -81,7 +80,6 @@ private fun HomeScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Background)
     ) {
         LazyColumn(
             modifier = Modifier
@@ -89,7 +87,10 @@ private fun HomeScreen(
                 .padding(top = 105.dp, start = 20.dp, end = 20.dp)
         ) {
             items(postFeeds.size) { index ->
-                PostFeed(postFeed = postFeeds[index], onClick = navigateToPost)
+                PostFeed(
+                    postFeed = postFeeds[index],
+                    onClick = navigateToPost
+                )
 
                 Spacer(Modifier.height(8.dp))
 
