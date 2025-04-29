@@ -20,15 +20,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
-import com.example.auth.navigation.navigateToLogin
 import com.example.common.event.TraceEvent
 import com.example.common.ui.TraceBottomBarAnimation
 import com.example.designsystem.component.TraceSnackBar
@@ -41,7 +36,6 @@ import com.example.main.navigation.AppBottomBar
 import com.example.main.navigation.AppNavHost
 import com.example.navigation.shouldHideBottomBar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -55,13 +49,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
 
-        viewModel.checkSession()
 
-        installSplashScreen().apply {
-            setKeepOnScreenCondition {
-               !viewModel.isAppReady.value
-            }
-        }
 
         enableEdgeToEdge()
         setContent {
@@ -76,7 +64,6 @@ class MainActivity : ComponentActivity() {
                         when (event) {
                             is MainEvent.NavigateHome -> {
                                 navigateToHome(navController)
-                                viewModel.onAppReady()
                             }
                         }
 

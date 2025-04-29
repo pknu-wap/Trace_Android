@@ -21,7 +21,8 @@ class EditProfileViewModel @Inject constructor(
     private val _eventChannel = Channel<EditProfileEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
 
-    private val idToken: String = requireNotNull(savedStateHandle["idToken"])
+    private val signUpToken: String = requireNotNull(savedStateHandle["signUpToken"])
+    private val providerId: String = requireNotNull(savedStateHandle["providerId"])
 
     private val _name = MutableStateFlow("")
     val nameText = _name.asStateFlow()
@@ -42,7 +43,7 @@ class EditProfileViewModel @Inject constructor(
     }
 
     internal fun registerUser() = viewModelScope.launch {
-        authRepository.registerUser(idToken).onSuccess {
+        authRepository.registerUser(signUpToken, providerId).onSuccess {
 
         }.onFailure {
 

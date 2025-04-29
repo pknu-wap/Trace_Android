@@ -1,6 +1,5 @@
 package com.example.auth.login
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.common.event.EventHelper
@@ -26,18 +25,21 @@ class LoginViewModel @Inject constructor(
     }
 
     internal fun loginKakao(idToken: String) = viewModelScope.launch {
-        authRepository.loginKakao(idToken).onSuccess { userRole ->
-            Log.d("idToken", userRole.toString() + "흠 성공?" )
-            if (userRole == UserRole.NONE) _eventChannel.send(LoginEvent.NavigateEditProfile(idToken))
+        authRepository.loginKakao(idToken).onSuccess { user ->
+            if (user.role == UserRole.NONE) _eventChannel.send(
+                LoginEvent.NavigateEditProfile(
+                    user.signUpToken,
+                    user.providerId
+                )
+            )
             else _eventChannel.send(LoginEvent.NavigateToHome)
         }.onFailure {
             eventHelper.sendEvent(TraceEvent.ShowSnackBar("로그인에 실패했습니다"))
-            _eventChannel.send(LoginEvent.NavigateEditProfile(idToken))
         }
     }
 
     sealed class LoginEvent {
-        data class NavigateEditProfile(val idToken: String) : LoginEvent()
+        data class NavigateEditProfile(val signUpToken: String, val providerId: String) : LoginEvent()
         data object NavigateToHome : LoginEvent()
     }
 

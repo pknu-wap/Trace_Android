@@ -32,7 +32,7 @@ import com.kakao.sdk.user.UserApiClient
 @Composable
 internal fun LoginRoute(
     navigateToHome: () -> Unit,
-    navigateToEditProfile: (String) -> Unit,
+    navigateToEditProfile: (String, String) -> Unit,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
 
@@ -40,7 +40,7 @@ internal fun LoginRoute(
         viewModel.eventChannel.collect { event ->
             when (event) {
                 is LoginEvent.NavigateToHome -> navigateToHome()
-                is LoginEvent.NavigateEditProfile -> navigateToEditProfile(event.idToken)
+                is LoginEvent.NavigateEditProfile -> navigateToEditProfile(event.signUpToken, event.providerId)
             }
         }
     }
@@ -49,7 +49,6 @@ internal fun LoginRoute(
         viewModel::loginKakao,
         onLoginFailure = { viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("로그인에 실패했습니다")) },
         navigateToHome = { viewModel.onEvent(LoginEvent.NavigateToHome) },
-        navigateToEditProfile = { viewModel.onEvent(LoginEvent.NavigateEditProfile(idToken = "")) }
     )
 }
 
@@ -57,7 +56,6 @@ internal fun LoginRoute(
 private fun LoginScreen(
     loginKakao: (String) -> Unit,
     onLoginFailure: () -> Unit,
-    navigateToEditProfile: () -> Unit,
     navigateToHome: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -73,7 +71,6 @@ private fun LoginScreen(
             contentDescription = "카카오 로그인",
             modifier = Modifier.clickable {
                 loginKakao(context, loginKakao, onLoginFailure)
-//                navigateToEditProfile()
             }
         )
 

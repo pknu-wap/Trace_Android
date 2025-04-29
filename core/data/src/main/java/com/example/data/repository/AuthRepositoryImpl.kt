@@ -2,6 +2,7 @@ package com.example.data.repository
 
 import com.example.common.util.suspendRunCatching
 import com.example.datastore.datasource.token.LocalTokenDataSource
+import com.example.domain.model.auth.User
 import com.example.domain.model.auth.UserRole
 import com.example.domain.repository.AuthRepository
 import com.example.network.source.auth.AuthDataSource
@@ -13,11 +14,13 @@ class AuthRepositoryImpl @Inject constructor(
     private val authDataSource: AuthDataSource,
     private val localTokenDataSource: LocalTokenDataSource,
 ) : AuthRepository {
-    override suspend fun loginKakao(idToken: String): Result<UserRole> = suspendRunCatching {
+    override suspend fun loginKakao(idToken: String): Result<User> = suspendRunCatching {
         val response = authDataSource.loginKakao(idToken).getOrThrow()
 
-        if (response.userId != null) {
-            UserRole.NONE
+        if (response.signupToken != null && response.providerId != null) {
+            val signUpToken = response.signupToken as String
+            val providerId = response.providerId as String
+            User(UserRole.NONE, signUpToken, providerId)
         } else {
             coroutineScope {
                 val accessTokenJob = launch {
@@ -25,20 +28,20 @@ class AuthRepositoryImpl @Inject constructor(
                 }
 
                 val refreshTokenJob = launch {
-                    response.refreshToekn?.let { localTokenDataSource.setRefreshToken(it) }
+                    response.refreshToken?.let { localTokenDataSource.setRefreshToken(it) }
                 }
 
                 accessTokenJob.join()
                 refreshTokenJob.join()
 
-                UserRole.USER
+                User(UserRole.USER)
             }
 
         }
     }
 
 
-    override suspend fun registerUser(idToken: String): Result<Unit> {
+    override suspend fun registerUser(signUpToken: String, providerId: String): Result<Unit> {
         return Result.success(Unit)
     }
 }
