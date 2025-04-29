@@ -7,6 +7,6 @@ enum class UserRole {
 
 data class User(
     val role: UserRole,
-    val signUpToken: String = "",
-    val providerId: String =  "",
+    val signUpToken: String? = null,
+    val providerId: String? = null,
 )

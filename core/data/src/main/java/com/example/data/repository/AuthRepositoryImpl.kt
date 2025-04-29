@@ -18,9 +18,7 @@ class AuthRepositoryImpl @Inject constructor(
         val response = authDataSource.loginKakao(idToken).getOrThrow()
 
         if (response.signupToken != null && response.providerId != null) {
-            val signUpToken = response.signupToken as String
-            val providerId = response.providerId as String
-            User(UserRole.NONE, signUpToken, providerId)
+            User(UserRole.NONE, response.signupToken, response.providerId)
         } else {
             coroutineScope {
                 val accessTokenJob = launch {
