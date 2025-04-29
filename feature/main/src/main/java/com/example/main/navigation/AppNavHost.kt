@@ -29,8 +29,6 @@ fun AppNavHost(
         startDestination = AuthGraphBaseRoute,
         modifier = modifier,
     ) {
-        val currentRoute = navController.currentDestination?.route
-      
         splashScreen(
             navigateToHome = {
                 navController.navigateToHome(
@@ -52,7 +50,7 @@ fun AppNavHost(
             navigateToHome = {
                 navController.navigateToHome(
                     navOptions {
-                        currentRoute?.let { popUpTo(currentRoute) { inclusive = true } }
+                         popUpTo(0) { inclusive = true }
                     }
                 )
             },
