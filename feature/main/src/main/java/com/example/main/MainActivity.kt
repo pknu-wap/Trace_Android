@@ -46,7 +46,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+
         installSplashScreen()
+
 
         enableEdgeToEdge()
         setContent {
@@ -56,6 +58,17 @@ class MainActivity : ComponentActivity() {
             val snackBarHostState = remember { SnackbarHostState() }
 
             LaunchedEffect(Unit) {
+                launch {
+                    viewModel.eventChannel.collect { event ->
+                        when (event) {
+                            is MainEvent.NavigateHome -> {
+                                navigateToHome(navController)
+                            }
+                        }
+
+                    }
+                }
+
                 launch {
                     viewModel.eventHelper.eventChannel.collect { event ->
                         when (event) {

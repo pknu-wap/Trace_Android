@@ -7,7 +7,6 @@ sealed interface Route
 @Serializable
 data object SplashRoute : Route
 
-@Serializable
 data object AuthGraphBaseRoute : Route
 
 sealed class AuthGraph : Route {
@@ -15,7 +14,7 @@ sealed class AuthGraph : Route {
     data object LoginRoute : AuthGraph()
 
     @Serializable
-    data class EditProfileRoute(val idToken : String) : AuthGraph()
+    data class EditProfileRoute(val signUpToken : String, val providerId: String) : AuthGraph()
 }
 
 @Serializable
