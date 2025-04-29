@@ -19,5 +19,4 @@ class MainViewModel @Inject constructor(
     sealed class MainEvent {
         data object NavigateHome : MainEvent()
     }
-
 }

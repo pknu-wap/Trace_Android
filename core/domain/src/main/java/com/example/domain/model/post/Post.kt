@@ -1,4 +1,4 @@
-package com.example.domain.model.home
+package com.example.domain.model.post
 
 import java.time.Duration
 import java.time.LocalDateTime
@@ -15,7 +15,7 @@ data class PostFeed(
     val isVerified : Boolean = false,
     val imageUri: String = "",
 ) {
-     fun getFormattedTime(): String {
+    fun getFormattedTime(): String {
         val now = LocalDateTime.now()
         val duration = Duration.between(createdAt, now)
 
@@ -51,6 +51,7 @@ data class PostDetail(
     val nickname: String,
     val profileImageUrl : String? = null,
     val createdAt: LocalDateTime,
+    val isVerified: Boolean = false,
     val viewCount : Int,
     val comments: List<Comment>,
     val feelingCount : FeelingCount,
@@ -72,5 +73,4 @@ enum class PostType(val label: String) {
 enum class WritePostType(val label : String) {
     GOOD_DEED("선행"),
     FREE("자유"),
-    NONE("없음")
 }

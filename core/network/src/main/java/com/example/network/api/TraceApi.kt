@@ -24,5 +24,5 @@ interface TraceApi {
     ): Result<TokenResponse>
 
     @HTTP(method = "GET", path = "/api/f1/auth/refresh", hasBody = true)
-    suspend fun refreshToken(@Body refreshToeknRequest: RefreshTokenRequest): Result<TokenResponse>
+    suspend fun refreshToken(@Body refreshTokenRequest: RefreshTokenRequest): Result<TokenResponse>
 }

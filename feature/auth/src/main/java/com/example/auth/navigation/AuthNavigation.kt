@@ -4,14 +4,16 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import androidx.navigation.navigation
 import com.example.auth.graph.editProfile.EditProfileRoute
 import com.example.auth.login.LoginRoute
-import com.example.navigation.EditProfileRoute
-import com.example.navigation.LoginRoute
+import com.example.navigation.AuthGraph
+import com.example.navigation.AuthGraphBaseRoute
+
 
 
 fun NavController.navigateToLogin(navOptions: NavOptions? = null) {
-    navigate(LoginRoute, navOptions)
+    navigate(AuthGraph.LoginRoute, navOptions)
 }
 
 fun NavController.navigateToEditProfile(signUpToken : String, providerId : String, navOptions: NavOptions? = null) {
@@ -29,16 +31,28 @@ fun NavGraphBuilder.loginScreen(
             navigateToEditProfile = { signUpToken, providerId -> navigateToEditProfile(signUpToken, providerId) }
         )
     }
+
 }
 
-fun NavGraphBuilder.editProfileScreen(
+fun NavGraphBuilder.authNavGraph(
     navigateToHome: () -> Unit,
+    navigateToEditProfile: (String) -> Unit,
     navigateBack: () -> Unit
 ) {
-    composable<EditProfileRoute> {
-        EditProfileRoute(
-            navigateToHome = navigateToHome,
-            navigateBack = navigateBack
-        )
+    navigation<AuthGraphBaseRoute>(startDestination = AuthGraph.LoginRoute) {
+        composable<AuthGraph.LoginRoute> {
+            LoginRoute(
+                navigateToHome = navigateToHome,
+                navigateToEditProfile = { idToken -> navigateToEditProfile(idToken) }
+            )
+        }
+
+        composable<AuthGraph.EditProfileRoute> {
+            EditProfileRoute(
+                navigateToHome = navigateToHome,
+                navigateBack = navigateBack
+            )
+        }
+
     }
 }

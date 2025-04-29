@@ -1,6 +1,6 @@
 [versions]
 ## Android gradle plugin
-androidGradlePlugin = "8.9.1"
+androidGradlePlugin = "8.9.2"
 ## AndroidX
 # https://developer.android.com/jetpack/androidx/releases/core
 androidxCore = "1.16.0"
@@ -22,6 +22,8 @@ androidxComposeBom = "2025.04.00"
 androidxComposeNavigation = "2.8.9"
 # https://developer.android.com/jetpack/androidx/releases/compose-foundation
 androidxComposeFoundation = "1.7.8"
+# https://developer.android.com/jetpack/androidx/releases/exifinterface
+androidxExifinterface = "1.4.0"
 
 ## Kotlin Symbol Processing
 ksp = "2.1.0-1.0.29"
@@ -55,7 +57,7 @@ kakao = "2.21.1"
 
 ## firebase
 googleServices = "4.4.2"
-firebaseBom = "33.12.0"
+firebaseBom = "33.13.0"
 crashlytics = "3.0.3"
 
 ### coil
@@ -76,9 +78,8 @@ androidxEspresso = "3.6.1"
 
 # https://kotest.io/
 kotest = "5.9.0"
-firebaseCommonKtx = "21.0.0"
-foundationAndroid = "1.7.8"
-activityKtx = "1.10.1"
+
+
 
 [libraries]
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
@@ -99,6 +100,8 @@ androidx-datastore = { group = "androidx.datastore", name = "datastore-preferenc
 androidx-lifecycle-runtimeCompose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidxLifecycle" }
 androidx-lifecycle-viewModelCompose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "androidxLifecycle" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidxActivity" }
+androidx-exifinterface = { module = "androidx.exifinterface:exifinterface", version.ref = "androidxExifinterface" }
+
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "androidxComposeBom" }
 androidx-compose-material = { group = "androidx.compose.material", name = "material" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
@@ -110,6 +113,7 @@ androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "u
 androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "androidxComposeFoundation" }
 androidx-compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidxComposeNavigation" }
 compose-compiler-gradle-plugin = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin" }
+
 
 coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutine" }
 coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutine" }
@@ -123,7 +127,6 @@ hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.r
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt" }
 hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
-
 hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 
 okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
@@ -158,10 +161,6 @@ kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.re
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 mockk-android = { group = "io.mockk", name = "mockk-android", version.ref = "mockk" }
 mockk-agent = { group = "io.mockk", name = "mockk-agent", version.ref = "mockk" }
-androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
-androidx-foundation-android = { group = "androidx.compose.foundation", name = "foundation-android", version.ref = "foundationAndroid" }
-androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "activityKtx" }
-
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }

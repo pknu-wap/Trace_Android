@@ -2,10 +2,10 @@ package com.example.home.graph.post
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.domain.model.home.Comment
-import com.example.domain.model.home.FeelingCount
-import com.example.domain.model.home.PostDetail
-import com.example.domain.model.home.PostType
+import com.example.domain.model.post.Comment
+import com.example.domain.model.post.FeelingCount
+import com.example.domain.model.post.PostDetail
+import com.example.domain.model.post.PostType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -93,6 +93,7 @@ val fakePostDetail = PostDetail(
     ),
     profileImageUrl = "https://picsum.photos/200/300?random=1",
     createdAt = LocalDateTime.now().minusDays(3),
+    isVerified = true,
     images = listOf(
         "https://picsum.photos/200/300?random=1",
         "https://picsum.photos/200/300?random=2",

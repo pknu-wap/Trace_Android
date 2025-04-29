@@ -1,6 +1,5 @@
 package com.example.home.graph.writepost.component
 
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -35,15 +34,14 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.rememberAsyncImagePainter
 import com.example.common.util.clickable
 import com.example.designsystem.theme.Black
-import com.example.designsystem.theme.Red
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.White
 
 
 @Composable
 internal fun ImageContent(
-    images: List<Uri>,
-    removeImage: (Uri) -> Unit,
+    images: List<String>,
+    removeImage: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val pagerState = rememberPagerState(0, ) { images.size }

@@ -1,10 +1,8 @@
 package com.example.home.graph.writepost
 
-import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.domain.model.home.WritePostType
+import com.example.domain.model.post.WritePostType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,7 +18,7 @@ class WritePostViewModel @Inject constructor(
     private val _eventChannel = Channel<WritePostEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
 
-    private val _type : MutableStateFlow<WritePostType> = MutableStateFlow(WritePostType.NONE)
+    private val _type : MutableStateFlow<WritePostType> = MutableStateFlow(WritePostType.GOOD_DEED)
     val type = _type.asStateFlow()
 
     private val _title = MutableStateFlow("")
@@ -29,7 +27,7 @@ class WritePostViewModel @Inject constructor(
     private val _content = MutableStateFlow("")
     val content = _content.asStateFlow()
 
-    private val _images : MutableStateFlow<List<Uri>> = MutableStateFlow(emptyList())
+    private val _images : MutableStateFlow<List<String>> = MutableStateFlow(emptyList())
     val images = _images.asStateFlow()
 
     private val _isVerified = MutableStateFlow(true)
@@ -51,12 +49,11 @@ class WritePostViewModel @Inject constructor(
         _isVerified.value = isVerified
     }
 
-    fun addImage(image: Uri) {
-        _images.value = _images.value + image
-        Log.d("images size", images.value.size.toString() )
+    fun addImages(images: List<String>) {
+        _images.value = _images.value + images
     }
 
-    fun removeImage(image: Uri) {
+    fun removeImage(image: String) {
         _images.value = _images.value.filter { it != image }
     }
 

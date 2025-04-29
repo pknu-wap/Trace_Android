@@ -5,17 +5,21 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
-import com.example.auth.navigation.editProfileScreen
-import com.example.auth.navigation.loginScreen
+import com.example.auth.navigation.authNavGraph
 import com.example.auth.navigation.navigateToEditProfile
-import com.example.home.navigation.homeScreen
+import com.example.auth.navigation.navigateToLogin
+import com.example.home.navigation.homeNavGraph
 import com.example.home.navigation.navigateToHome
 import com.example.home.navigation.navigateToPost
 import com.example.home.navigation.navigateToWritePost
 import com.example.home.navigation.postScreen
 import com.example.home.navigation.writePostScreen
-import com.example.navigation.EditProfileRoute
-import com.example.navigation.LoginRoute
+import com.example.mission.navigation.missionNavGraph
+import com.example.mypage.navigation.myPageNavGraph
+import com.example.mypage.navigation.navigateToSetting
+import com.example.mypage.navigation.navigateToUpdateProfile
+import com.example.navigation.AuthGraphBaseRoute
+import com.example.splash.navigation.splashScreen
 
 @Composable
 fun AppNavHost(
@@ -24,44 +28,72 @@ fun AppNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = LoginRoute,
+        startDestination = AuthGraphBaseRoute,
         modifier = modifier,
     ) {
-        loginScreen(
+        val currentRoute = navController.currentDestination?.route
+      
+        splashScreen(
             navigateToHome = {
                 navController.navigateToHome(
                     navOptions {
-                        popUpTo<LoginRoute> { inclusive = true }
+                        popUpTo(0) { inclusive = true }
                     }
                 )
             },
+            navigateToLogin = {
+                navController.navigateToLogin(
+                    navOptions {
+                        popUpTo(0) { inclusive = true }
+                    }
+                )
+            }
+        )
+
+        authNavGraph(
+            navigateToHome = {
+                navController.navigateToHome(
+                    navOptions {
+                        currentRoute?.let { popUpTo(currentRoute) { inclusive = true } }
+                    }
+                )
+            },
+            navigateBack = { navigateBack(navController) },
             navigateToEditProfile = { signUpToken, providerId ->
                 navController.navigateToEditProfile(signUpToken, providerId)
             }
         )
-        editProfileScreen(
-            navigateToHome = {
-                navController.navigateToHome(
-                    navOptions {
-                        popUpTo<EditProfileRoute> { inclusive = true }
-                    }
-                )
-            },
-            navigateBack = { navController.popBackStack() }
-        )
-        homeScreen(
+
+        homeNavGraph(
             navigateToPost = {
                 navController.navigateToPost()
             },
             navigateToWritePost = {
                 navController.navigateToWritePost()
+            },
+            navigateBack = { navigateBack(navController) }
+        )
+
+        missionNavGraph()
+
+        myPageNavGraph(
+            navigateToPost = { navController.navigateToPost() },
+            navigateToUpdateProfile = { navController.navigateToUpdateProfile() },
+            navigateToSetting = { navController.navigateToSetting() },
+            navigateBack = { navigateBack(navController) },
+            navigateToLogin = {
+                navController.navigateToLogin(navOptions {
+                    popUpTo(0) { inclusive = true }
+                })
             }
         )
-        writePostScreen(
-            navigateBack = { navController.popBackStack() }
-        )
-        postScreen(
-            navigateBack = { navController.popBackStack() }
-        )
+
     }
 }
+
+private fun navigateBack(
+    navController: NavHostController
+) {
+    navController.popBackStack()
+}
+ 

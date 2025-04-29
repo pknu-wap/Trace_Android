@@ -1,13 +1,18 @@
 package com.example.navigation
 
 import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavDestination.Companion.hierarchy
 import kotlin.reflect.KClass
 
 private val HIDDEN_BOTTOM_BAR_ROUTES = setOf(
-    LoginRoute::class,
-    EditProfileRoute::class,
-    WritePostRoute::class,
-    PostRoute::class
+    AuthGraph.LoginRoute::class,
+    AuthGraph.EditProfileRoute::class,
+    HomeGraph.WritePostRoute::class,
+    HomeGraph.PostRoute::class,
+    MyPageGraph.UpdateProfileRoute::class,
+    MyPageGraph.SettingRoute::class,
+    SplashRoute::class
 )
 
 fun NavDestination?.shouldHideBottomBar(): Boolean =
@@ -17,9 +22,8 @@ fun NavDestination?.shouldHideBottomBar(): Boolean =
         }
     } ?: false
 
-fun NavDestination?.eqaulsRoute(route: KClass<*>): Boolean =
-    this?.route?.startsWith(route.qualifiedName ?: "") == true
+fun NavDestination?.isRouteInHierarchy(route: KClass<*>): Boolean =
+    this?.hierarchy?.any { it.hasRoute(route) } == true
 
-//private val FULL_SCREEN_ROUTES = setOf(
-//
-//)
+
+

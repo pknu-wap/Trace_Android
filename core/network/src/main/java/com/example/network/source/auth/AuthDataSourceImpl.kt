@@ -1,8 +1,18 @@
 package com.example.network.source.auth
 
+import android.os.Build
 import com.example.network.api.TraceApi
 import com.example.network.model.auth.LoginKakaoRequest
 import com.example.network.model.auth.LoginKakaoResponse
+import com.example.network.model.auth.RegisterUserRequest
+import com.example.network.model.auth.TokenResponse
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.InputStream
+import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -17,41 +27,48 @@ class AuthDataSourceImpl @Inject constructor(
             )
         )
 
-//    override suspend fun registerUser(
-//        idToken: String,
-//        nickname: String,
-//        profileImageUrl: String?
-//    ): Result<TokenResponse> {
-//
-//        val jsonString = Json.encodeToString(
-//            RegisterUserRequest(
-//                idToken    = idToken,
-//                nickname   = nickname
-//            )
-//        )
-//
-//        val profileImageFile = profileImageUrl
-//            ?.let { url ->
-//                val input = context.contentResolver.openInputStream(url)
-//                val tempFile = File.createTempFile("upload", ".jpg", context.cacheDir)
-//                input.use { it.copyTo(tempFile.outputStream()) }
-//            }
-//
-//        val requestBody = jsonString
-//            .toRequestBody("application/json; charset=utf-8".toMediaType())
-//
-//        val imagePart: MultipartBody.Part? = profileImageFile?.let { file ->
-//            MultipartBody.Part.createFormData(
-//                "profileImage",
-//                file.name,
-//                file.asRequestBody("image/jpeg".toMediaType())
-//            )
-//        }
-//
-//        traceApi.registerUser(
-//            registerUserRequest  = requestBody,
-//            profileImage = imagePart
-//        )
-//    }
+    override suspend fun registerUser(
+        idToken: String,
+        nickname: String,
+        profileImage: InputStream?
+    ): Result<TokenResponse> {
+        val jsonString = Json.encodeToString(
+            RegisterUserRequest(
+                idToken = idToken,
+                nickname = nickname
+            )
+        )
+
+        val requestBody = jsonString
+            .toRequestBody("application/json; charset=utf-8".toMediaType())
+
+
+        val (imageFileExtension, imageFileName) = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            WEBP_MEDIA_TYPE to "profile_${UUID.randomUUID()}.webp"
+        } else {
+            JPEG_MEDIA_TYPE to "profile_${UUID.randomUUID()}.jpg"
+        }
+
+        val mediaType = imageFileExtension.toMediaTypeOrNull()
+            ?: throw IllegalArgumentException("Invalid media type: $imageFileExtension")
+
+        val requestImage = profileImage?.let {
+            MultipartBody.Part.createFormData(
+                name = "profileImage",
+                filename = imageFileName,
+                body = profileImage.readBytes().toRequestBody(mediaType)
+            )
+        }
+
+        return traceApi.registerUser(
+            registerUserRequest = requestBody,
+            profileImage = requestImage
+        )
+    }
+
+    companion object {
+        private const val WEBP_MEDIA_TYPE = "image/webp"
+        private const val JPEG_MEDIA_TYPE = "image/jpeg"
+    }
 
 }
