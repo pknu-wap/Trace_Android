@@ -28,20 +28,21 @@ class AuthDataSourceImpl @Inject constructor(
         )
 
     override suspend fun registerUser(
-        idToken: String,
+        signUpToken: String,
+        providerId: String,
         nickname: String,
         profileImage: InputStream?
     ): Result<TokenResponse> {
         val jsonString = Json.encodeToString(
             RegisterUserRequest(
-                idToken = idToken,
+                signupToken = signUpToken,
+                providerId = providerId,
                 nickname = nickname
             )
         )
 
         val requestBody = jsonString
             .toRequestBody("application/json; charset=utf-8".toMediaType())
-
 
         val (imageFileExtension, imageFileName) = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             WEBP_MEDIA_TYPE to "profile_${UUID.randomUUID()}.webp"

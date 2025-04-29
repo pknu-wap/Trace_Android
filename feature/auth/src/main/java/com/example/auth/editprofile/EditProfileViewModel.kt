@@ -44,8 +44,10 @@ class EditProfileViewModel @Inject constructor(
     }
 
     internal fun registerUser() = viewModelScope.launch {
-        authRepository.registerUser(signUpToken, providerId, name.value, profileImage.value).onSuccess {
-        }.onFailure {
+        authRepository.registerUser(signUpToken, providerId, name.value, profileImage.value)
+            .onSuccess {
+               _eventChannel.send(EditProfileEvent.RegisterUserSuccess)
+            }.onFailure {
             _eventChannel.send(EditProfileEvent.RegisterUserFailure)
         }
     }

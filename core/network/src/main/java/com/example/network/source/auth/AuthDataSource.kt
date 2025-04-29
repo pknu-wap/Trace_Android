@@ -8,7 +8,8 @@ interface AuthDataSource {
     suspend fun loginKakao(idToken: String): Result<LoginKakaoResponse>
 
     suspend fun registerUser(
-        idToken: String,
+        signUpToken : String,
+        providerId : String,
         nickname: String,
         profileImage: InputStream? = null
     ): Result<TokenResponse>
