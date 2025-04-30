@@ -66,7 +66,7 @@ class WritePostViewModel @Inject constructor(
             _content.value,
             _images.value
         ).onSuccess { postId ->
-            _eventChannel.send(WritePostEvent.NavigateToPost(postId = postId))
+            _eventChannel.send(WritePostEvent.AddPostSuccess(postId = postId))
         }.onFailure {
             _eventChannel.send(WritePostEvent.AddPostFailure)
         }
@@ -77,8 +77,8 @@ class WritePostViewModel @Inject constructor(
     }
 
     sealed class WritePostEvent {
-        data class NavigateToPost(val postId: Int) : WritePostEvent()
         data object NavigateToBack : WritePostEvent()
+        data class AddPostSuccess(val postId: Int) : WritePostEvent()
         data object AddPostFailure : WritePostEvent()
     }
 }

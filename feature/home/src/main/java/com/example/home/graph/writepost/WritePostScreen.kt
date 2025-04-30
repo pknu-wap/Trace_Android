@@ -66,8 +66,11 @@ internal fun WritePostRoute(
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
             when (event) {
-                is WritePostEvent.AddPostFailure -> {viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글 등록에 실패했습니다."))}
-                is WritePostEvent.NavigateToPost -> navigateToPost(event.postId)
+                is WritePostEvent.AddPostSuccess -> {
+                    navigateToPost(event.postId)
+                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글이 등록되었습니다."))
+                }
+                is WritePostEvent.AddPostFailure -> { viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글 등록에 실패했습니다.")) }
                 is WritePostEvent.NavigateToBack -> navigateBack()
             }
         }
