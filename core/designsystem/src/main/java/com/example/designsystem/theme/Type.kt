@@ -59,6 +59,11 @@ val BagelFatOneRegular = FontFamily(
 
 @Immutable
 data class TraceTypography(
+    val headingXLB: TextStyle = TextStyle(
+        fontFamily = BookkBold,
+        fontSize = 50.sp,
+        lineHeight = 60.sp
+    ),
     val headingLB: TextStyle = TextStyle(
         fontFamily = BookkBold,
         fontSize = 24.sp,
