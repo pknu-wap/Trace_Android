@@ -1,15 +1,17 @@
 package com.example.splash
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.designsystem.theme.TraceTheme
+import com.example.designsystem.R
 import com.example.splash.SplashViewModel.SplashEvent
 
 @Composable
@@ -36,10 +38,18 @@ private fun SplashScreen() {
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(Modifier.weight(1f))
+        Spacer(Modifier.weight(0.75f))
 
-        Text("스플래시", style = TraceTheme.typography.headingLB)
+        Image(painter = painterResource(R.drawable.app_icon_pencil), contentDescription = "앱 아이콘", modifier = Modifier.weight(0.5f))
 
         Spacer(Modifier.weight(1f))
     }
+}
+
+
+@Preview
+@Composable
+fun SplashScreenPreview() {
+    SplashScreen(
+    )
 }
