@@ -1,11 +1,14 @@
 package com.example.home.graph.post
 
+import android.util.Log
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.model.post.Comment
 import com.example.domain.model.post.FeelingCount
 import com.example.domain.model.post.PostDetail
 import com.example.domain.model.post.PostType
+import com.example.domain.repository.PostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,10 +20,17 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PostViewModel @Inject constructor(
-
+    private val postRepository: PostRepository,
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val _eventChannel = Channel<PostEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
+
+    private val postId: Int = savedStateHandle["postId"] ?: 1
+
+    init {
+        getPost()
+    }
 
     internal fun onEvent(event: PostEvent) = viewModelScope.launch {
         _eventChannel.send(event)
@@ -37,6 +47,17 @@ class PostViewModel @Inject constructor(
 
     fun setCommentInput(commentInput: String) {
         _commentInput.value = commentInput
+    }
+
+    private fun getPost() = viewModelScope.launch {
+        if (postId != 1) {
+            postRepository.getPost(postId).onSuccess {
+                _postDetail.value = it
+                Log.d("postDetail", _postDetail.value.toString() )
+            }.onFailure {
+                _postDetail.value = fakePostDetail
+            }
+        }
     }
 
     sealed class PostEvent {

@@ -1,8 +1,8 @@
 package com.example.home.graph.writepost
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.common.event.EventHelper
 import com.example.domain.model.post.WritePostType
 import com.example.domain.repository.PostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,7 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WritePostViewModel @Inject constructor(
-    private val postRepository: PostRepository
+    private val postRepository: PostRepository,
+    val eventHelper: EventHelper
 ) : ViewModel() {
     private val _eventChannel = Channel<WritePostEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
@@ -64,10 +65,10 @@ class WritePostViewModel @Inject constructor(
             _title.value,
             _content.value,
             _images.value
-        ).onSuccess {
-            Log.d("writePost", "게시글 업로드 성공")
+        ).onSuccess { postId ->
+            _eventChannel.send(WritePostEvent.NavigateToPost(postId = postId))
         }.onFailure {
-            Log.d("writePost", "게시글 업로드 실패")
+            _eventChannel.send(WritePostEvent.AddPostFailure)
         }
     }
 
@@ -76,7 +77,8 @@ class WritePostViewModel @Inject constructor(
     }
 
     sealed class WritePostEvent {
-        data object NavigateToPost : WritePostEvent()
+        data class NavigateToPost(val postId: Int) : WritePostEvent()
         data object NavigateToBack : WritePostEvent()
+        data object AddPostFailure : WritePostEvent()
     }
 }

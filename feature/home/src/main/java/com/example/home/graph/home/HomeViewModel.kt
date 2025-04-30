@@ -39,7 +39,7 @@ class HomeViewModel @Inject constructor(
     }
 
     sealed class HomeEvent {
-        data object NavigateToPost : HomeEvent()
+        data class NavigateToPost(val postId : Int) : HomeEvent()
         data object NavigateToWritePost : HomeEvent()
     }
 }

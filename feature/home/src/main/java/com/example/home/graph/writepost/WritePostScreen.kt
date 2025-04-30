@@ -36,6 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.common.event.TraceEvent
 import com.example.common.util.clickable
 import com.example.designsystem.R
 import com.example.designsystem.theme.Background
@@ -53,7 +54,7 @@ import com.example.home.graph.writepost.component.TraceTitleField
 @Composable
 internal fun WritePostRoute(
     navigateBack: () -> Unit,
-    navigateToPost: () -> Unit,
+    navigateToPost: (Int) -> Unit,
     viewModel: WritePostViewModel = hiltViewModel(),
 ) {
     val type by viewModel.type.collectAsStateWithLifecycle()
@@ -65,7 +66,8 @@ internal fun WritePostRoute(
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
             when (event) {
-                is WritePostEvent.NavigateToPost -> navigateToPost()
+                is WritePostEvent.AddPostFailure -> {viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글 등록에 실패했습니다."))}
+                is WritePostEvent.NavigateToPost -> navigateToPost(event.postId)
                 is WritePostEvent.NavigateToBack -> navigateBack()
             }
         }

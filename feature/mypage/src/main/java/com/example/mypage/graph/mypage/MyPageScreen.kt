@@ -44,14 +44,14 @@ import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.TabIndicator
 import com.example.designsystem.theme.TraceTheme
 import com.example.domain.model.mypage.MyPageTab
-import com.example.domain.user.UserInfo
 import com.example.domain.model.post.PostFeed
+import com.example.domain.user.UserInfo
 import com.example.mypage.graph.mypage.MyPageViewModel.MyPageEvent
 import com.example.mypage.graph.mypage.component.PostFeed
 
 @Composable
 internal fun MyPageRoute(
-    navigateToPost: () -> Unit,
+    navigateToPost: (Int) -> Unit,
     navigateToEditProfile: () -> Unit,
     navigateToSetting: () -> Unit,
     viewModel: MyPageViewModel = hiltViewModel(),
@@ -65,7 +65,7 @@ internal fun MyPageRoute(
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
             when (event) {
-                is MyPageEvent.NavigateToPost -> navigateToPost()
+                is MyPageEvent.NavigateToPost -> navigateToPost(event.postId)
                 is MyPageEvent.NavigateToEditProfile -> navigateToEditProfile()
                 is MyPageEvent.NavigateToSetting -> navigateToSetting()
             }
@@ -81,7 +81,7 @@ internal fun MyPageRoute(
             MyPageTab.REACTED_POSTS -> reactedPosts
         },
         onTabTypeChange = viewModel::setTabType,
-        navigateToPost = { viewModel.onEvent(MyPageEvent.NavigateToPost) },
+        navigateToPost = { postId -> viewModel.onEvent(MyPageEvent.NavigateToPost(postId)) },
         navigateToEditProfile = { viewModel.onEvent(MyPageEvent.NavigateToEditProfile) },
         navigateToSetting = { viewModel.onEvent(MyPageEvent.NavigateToSetting) }
     )
@@ -94,7 +94,7 @@ private fun MyPageScreen(
     tabType: MyPageTab,
     displayedPosts: List<PostFeed>,
     onTabTypeChange: (MyPageTab) -> Unit,
-    navigateToPost: () -> Unit,
+    navigateToPost: (Int) -> Unit,
     navigateToEditProfile: () -> Unit,
     navigateToSetting: () -> Unit,
 ) {
@@ -211,7 +211,7 @@ private fun MyPageScreen(
         }
 
         items(displayedPosts.size) { index ->
-            PostFeed(displayedPosts[index], onClick = { navigateToPost() })
+            PostFeed(displayedPosts[index], onClick = { navigateToPost(1) })
 
             Spacer(Modifier.height(8.dp))
 

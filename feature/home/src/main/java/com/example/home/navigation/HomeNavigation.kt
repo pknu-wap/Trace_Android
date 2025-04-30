@@ -19,12 +19,13 @@ fun NavController.navigateToWritePost(navOptions: NavOptions? = null) {
     navigate(HomeGraph.WritePostRoute, navOptions)
 }
 
-fun NavController.navigateToPost(navOptions: NavOptions? = null) {
-    navigate(HomeGraph.PostRoute, navOptions)
+fun NavController.navigateToPost(postId : Int, navOptions: NavOptions? = null) {
+    navigate(HomeGraph.PostRoute(postId), navOptions)
 }
 
 fun NavGraphBuilder.homeNavGraph(
-    navigateToPost: () -> Unit,
+    navigateToPost: (Int) -> Unit,
+    navigateToWrittenPost: (Int) -> Unit,
     navigateToWritePost: () -> Unit,
     navigateBack: () -> Unit
 ) {
@@ -38,7 +39,7 @@ fun NavGraphBuilder.homeNavGraph(
 
         composable<HomeGraph.WritePostRoute> {
             WritePostRoute(
-                navigateToPost = navigateToPost,
+                navigateToPost = navigateToWrittenPost,
                 navigateBack = navigateBack
             )
         }

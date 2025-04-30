@@ -17,13 +17,13 @@ androidxNavigation = "2.8.9"
 # https://developer.android.com/jetpack/androidx/releases/core
 androidxSplashscreen = "1.0.1"
 # https://developer.android.com/develop/ui/compose/bom/bom-mapping
-androidxComposeBom = "2025.04.00"
+androidxComposeBom = "2025.04.01"
 # https://developer.android.com/jetpack/androidx/releases/navigation
 androidxComposeNavigation = "2.8.9"
 # https://developer.android.com/jetpack/androidx/releases/compose-foundation
-androidxComposeFoundation = "1.7.8"
+androidxComposeFoundation = "1.8.0"
 # https://developer.android.com/jetpack/androidx/releases/exifinterface
-androidxExifinterface = "1.4.0"
+androidxExifinterface = "1.4.1"
 
 ## Kotlin Symbol Processing
 ksp = "2.1.0-1.0.29"
@@ -48,6 +48,7 @@ uiautomator = "2.3.0"
 ## Kotlin
 kotlin = "2.1.0"
 kotlinxSerializationJson = "1.8.0"
+kotlinxDateTime = "0.6.2"
 kotlinxCoroutine = "1.10.1"
 gson = "2.12.1"
 
@@ -138,6 +139,7 @@ firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
 
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinxDateTime" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 
 kakao-user = { module = "com.kakao.sdk:v2-user", version.ref = "kakao" }

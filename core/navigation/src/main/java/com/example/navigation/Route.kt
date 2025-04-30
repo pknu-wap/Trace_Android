@@ -26,7 +26,7 @@ sealed class HomeGraph : Route {
     data object HomeRoute : HomeGraph()
 
     @Serializable
-    data object PostRoute :  HomeGraph()
+    data class PostRoute(val postId : Int) :  HomeGraph()
 
     @Serializable
     data object WritePostRoute :  HomeGraph()

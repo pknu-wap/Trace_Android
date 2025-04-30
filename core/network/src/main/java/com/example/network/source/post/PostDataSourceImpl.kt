@@ -1,10 +1,10 @@
 package com.example.network.source.post
 
 import android.os.Build
-import android.util.Log
 import com.example.network.api.TraceApi
-import com.example.network.model.auth.RegisterUserRequest
 import com.example.network.model.post.AddPostRequest
+import com.example.network.model.post.AddPostResponse
+import com.example.network.model.post.GetPostResponse
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -17,11 +17,13 @@ import javax.inject.Inject
 class PostDataSourceImpl @Inject constructor(
     private val traceApi: TraceApi,
 ) : PostDataSource {
+    override suspend fun getPost(postId: Int): Result<GetPostResponse> = traceApi.getPost(postId)
+
     override suspend fun addPost(
-         title : String,
-         content : String,
-        images : List<InputStream>?
-    ): Result<Unit> {
+        title: String,
+        content: String,
+        images: List<InputStream>?
+    ): Result<AddPostResponse> {
         val jsonString = Json.encodeToString(
             AddPostRequest(
                 title = title,

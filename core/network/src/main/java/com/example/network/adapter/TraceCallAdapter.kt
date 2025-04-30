@@ -1,5 +1,6 @@
 package com.example.network.adapter
 
+import android.util.Log
 import okhttp3.Request
 import okio.Timeout
 import retrofit2.Call
@@ -11,7 +12,6 @@ import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 import javax.inject.Inject
 import javax.inject.Singleton
-import android.util.Log
 
 @Singleton
 class TraceCallAdapterFactory @Inject constructor() : CallAdapter.Factory() {
@@ -46,7 +46,7 @@ private class TraceCall<T : Any>(
             override fun onResponse(call: Call<T>, response: Response<T>) {
                 val body = response.body()
                 if (response.isSuccessful && body != null) {
-                    Log.d("traceResponse", "${response.raw()}")
+                    Log.d("traceResponse", "${response.raw()} body ${body}")
                     callback.onResponse(
                         this@TraceCall,
                         Response.success(Result.success(body))

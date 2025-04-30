@@ -16,7 +16,7 @@ import com.example.mission.navigation.missionNavGraph
 import com.example.mypage.navigation.myPageNavGraph
 import com.example.mypage.navigation.navigateToSetting
 import com.example.mypage.navigation.navigateToUpdateProfile
-import com.example.navigation.AuthGraphBaseRoute
+import com.example.navigation.HomeGraph
 import com.example.navigation.SplashRoute
 import com.example.splash.navigation.splashScreen
 
@@ -30,6 +30,8 @@ fun AppNavHost(
         startDestination = SplashRoute,
         modifier = modifier,
     ) {
+        val currentRoute = navController.currentDestination?.route
+
         splashScreen(
             navigateToHome = {
                 navController.navigateToHome(
@@ -51,7 +53,7 @@ fun AppNavHost(
             navigateToHome = {
                 navController.navigateToHome(
                     navOptions {
-                         popUpTo(0) { inclusive = true }
+                        popUpTo(0) { inclusive = true }
                     }
                 )
             },
@@ -62,8 +64,15 @@ fun AppNavHost(
         )
 
         homeNavGraph(
-            navigateToPost = {
-                navController.navigateToPost()
+            navigateToPost = { postId ->
+                navController.navigateToPost(postId)
+            },
+            navigateToWrittenPost = { postId ->
+                navController.navigateToPost(postId, navOptions {
+                    popUpTo<HomeGraph.WritePostRoute> {
+                        inclusive = true
+                    }
+                })
             },
             navigateToWritePost = {
                 navController.navigateToWritePost()
@@ -74,7 +83,7 @@ fun AppNavHost(
         missionNavGraph()
 
         myPageNavGraph(
-            navigateToPost = { navController.navigateToPost() },
+            navigateToPost = { postId -> navController.navigateToPost(postId) },
             navigateToUpdateProfile = { navController.navigateToUpdateProfile() },
             navigateToSetting = { navController.navigateToSetting() },
             navigateBack = { navigateBack(navController) },

@@ -39,7 +39,7 @@ import com.example.domain.model.post.PostType
 @Composable
 internal fun PostFeed(
     postFeed: PostFeed,
-    onClick: () -> Unit
+    onClick: (Int) -> Unit
 ) {
     if (postFeed.imageUri.isNotEmpty()) {
         val painter = rememberAsyncImagePainter(
@@ -52,7 +52,7 @@ internal fun PostFeed(
         Box(modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                onClick()
+                onClick(1)
             }) {
             Column(
                 modifier = Modifier
@@ -154,7 +154,7 @@ internal fun PostFeed(
     } else {
         Column(
             modifier = Modifier.clickable {
-                onClick()
+                onClick(1)
             }
         ) {
             Text(
