@@ -38,6 +38,7 @@ fun NavGraphBuilder.homeNavGraph(
 
         composable<HomeGraph.WritePostRoute> {
             WritePostRoute(
+                navigateToPost = navigateToPost,
                 navigateBack = navigateBack
             )
         }

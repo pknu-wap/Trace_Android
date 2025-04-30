@@ -25,4 +25,11 @@ interface TraceApi {
 
     @HTTP(method = "GET", path = "/api/f1/auth/refresh", hasBody = true)
     suspend fun refreshToken(@Body refreshTokenRequest: RefreshTokenRequest): Result<TokenResponse>
+
+    @Multipart
+    @POST("/api/v1/api/posts")
+    suspend fun addPost(
+        @Part("request") addPostRequest: RequestBody,
+        @Part imageFile: List<MultipartBody.Part>? = null
+    ) : Result<Unit>
 }

@@ -1,9 +1,11 @@
 package com.example.data.di
 
 import com.example.data.repository.AuthRepositoryImpl
+import com.example.data.repository.PostRepositoryImpl
 import com.example.data.repository.TokenManagerImpl
 import com.example.data.repository.UserRepositoryImpl
 import com.example.domain.repository.AuthRepository
+import com.example.domain.repository.PostRepository
 import com.example.domain.repository.UserRepository
 import com.example.network.token.TokenManager
 import dagger.Binds
@@ -32,4 +34,10 @@ abstract class DataModule {
     abstract fun bindsUserRepository(
         userRepositoryImpl : UserRepositoryImpl
     ) : UserRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindsPostrepository(
+        postRepositoryImpl : PostRepositoryImpl
+    ) : PostRepository
 }

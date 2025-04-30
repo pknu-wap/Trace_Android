@@ -11,6 +11,7 @@ import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 import javax.inject.Inject
 import javax.inject.Singleton
+import android.util.Log
 
 @Singleton
 class TraceCallAdapterFactory @Inject constructor() : CallAdapter.Factory() {
@@ -45,9 +46,11 @@ private class TraceCall<T : Any>(
             override fun onResponse(call: Call<T>, response: Response<T>) {
                 val body = response.body()
                 if (response.isSuccessful && body != null) {
+                    Log.d("traceResponse", "${response.raw()}")
                     callback.onResponse(
                         this@TraceCall,
                         Response.success(Result.success(body))
+
                     )
                 } else {
                     callback.onResponse(
@@ -75,5 +78,4 @@ private class TraceCall<T : Any>(
     override fun request(): Request = delegate.request()
     override fun timeout(): Timeout = delegate.timeout()
 }
-
 

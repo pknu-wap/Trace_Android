@@ -53,6 +53,7 @@ import com.example.home.graph.writepost.component.TraceTitleField
 @Composable
 internal fun WritePostRoute(
     navigateBack: () -> Unit,
+    navigateToPost: () -> Unit,
     viewModel: WritePostViewModel = hiltViewModel(),
 ) {
     val type by viewModel.type.collectAsStateWithLifecycle()
@@ -64,6 +65,7 @@ internal fun WritePostRoute(
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
             when (event) {
+                is WritePostEvent.NavigateToPost -> navigateToPost()
                 is WritePostEvent.NavigateToBack -> navigateBack()
             }
         }
@@ -82,8 +84,8 @@ internal fun WritePostRoute(
         removeImage = viewModel::removeImage,
         onTypeChange = viewModel::setType,
         onIsVerifiedChange = viewModel::setIsVerified,
-
-        )
+        addPost = viewModel::addPost
+    )
 }
 
 @Composable
@@ -99,6 +101,7 @@ private fun WritePostScreen(
     addImages: (List<String>) -> Unit,
     removeImage: (String) -> Unit,
     onIsVerifiedChange: (Boolean) -> Unit,
+    addPost: () -> Unit,
     navigateBack: () -> Unit,
 ) {
     val contentFieldFocusRequester = remember { FocusRequester() }
@@ -237,6 +240,7 @@ private fun WritePostScreen(
                 style = TraceTheme.typography.bodyMM,
                 color = if (requestAvailable) PrimaryActive else TextHint,
                 modifier = Modifier.clickable(isRipple = true, enabled = requestAvailable) {
+                    addPost()
                 }
             )
         }
@@ -355,6 +359,7 @@ fun WritePostScreenPreview() {
         navigateBack = {},
         images = emptyList(),
         addImages = {},
-        removeImage = {}
+        removeImage = {},
+        addPost = {}
     )
 }
