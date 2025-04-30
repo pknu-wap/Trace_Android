@@ -43,7 +43,7 @@ class PostDataSourceImpl @Inject constructor(
         val mediaType = imageFileExtension.toMediaTypeOrNull()
             ?: throw IllegalArgumentException("Invalid media type: $imageFileExtension")
 
-        val requestImage = images?.mapIndexed { index, image ->
+        val requestImage = images?.map {  image ->
             val body = image.readBytes().toRequestBody(mediaType)
             MultipartBody.Part.createFormData(
                 name = "imageFile",
