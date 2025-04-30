@@ -46,7 +46,7 @@ class PostDataSourceImpl @Inject constructor(
         val requestImage = images?.mapIndexed { index, image ->
             val body = image.readBytes().toRequestBody(mediaType)
             MultipartBody.Part.createFormData(
-                name = "imageFie",
+                name = "imageFile",
                 filename = imageFileName,
                 body = body
             )
