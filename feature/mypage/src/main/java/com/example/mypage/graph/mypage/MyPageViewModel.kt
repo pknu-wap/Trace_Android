@@ -3,9 +3,9 @@ package com.example.mypage.graph.mypage
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.model.mypage.MyPageTab
-import com.example.domain.user.UserInfo
 import com.example.domain.model.post.PostFeed
 import com.example.domain.model.post.PostType
+import com.example.domain.user.UserInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -71,7 +71,7 @@ class MyPageViewModel @Inject constructor(
 
     sealed class MyPageEvent {
         data object NavigateToEditProfile : MyPageEvent()
-        data object NavigateToPost : MyPageEvent()
+        data class NavigateToPost(val postId : Int) : MyPageEvent()
         data object NavigateToSetting : MyPageEvent()
     }
 }

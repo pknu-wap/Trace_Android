@@ -117,7 +117,7 @@ class ImageResizer @Inject constructor(
             Bitmap.CompressFormat.JPEG
         }
 
-        bitmap.compress(format, 85, outputStream)
+        bitmap.compress(format, 100, outputStream)
 
         logStreamSize(ByteArrayInputStream(outputStream.toByteArray()))
         return ByteArrayInputStream(outputStream.toByteArray())

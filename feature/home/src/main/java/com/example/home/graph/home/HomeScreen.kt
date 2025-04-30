@@ -43,7 +43,7 @@ import com.example.home.graph.home.component.TabSelector
 
 @Composable
 internal fun HomeRoute(
-    navigateToPost: () -> Unit,
+    navigateToPost: (Int) -> Unit,
     navigateToWritePost: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
@@ -54,7 +54,7 @@ internal fun HomeRoute(
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
             when (event) {
-                is HomeEvent.NavigateToPost -> navigateToPost()
+                is HomeEvent.NavigateToPost -> navigateToPost(event.postId)
                 is HomeEvent.NavigateToWritePost -> navigateToWritePost()
             }
         }
@@ -64,7 +64,7 @@ internal fun HomeRoute(
         postFeeds = postFeeds,
         tabType = tabType,
         onTabTypeChange = viewModel::setTabType,
-        navigateToPost = { viewModel.onEvent(HomeEvent.NavigateToPost) },
+        navigateToPost = { postId -> viewModel.onEvent(HomeEvent.NavigateToPost(postId)) },
         navigateToWritePost = { viewModel.onEvent(HomeEvent.NavigateToWritePost) })
 }
 
@@ -74,7 +74,7 @@ private fun HomeScreen(
     postFeeds: List<PostFeed>,
     tabType: PostType,
     onTabTypeChange: (PostType) -> Unit,
-    navigateToPost: () -> Unit,
+    navigateToPost: (Int) -> Unit,
     navigateToWritePost: () -> Unit,
 ) {
     Box(

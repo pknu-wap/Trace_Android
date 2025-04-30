@@ -1,5 +1,6 @@
 package com.example.network.adapter
 
+import android.util.Log
 import okhttp3.Request
 import okio.Timeout
 import retrofit2.Call
@@ -45,9 +46,11 @@ private class TraceCall<T : Any>(
             override fun onResponse(call: Call<T>, response: Response<T>) {
                 val body = response.body()
                 if (response.isSuccessful && body != null) {
+                    Log.d("traceResponse", "${response.raw()} body ${body}")
                     callback.onResponse(
                         this@TraceCall,
                         Response.success(Result.success(body))
+
                     )
                 } else {
                     callback.onResponse(
@@ -75,5 +78,4 @@ private class TraceCall<T : Any>(
     override fun request(): Request = delegate.request()
     override fun timeout(): Timeout = delegate.timeout()
 }
-
 

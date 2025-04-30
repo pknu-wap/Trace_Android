@@ -21,8 +21,6 @@ class TraceAuthenticator @Inject constructor(
 ) : Authenticator {
     private val refreshMutex = Mutex()
     override fun authenticate(route: Route?, response: Response): Request? {
-
-
         val originRequest = response.request
 
         if (originRequest.header("Authorization").isNullOrEmpty()) {

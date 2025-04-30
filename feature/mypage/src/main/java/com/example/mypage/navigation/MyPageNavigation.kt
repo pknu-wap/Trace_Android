@@ -25,7 +25,7 @@ fun NavController.navigateToSetting(navOptions: NavOptions? = null) {
 
 fun NavGraphBuilder.myPageNavGraph(
     navigateToLogin : () -> Unit,
-    navigateToPost: () -> Unit,
+    navigateToPost: (Int) -> Unit,
     navigateToUpdateProfile: () -> Unit,
     navigateToSetting: () -> Unit,
     navigateBack: () -> Unit

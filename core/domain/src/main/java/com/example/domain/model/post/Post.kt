@@ -1,5 +1,6 @@
 package com.example.domain.model.post
 
+
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -9,10 +10,10 @@ data class PostFeed(
     val title: String,
     val content: String,
     val nickname: String,
-    val createdAt : LocalDateTime,
+    val createdAt: LocalDateTime,
     val viewCount: Int = 0,
     val commentCount: Int = 0,
-    val isVerified : Boolean = false,
+    val isVerified: Boolean = false,
     val imageUri: String = "",
 ) {
     fun getFormattedTime(): String {
@@ -45,17 +46,17 @@ data class PostFeed(
 }
 
 data class PostDetail(
-    val postType : PostType,
-    val title : String,
-    val content : String,
+    val postType: PostType,
+    val title: String,
+    val content: String,
     val nickname: String,
-    val profileImageUrl : String? = null,
+    val profileImageUrl: String? = null,
     val createdAt: LocalDateTime,
     val isVerified: Boolean = false,
-    val viewCount : Int,
+    val viewCount: Int,
     val comments: List<Comment>,
-    val feelingCount : FeelingCount,
-    val images : List<String> = emptyList(),
+    val feelingCount: FeelingCount,
+    val images: List<String> = emptyList(),
 ) {
     fun getFormattedDate(): String {
         val formatter = DateTimeFormatter.ofPattern("M/d HH:mm")
@@ -70,7 +71,7 @@ enum class PostType(val label: String) {
     MISSION("미션")
 }
 
-enum class WritePostType(val label : String) {
+enum class WritePostType(val label: String) {
     GOOD_DEED("선행"),
     FREE("자유"),
 }

@@ -2,7 +2,9 @@ package com.example.home.graph.writepost
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.common.event.EventHelper
 import com.example.domain.model.post.WritePostType
+import com.example.domain.repository.PostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,12 +15,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WritePostViewModel @Inject constructor(
-
+    private val postRepository: PostRepository,
+    val eventHelper: EventHelper
 ) : ViewModel() {
     private val _eventChannel = Channel<WritePostEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
 
-    private val _type : MutableStateFlow<WritePostType> = MutableStateFlow(WritePostType.GOOD_DEED)
+    private val _type: MutableStateFlow<WritePostType> = MutableStateFlow(WritePostType.GOOD_DEED)
     val type = _type.asStateFlow()
 
     private val _title = MutableStateFlow("")
@@ -27,7 +30,7 @@ class WritePostViewModel @Inject constructor(
     private val _content = MutableStateFlow("")
     val content = _content.asStateFlow()
 
-    private val _images : MutableStateFlow<List<String>> = MutableStateFlow(emptyList())
+    private val _images: MutableStateFlow<List<String>> = MutableStateFlow(emptyList())
     val images = _images.asStateFlow()
 
     private val _isVerified = MutableStateFlow(true)
@@ -57,11 +60,25 @@ class WritePostViewModel @Inject constructor(
         _images.value = _images.value.filter { it != image }
     }
 
+    fun addPost() = viewModelScope.launch {
+        postRepository.addPost(
+            _title.value,
+            _content.value,
+            _images.value
+        ).onSuccess { postId ->
+            _eventChannel.send(WritePostEvent.AddPostSuccess(postId = postId))
+        }.onFailure {
+            _eventChannel.send(WritePostEvent.AddPostFailure)
+        }
+    }
+
     internal fun onEvent(event: WritePostEvent) = viewModelScope.launch {
         _eventChannel.send(event)
     }
 
     sealed class WritePostEvent {
         data object NavigateToBack : WritePostEvent()
+        data class AddPostSuccess(val postId: Int) : WritePostEvent()
+        data object AddPostFailure : WritePostEvent()
     }
 }

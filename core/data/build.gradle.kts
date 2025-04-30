@@ -9,6 +9,7 @@ android {
 
 dependencies {
     implementation(libs.androidx.exifinterface)
+    implementation(libs.kotlinx.datetime)
 
     implementation(projects.core.domain)
     implementation(projects.core.common)

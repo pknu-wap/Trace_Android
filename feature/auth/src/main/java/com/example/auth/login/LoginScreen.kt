@@ -100,7 +100,6 @@ private fun loginKakao(
     }
 
     UserApiClient.instance.apply {
-
         if (isKakaoTalkLoginAvailable(context)) {
             loginWithKakaoTalk(context) { token, error ->
                 if (error != null) {

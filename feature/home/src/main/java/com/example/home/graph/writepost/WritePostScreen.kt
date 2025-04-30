@@ -36,6 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.common.event.TraceEvent
 import com.example.common.util.clickable
 import com.example.designsystem.R
 import com.example.designsystem.theme.Background
@@ -53,6 +54,7 @@ import com.example.home.graph.writepost.component.TraceTitleField
 @Composable
 internal fun WritePostRoute(
     navigateBack: () -> Unit,
+    navigateToPost: (Int) -> Unit,
     viewModel: WritePostViewModel = hiltViewModel(),
 ) {
     val type by viewModel.type.collectAsStateWithLifecycle()
@@ -64,6 +66,11 @@ internal fun WritePostRoute(
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
             when (event) {
+                is WritePostEvent.AddPostSuccess -> {
+                    navigateToPost(event.postId)
+                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글이 등록되었습니다."))
+                }
+                is WritePostEvent.AddPostFailure -> { viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글 등록에 실패했습니다.")) }
                 is WritePostEvent.NavigateToBack -> navigateBack()
             }
         }
@@ -82,8 +89,8 @@ internal fun WritePostRoute(
         removeImage = viewModel::removeImage,
         onTypeChange = viewModel::setType,
         onIsVerifiedChange = viewModel::setIsVerified,
-
-        )
+        addPost = viewModel::addPost
+    )
 }
 
 @Composable
@@ -99,6 +106,7 @@ private fun WritePostScreen(
     addImages: (List<String>) -> Unit,
     removeImage: (String) -> Unit,
     onIsVerifiedChange: (Boolean) -> Unit,
+    addPost: () -> Unit,
     navigateBack: () -> Unit,
 ) {
     val contentFieldFocusRequester = remember { FocusRequester() }
@@ -237,6 +245,7 @@ private fun WritePostScreen(
                 style = TraceTheme.typography.bodyMM,
                 color = if (requestAvailable) PrimaryActive else TextHint,
                 modifier = Modifier.clickable(isRipple = true, enabled = requestAvailable) {
+                    addPost()
                 }
             )
         }
@@ -355,6 +364,7 @@ fun WritePostScreenPreview() {
         navigateBack = {},
         images = emptyList(),
         addImages = {},
-        removeImage = {}
+        removeImage = {},
+        addPost = {}
     )
 }
