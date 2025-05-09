@@ -53,7 +53,7 @@ class WritePostViewModel @Inject constructor(
     }
 
     fun addImages(images: List<String>) {
-        _images.value += _images.value + images
+        _images.value += images
     }
 
     fun removeImage(image: String) {
