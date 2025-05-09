@@ -10,10 +10,8 @@ import com.example.domain.model.post.PostDetail
 import com.example.domain.model.post.PostType
 import com.example.domain.repository.PostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -23,21 +21,12 @@ class PostViewModel @Inject constructor(
     private val postRepository: PostRepository,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
-    private val _eventChannel = Channel<PostEvent>()
-    val eventChannel = _eventChannel.receiveAsFlow()
 
     private val postId: Int = savedStateHandle["postId"] ?: 1
 
     init {
         getPost()
     }
-
-    internal fun onEvent(event: PostEvent) = viewModelScope.launch {
-        _eventChannel.send(event)
-    }
-
-    private val _userId = MutableStateFlow("")
-    val userId = _userId.asStateFlow()
 
     private val _postDetail = MutableStateFlow(fakePostDetail)
     val postDetail = _postDetail.asStateFlow()
@@ -58,10 +47,6 @@ class PostViewModel @Inject constructor(
                 _postDetail.value = fakePostDetail
             }
         }
-    }
-
-    sealed class PostEvent {
-        data object NavigateBack : PostEvent()
     }
 }
 
@@ -99,6 +84,8 @@ val fakeComments = listOf(
 )
 
 val fakePostDetail = PostDetail(
+    postId = 0,
+    userId = 0,
     postType = PostType.GOOD_DEED,
     title = "작은 선행을 나누다",
     content = "오늘은 작은 선행을 나누었습니다. 많은 사람들에게 도움이 되었으면 좋겠습니다.",

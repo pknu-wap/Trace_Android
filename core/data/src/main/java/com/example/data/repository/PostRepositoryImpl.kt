@@ -35,7 +35,9 @@ class PostRepositoryImpl @Inject constructor(
                 touchingCount = 0,
                 impressiveCount = 0
             ),
-            images = response.imageUrls
+            images = response.imageUrls,
+            postId = 0,
+            userId = 0
         )
     }
 

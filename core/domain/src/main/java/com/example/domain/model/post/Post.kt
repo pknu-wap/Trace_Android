@@ -46,6 +46,7 @@ data class PostFeed(
 }
 
 data class PostDetail(
+    val postId : Int,
     val postType: PostType,
     val title: String,
     val content: String,
@@ -53,6 +54,8 @@ data class PostDetail(
     val profileImageUrl: String? = null,
     val createdAt: LocalDateTime,
     val isVerified: Boolean = false,
+    val userId : Int,
+    val isOwner : Boolean = true,
     val viewCount: Int,
     val comments: List<Comment>,
     val feelingCount: FeelingCount,

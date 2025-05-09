@@ -29,7 +29,7 @@ import com.example.designsystem.theme.White
 internal fun OwnPostDropdownMenu(
     expanded: Boolean,
     onDismiss: () -> Unit,
-    onEdit: () -> Unit,
+    onUpdate: () -> Unit,
     onDelete: () -> Unit,
 ) {
     var showDeleteDialog by remember { mutableStateOf(false) }
@@ -57,7 +57,7 @@ internal fun OwnPostDropdownMenu(
                 modifier = Modifier
                     .clickable(isRipple = true) {
                         onDismiss()
-                        onEdit()
+                        onUpdate()
                     }
                     .padding(top = 15.dp, bottom = 15.dp, start = 15.dp),
                 verticalAlignment = Alignment.CenterVertically,

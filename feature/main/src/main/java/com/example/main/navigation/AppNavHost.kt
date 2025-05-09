@@ -11,6 +11,7 @@ import com.example.auth.navigation.navigateToLogin
 import com.example.home.navigation.homeNavGraph
 import com.example.home.navigation.navigateToHome
 import com.example.home.navigation.navigateToPost
+import com.example.home.navigation.navigateToUpdatePost
 import com.example.home.navigation.navigateToWritePost
 import com.example.mission.navigation.missionNavGraph
 import com.example.mypage.navigation.myPageNavGraph
@@ -65,19 +66,19 @@ fun AppNavHost(
 
         homeNavGraph(
             navigateToPost = { postId ->
-                navController.navigateToPost(postId)
-            },
-            navigateToWrittenPost = { postId ->
                 navController.navigateToPost(postId, navOptions {
-                    popUpTo<HomeGraph.WritePostRoute> {
-                        inclusive = true
+                    popUpTo<HomeGraph.HomeRoute> {
+                        inclusive = false
                     }
                 })
             },
             navigateToWritePost = {
                 navController.navigateToWritePost()
             },
-            navigateBack = { navigateBack(navController) }
+            navigateToUpdatePost = { postId ->
+                navController.navigateToUpdatePost(postId)
+            },
+            navigateBack = { navigateBack(navController) },
         )
 
         missionNavGraph()
