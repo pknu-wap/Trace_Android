@@ -35,7 +35,7 @@ import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.White
 import com.example.domain.model.post.PostFeed
-import com.example.domain.model.post.PostType
+import com.example.domain.model.post.TabType
 import com.example.home.graph.home.HomeViewModel.HomeEvent
 import com.example.home.graph.home.component.PostFeed
 import com.example.home.graph.home.component.TabSelector
@@ -65,15 +65,16 @@ internal fun HomeRoute(
         tabType = tabType,
         onTabTypeChange = viewModel::setTabType,
         navigateToPost = { postId -> viewModel.onEvent(HomeEvent.NavigateToPost(postId)) },
-        navigateToWritePost = { viewModel.onEvent(HomeEvent.NavigateToWritePost) })
+        navigateToWritePost = { viewModel.onEvent(HomeEvent.NavigateToWritePost) },
+    )
 }
 
 
 @Composable
 private fun HomeScreen(
     postFeeds: List<PostFeed>,
-    tabType: PostType,
-    onTabTypeChange: (PostType) -> Unit,
+    tabType: TabType,
+    onTabTypeChange: (TabType) -> Unit,
     navigateToPost: (Int) -> Unit,
     navigateToWritePost: () -> Unit,
 ) {
@@ -152,14 +153,14 @@ private fun HomeScreen(
                     },
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    PostType.entries.forEachIndexed { index, type ->
+                    TabType.entries.forEachIndexed { index, type ->
                         TabSelector(
                             type = type,
                             selectedType = tabType,
                             onTabSelected = onTabTypeChange
                         )
 
-                        if (index != PostType.entries.size - 1) Spacer(Modifier.width(12.dp))
+                        if (index != TabType.entries.size - 1) Spacer(Modifier.width(12.dp))
                     }
                 }
             }
@@ -192,7 +193,7 @@ fun HomeScreenPreview() {
         navigateToPost = {},
         navigateToWritePost = {},
         postFeeds = fakePostFeeds,
-        tabType = PostType.ALL,
+        tabType = TabType.ALL,
         onTabTypeChange = {},
     )
 }

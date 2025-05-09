@@ -20,7 +20,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,7 +50,6 @@ import com.example.designsystem.theme.WarmGray
 import com.example.designsystem.theme.White
 import com.example.domain.model.post.PostDetail
 import com.example.domain.model.post.PostType
-import com.example.home.graph.post.PostViewModel.PostEvent
 import com.example.home.graph.post.component.CommentView
 import com.example.home.graph.post.component.OtherPostDropdownMenu
 import com.example.home.graph.post.component.OwnPostDropdownMenu
@@ -62,36 +60,28 @@ import com.example.home.graph.post.component.TraceCommentField
 @Composable
 internal fun PostRoute(
     navigateBack: () -> Unit,
+    navigateToUpdatePost: (Int) -> Unit,
     viewModel: PostViewModel = hiltViewModel()
 ) {
-    val userId by viewModel.userId.collectAsStateWithLifecycle()
     val commentInput by viewModel.commentInput.collectAsStateWithLifecycle()
     val postDetail by viewModel.postDetail.collectAsStateWithLifecycle()
 
-    LaunchedEffect(true) {
-        viewModel.eventChannel.collect { event ->
-            when (event) {
-                PostEvent.NavigateBack -> navigateBack()
-            }
-        }
-    }
-
     PostScreen(
-        navigateBack = { viewModel.onEvent(PostEvent.NavigateBack) },
-        userId = userId,
         postDetail = postDetail,
         commentInput = commentInput,
-        onCommentInputChange = viewModel::setCommentInput
+        onCommentInputChange = viewModel::setCommentInput,
+        navigateBack = navigateBack,
+        navigateToUpdatePost = navigateToUpdatePost
     )
 }
 
 @Composable
 private fun PostScreen(
-    navigateBack: () -> Unit,
-    userId: String,
     postDetail: PostDetail,
     commentInput: String,
-    onCommentInputChange: (String) -> Unit
+    onCommentInputChange: (String) -> Unit,
+    navigateToUpdatePost: (Int) -> Unit,
+    navigateBack: () -> Unit,
 ) {
     var isOwnPostDropDownMenuExpanded by remember { mutableStateOf(false) }
     var isOtherPostDropDownMenuExpanded by remember { mutableStateOf(false) }
@@ -109,10 +99,13 @@ private fun PostScreen(
                 .padding(top = 75.dp, start = 20.dp, end = 20.dp, bottom = 50.dp)
         ) {
             item {
-                Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Text(postDetail.title, style = TraceTheme.typography.bodyLSB)
 
-                    if(postDetail.postType == PostType.GOOD_DEED && postDetail.isVerified ) {
+                    if (postDetail.postType == PostType.GOOD_DEED && postDetail.isVerified) {
                         Spacer(Modifier.width(8.dp))
 
                         Image(
@@ -245,7 +238,6 @@ private fun PostScreen(
                         )
                     }
                 }
-
                 Spacer(Modifier.height(100.dp))
             }
         }
@@ -283,7 +275,7 @@ private fun PostScreen(
                     contentDescription = "메뉴",
                     modifier = Modifier
                         .clickable(isRipple = true) {
-                            if (userId.isEmpty()) {
+                            if (postDetail.isOwner) {
                                 isOwnPostDropDownMenuExpanded = true
                             } else {
                                 isOtherPostDropDownMenuExpanded = true
@@ -294,7 +286,7 @@ private fun PostScreen(
                 OwnPostDropdownMenu(
                     expanded = isOwnPostDropDownMenuExpanded,
                     onDismiss = { isOwnPostDropDownMenuExpanded = false },
-                    onEdit = {},
+                    onUpdate = { navigateToUpdatePost(postDetail.postId) },
                     onDelete = {}
                 )
 
@@ -303,9 +295,7 @@ private fun PostScreen(
                     onDismiss = { isOtherPostDropDownMenuExpanded = false },
                     onReport = {}
                 )
-
             }
-
         }
 
         Row(
@@ -323,7 +313,6 @@ private fun PostScreen(
                 onAddComment = {},
             )
         }
-
     }
 }
 
@@ -355,10 +344,10 @@ private fun ProfileImage(imageUrl: String?) {
 @Composable
 fun PostScreenPreview() {
     PostScreen(
-        navigateBack = {},
         commentInput = "",
         postDetail = fakePostDetail,
-        userId = "",
-        onCommentInputChange = {}
+        onCommentInputChange = {},
+        navigateBack = {},
+        navigateToUpdatePost = {}
     )
 }

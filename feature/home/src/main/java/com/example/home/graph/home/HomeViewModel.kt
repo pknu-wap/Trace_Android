@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.model.post.PostFeed
 import com.example.domain.model.post.PostType
+import com.example.domain.model.post.TabType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,14 +28,14 @@ class HomeViewModel @Inject constructor(
     private val _postFeeds: MutableStateFlow<List<PostFeed>> = MutableStateFlow(fakePostFeeds)
     val postFeeds = _postFeeds.asStateFlow()
 
-    private val _tabType : MutableStateFlow<PostType> = MutableStateFlow(PostType.ALL)
+    private val _tabType : MutableStateFlow<TabType> = MutableStateFlow(TabType.ALL)
     val tabType = _tabType.asStateFlow()
 
     private fun setPostFeeds(postFeeds: List<PostFeed>) {
         _postFeeds.value = postFeeds
     }
 
-    fun setTabType(tabType: PostType) {
+    fun setTabType(tabType: TabType) {
         _tabType.value = tabType
     }
 

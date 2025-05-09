@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.example.home.graph.home.HomeRoute
 import com.example.home.graph.post.PostRoute
+import com.example.home.graph.updatepost.UpdatePostRoute
 import com.example.home.graph.writepost.WritePostRoute
 import com.example.navigation.HomeBaseRoute
 import com.example.navigation.HomeGraph
@@ -23,10 +24,14 @@ fun NavController.navigateToPost(postId : Int, navOptions: NavOptions? = null) {
     navigate(HomeGraph.PostRoute(postId), navOptions)
 }
 
+fun NavController.navigateToUpdatePost(postId : Int, navOptions: NavOptions? = null) {
+    navigate(HomeGraph.UpdatePostRoute(postId), navOptions)
+}
+
 fun NavGraphBuilder.homeNavGraph(
     navigateToPost: (Int) -> Unit,
-    navigateToWrittenPost: (Int) -> Unit,
     navigateToWritePost: () -> Unit,
+    navigateToUpdatePost : (Int) -> Unit,
     navigateBack: () -> Unit
 ) {
     navigation<HomeBaseRoute>(startDestination = HomeGraph.HomeRoute) {
@@ -39,14 +44,22 @@ fun NavGraphBuilder.homeNavGraph(
 
         composable<HomeGraph.WritePostRoute> {
             WritePostRoute(
-                navigateToPost = navigateToWrittenPost,
+                navigateToPost = navigateToPost,
                 navigateBack = navigateBack
             )
         }
 
         composable<HomeGraph.PostRoute> {
             PostRoute(
-                navigateBack = navigateBack
+                navigateBack = navigateBack,
+                navigateToUpdatePost = navigateToUpdatePost
+            )
+        }
+
+        composable<HomeGraph.UpdatePostRoute> {
+            UpdatePostRoute(
+                navigateBack = navigateBack,
+                navigateToPost = navigateToPost
             )
         }
     }
