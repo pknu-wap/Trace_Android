@@ -36,6 +36,10 @@ class WritePostViewModel @Inject constructor(
     private val _isVerified = MutableStateFlow(true)
     val isVerified = _isVerified.asStateFlow()
 
+    fun setType(type: WritePostType) {
+        _type.value = type
+    }
+
     fun setTitle(title: String) {
         _title.value = title
     }
@@ -44,16 +48,12 @@ class WritePostViewModel @Inject constructor(
         _content.value = content
     }
 
-    fun setType(type: WritePostType) {
-        _type.value = type
-    }
-
     fun setIsVerified(isVerified: Boolean) {
         _isVerified.value = isVerified
     }
 
     fun addImages(images: List<String>) {
-        _images.value = _images.value + images
+        _images.value += _images.value + images
     }
 
     fun removeImage(image: String) {
@@ -70,10 +70,6 @@ class WritePostViewModel @Inject constructor(
         }.onFailure {
             _eventChannel.send(WritePostEvent.AddPostFailure)
         }
-    }
-
-    internal fun onEvent(event: WritePostEvent) = viewModelScope.launch {
-        _eventChannel.send(event)
     }
 
     sealed class WritePostEvent {

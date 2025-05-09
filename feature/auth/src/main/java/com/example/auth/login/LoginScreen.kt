@@ -140,7 +140,7 @@ private fun loginKakao(
                     }
 
                     loginWithKakaoAccount(context, callback = callback)
-                } else if (token != null) {
+                } else if (token?.idToken != null) {
 
                     onSuccess(token.idToken!!)
                     Log.d("idToken", token.idToken!!)
@@ -151,7 +151,6 @@ private fun loginKakao(
             loginWithKakaoAccount(context, callback = callback)
         }
     }
-
 }
 
 

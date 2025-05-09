@@ -36,6 +36,7 @@ import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.White
 import com.example.domain.model.post.PostFeed
 import com.example.domain.model.post.PostType
+import com.example.domain.model.post.TabType
 import com.example.home.graph.home.HomeViewModel.HomeEvent
 import com.example.home.graph.home.component.PostFeed
 import com.example.home.graph.home.component.TabSelector
@@ -72,8 +73,8 @@ internal fun HomeRoute(
 @Composable
 private fun HomeScreen(
     postFeeds: List<PostFeed>,
-    tabType: PostType,
-    onTabTypeChange: (PostType) -> Unit,
+    tabType: TabType,
+    onTabTypeChange: (TabType) -> Unit,
     navigateToPost: (Int) -> Unit,
     navigateToWritePost: () -> Unit,
 ) {
@@ -152,7 +153,7 @@ private fun HomeScreen(
                     },
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    PostType.entries.forEachIndexed { index, type ->
+                    TabType.entries.forEachIndexed { index, type ->
                         TabSelector(
                             type = type,
                             selectedType = tabType,
@@ -192,7 +193,7 @@ fun HomeScreenPreview() {
         navigateToPost = {},
         navigateToWritePost = {},
         postFeeds = fakePostFeeds,
-        tabType = PostType.ALL,
+        tabType = TabType.ALL,
         onTabTypeChange = {},
     )
 }
