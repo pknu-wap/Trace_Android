@@ -38,7 +38,6 @@ fun NavGraphBuilder.homeNavGraph(
         composable<HomeGraph.HomeRoute> {
             HomeRoute(
                 navigateToPost = navigateToPost,
-                navigateToUpdatePost = navigateToUpdatePost,
                 navigateToWritePost = navigateToWritePost
             )
         }

@@ -46,7 +46,6 @@ import com.example.home.graph.home.component.TabSelector
 internal fun HomeRoute(
     navigateToPost: (Int) -> Unit,
     navigateToWritePost: () -> Unit,
-    navigateToUpdatePost: (Int) -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
 
