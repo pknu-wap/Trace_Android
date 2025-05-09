@@ -35,7 +35,6 @@ import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.White
 import com.example.domain.model.post.PostFeed
-import com.example.domain.model.post.PostType
 import com.example.domain.model.post.TabType
 import com.example.home.graph.home.HomeViewModel.HomeEvent
 import com.example.home.graph.home.component.PostFeed
@@ -161,7 +160,7 @@ private fun HomeScreen(
                             onTabSelected = onTabTypeChange
                         )
 
-                        if (index != PostType.entries.size - 1) Spacer(Modifier.width(12.dp))
+                        if (index != TabType.entries.size - 1) Spacer(Modifier.width(12.dp))
                     }
                 }
             }
