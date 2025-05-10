@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenu
@@ -28,9 +29,9 @@ import com.example.designsystem.theme.White
 @Composable
 internal fun OwnCommentDropdownMenu(
     expanded: Boolean,
-    commentId : Int,
+    commentId: Int,
     onDismiss: () -> Unit,
-    onReply : (Int) -> Unit,
+    onReply: (Int) -> Unit,
     onDelete: (Int) -> Unit,
 ) {
     var showDeleteDialog by remember { mutableStateOf(false) }
@@ -63,11 +64,15 @@ internal fun OwnCommentDropdownMenu(
                     .padding(top = 15.dp, bottom = 15.dp, start = 15.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Image(painter = painterResource(R.drawable.reply), contentDescription = "답글 달기")
+                Image(
+                    painter = painterResource(R.drawable.reply),
+                    contentDescription = "답글 달기",
+                    modifier = Modifier.size(24.dp)
+                )
 
                 Spacer(Modifier.width(12.dp))
 
-                Text(stringResource(R.string.edit), style = TraceTheme.typography.bodyMR)
+                Text(stringResource(R.string.reply), style = TraceTheme.typography.bodyMR)
 
                 Spacer(Modifier.width(70.dp))
             }
@@ -81,7 +86,11 @@ internal fun OwnCommentDropdownMenu(
                     .padding(top = 15.dp, bottom = 15.dp, start = 15.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Image(painter = painterResource(R.drawable.delete_ic), contentDescription = "삭제하기")
+                Image(
+                    painter = painterResource(R.drawable.delete_ic),
+                    contentDescription = "삭제하기",
+                    modifier = Modifier.size(24.dp)
+                )
 
                 Spacer(Modifier.width(12.dp))
 
@@ -101,7 +110,7 @@ internal fun OtherCommentDropdownMenu(
     expanded: Boolean,
     onDismiss: () -> Unit,
     onReply: (Int) -> Unit,
-    onReport : (Int) -> Unit,
+    onReport: (Int) -> Unit,
 ) {
     if (expanded) {
         DropdownMenu(
@@ -115,12 +124,38 @@ internal fun OtherCommentDropdownMenu(
                 modifier = Modifier
                     .clickable(isRipple = true) {
                         onDismiss()
+                        onReply(commentId)
+                    }
+                    .padding(top = 15.dp, bottom = 15.dp, start = 15.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.reply),
+                    contentDescription = "답글 달기",
+                    modifier = Modifier.size(24.dp)
+                )
+
+                Spacer(Modifier.width(12.dp))
+
+                Text(stringResource(R.string.reply), style = TraceTheme.typography.bodyMR)
+
+                Spacer(Modifier.width(70.dp))
+            }
+
+            Row(
+                modifier = Modifier
+                    .clickable(isRipple = true) {
+                        onDismiss()
                         onReport(commentId)
                     }
                     .padding(top = 15.dp, bottom = 15.dp, start = 15.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Image(painter = painterResource(R.drawable.report_ic), contentDescription = "신고하기")
+                Image(
+                    painter = painterResource(R.drawable.report_ic),
+                    contentDescription = "신고하기",
+                    modifier = Modifier.size(24.dp)
+                )
 
                 Spacer(Modifier.width(12.dp))
 

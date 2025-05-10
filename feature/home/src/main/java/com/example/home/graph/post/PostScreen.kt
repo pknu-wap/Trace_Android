@@ -237,16 +237,13 @@ private fun PostScreen(
                 postDetail.comments.forEachIndexed { index, comment ->
                     Spacer(Modifier.height(13.dp))
 
-                    CommentView(comment = comment, onDelete = {
-                        onDeleteComment(comment.commentId)
-                    }, onReport = {
-                        onReportComment(comment.commentId)
-                    }, onReply = {
-                        onReplyComment(comment.commentId)
-                    })
+                    CommentView(
+                        comment = comment, onDelete = onDeleteComment, onReport = onReportComment,
+                        onReply = onReplyComment
+                    )
 
                     if (index != postDetail.comments.size - 1) {
-                        Spacer(Modifier.height(11.dp))
+                        Spacer(Modifier.height(15.dp))
 
                         Spacer(
                             modifier = Modifier
@@ -323,7 +320,7 @@ private fun PostScreen(
             TraceCommentField(
                 value = commentInput,
                 onValueChange = onCommentInputChange,
-                onAddComment = {},
+                onAddComment = { onAddComment() },
             )
         }
     }
@@ -365,5 +362,6 @@ fun PostScreenPreview() {
         onDeleteComment = {},
         onDeletePost = {},
         onReportComment = {},
-        onReportPost = {})
+        onReportPost = {}
+    )
 }

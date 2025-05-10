@@ -29,6 +29,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import coil3.request.crossfade
@@ -57,80 +58,172 @@ internal fun CommentView(
             .crossfade(true)
             .build()
     )
-
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Image(
-            painter = profileImage,
-            contentDescription = "프로필 이미지",
-            modifier = Modifier
-                .size(25.dp)
-                .clip(CircleShape),
-            contentScale = ContentScale.Crop
-        )
-
-        Spacer(Modifier.width(6.dp))
-
-        Text(comment.nickName, style = TraceTheme.typography.bodySSB)
-
-        Spacer(Modifier.width(6.dp))
-
-        Text(comment.getFormattedTime(), style = TraceTheme.typography.bodyXSM, color = DarkGray)
-
-
-        Spacer(Modifier.weight(1f))
-
-        Box() {
+    
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Image(
-                painter = painterResource(R.drawable.menu_ic),
-                contentDescription = "댓글 메뉴",
-                colorFilter = ColorFilter.tint(WarmGray),
+                painter = profileImage,
+                contentDescription = "프로필 이미지",
                 modifier = Modifier
-                    .height(15.dp)
-                    .clickable {
-                        if (comment.isOwner) {
-                            isOwnCommentDropDownMenuExpanded = true
-                        } else {
-                            isOtherCommentDropDownMenuExpanded = true
+                    .size(25.dp)
+                    .clip(CircleShape),
+                contentScale = ContentScale.Crop
+            )
+
+            Spacer(Modifier.width(6.dp))
+
+            Text(comment.nickName, style = TraceTheme.typography.bodySSB)
+
+            Spacer(Modifier.width(6.dp))
+
+            Text(comment.getFormattedTime(), style = TraceTheme.typography.bodyXSM, color = DarkGray)
+
+            Spacer(Modifier.weight(1f))
+
+            Box() {
+                Image(
+                    painter = painterResource(R.drawable.menu_ic),
+                    contentDescription = "댓글 메뉴",
+                    colorFilter = ColorFilter.tint(WarmGray),
+                    modifier = Modifier
+                        .height(15.dp)
+                        .clickable {
+                            if (comment.isOwner) {
+                                isOwnCommentDropDownMenuExpanded = true
+                            } else {
+                                isOtherCommentDropDownMenuExpanded = true
+                            }
                         }
-                    }
-            )
+                )
 
-            OwnCommentDropdownMenu(
-                expanded = isOwnCommentDropDownMenuExpanded,
-                commentId = comment.commentId,
-                onDismiss = { isOwnCommentDropDownMenuExpanded = false },
-                onReply = onReply,
-                onDelete = onDelete,
-            )
+                OwnCommentDropdownMenu(
+                    expanded = isOwnCommentDropDownMenuExpanded,
+                    commentId = comment.commentId,
+                    onDismiss = { isOwnCommentDropDownMenuExpanded = false },
+                    onReply = onReply,
+                    onDelete = onDelete,
+                )
 
-            OtherCommentDropdownMenu(
-                expanded = isOtherCommentDropDownMenuExpanded,
-                commentId = comment.commentId,
-                onDismiss = { isOtherCommentDropDownMenuExpanded = false },
-                onReply = onReply,
-                onReport = onReport,
-            )
+                OtherCommentDropdownMenu(
+                    expanded = isOtherCommentDropDownMenuExpanded,
+                    commentId = comment.commentId,
+                    onDismiss = { isOtherCommentDropDownMenuExpanded = false },
+                    onReply = onReply,
+                    onReport = onReport,
+                )
+            }
+
         }
 
+        Spacer(Modifier.height(7.dp))
+
+        Text(comment.content, style = TraceTheme.typography.bodyMM)
+
+        Spacer(Modifier.height(5.dp))
+
+        Text(
+            "답글 달기",
+            style = TraceTheme.typography.bodySM.copy(fontSize = 13.sp, lineHeight = 16.sp),
+            color = DarkGray,
+            modifier = Modifier.clickable {
+                onReply(comment.commentId)
+            })
+
+        comment.replies.forEachIndexed { index, childComment ->
+            if (index == 0) Spacer(Modifier.height(20.dp))
+
+            ChildCommentView(childComment, onDelete = onDelete, onReport = onReport, onReply = onReply)
+
+            if (index != comment.replies.size - 1) Spacer(Modifier.height(20.dp))
+        }
     }
 
-    Spacer(Modifier.height(7.dp))
+}
 
-    Text(comment.content, style = TraceTheme.typography.bodyMM)
+@Composable
+private fun ChildCommentView(
+    comment: Comment,
+    onDelete: (Int) -> Unit,
+    onReply: (Int) -> Unit,
+    onReport: (Int) -> Unit
+) {
 
+    val profileImage = rememberAsyncImagePainter(
+        model = ImageRequest.Builder(LocalContext.current)
+            .data(comment.profileImageUrl ?: R.drawable.default_profile)
+            .crossfade(true)
+            .build()
+    )
 
-    Spacer(Modifier.height(5.dp))
+    var isOwnCommentDropDownMenuExpanded by remember { mutableStateOf(false) }
+    var isOtherCommentDropDownMenuExpanded by remember { mutableStateOf(false) }
 
-    Text(
-        "답글 달기",
-        style = TraceTheme.typography.bodySM,
-        color = DarkGray,
-        modifier = Modifier.clickable {
-            onReply(comment.commentId)
-        })
+    Column(modifier = Modifier.fillMaxWidth().padding(start = 20.dp),) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                painter = profileImage,
+                contentDescription = "프로필 이미지",
+                modifier = Modifier
+                    .size(25.dp)
+                    .clip(CircleShape),
+                contentScale = ContentScale.Crop
+            )
+
+            Spacer(Modifier.width(6.dp))
+
+            Text(comment.nickName, style = TraceTheme.typography.bodySSB)
+
+            Spacer(Modifier.width(6.dp))
+
+            Text(comment.getFormattedTime(), style = TraceTheme.typography.bodyXSM, color = DarkGray)
+
+            Spacer(Modifier.weight(1f))
+
+            Box() {
+                Image(
+                    painter = painterResource(R.drawable.menu_ic),
+                    contentDescription = "댓글 메뉴",
+                    colorFilter = ColorFilter.tint(WarmGray),
+                    modifier = Modifier
+                        .height(15.dp)
+                        .clickable {
+                            if (comment.isOwner) {
+                                isOwnCommentDropDownMenuExpanded = true
+                            } else {
+                                isOtherCommentDropDownMenuExpanded = true
+                            }
+                        }
+                )
+
+                OwnCommentDropdownMenu(
+                    expanded = isOwnCommentDropDownMenuExpanded,
+                    commentId = comment.commentId,
+                    onDismiss = { isOwnCommentDropDownMenuExpanded = false },
+                    onReply = onReply,
+                    onDelete = onDelete,
+                )
+
+                OtherCommentDropdownMenu(
+                    expanded = isOtherCommentDropDownMenuExpanded,
+                    commentId = comment.commentId,
+                    onDismiss = { isOtherCommentDropDownMenuExpanded = false },
+                    onReply = onReply,
+                    onReport = onReport,
+                )
+            }
+        }
+
+        Spacer(Modifier.height(8.dp))
+
+        Text(comment.content, style = TraceTheme.typography.bodyMM)
+    }
+
 }
 
 
