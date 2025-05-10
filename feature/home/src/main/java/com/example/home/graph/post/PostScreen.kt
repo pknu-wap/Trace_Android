@@ -70,8 +70,14 @@ internal fun PostRoute(
         postDetail = postDetail,
         commentInput = commentInput,
         onCommentInputChange = viewModel::setCommentInput,
+        onAddComment = {},
+        onDeletePost = {},
+        onReportPost = {},
+        onDeleteComment = {},
+        onReplyComment = {},
+        onReportComment = {},
         navigateBack = navigateBack,
-        navigateToUpdatePost = navigateToUpdatePost
+        navigateToUpdatePost = navigateToUpdatePost,
     )
 }
 
@@ -79,7 +85,13 @@ internal fun PostRoute(
 private fun PostScreen(
     postDetail: PostDetail,
     commentInput: String,
+    onAddComment: () -> Unit,
     onCommentInputChange: (String) -> Unit,
+    onDeletePost: (Int) -> Unit,
+    onReportPost: (Int) -> Unit,
+    onDeleteComment: (Int) -> Unit,
+    onReplyComment: (Int) -> Unit,
+    onReportComment: (Int) -> Unit,
     navigateToUpdatePost: (Int) -> Unit,
     navigateBack: () -> Unit,
 ) {
@@ -225,7 +237,13 @@ private fun PostScreen(
                 postDetail.comments.forEachIndexed { index, comment ->
                     Spacer(Modifier.height(13.dp))
 
-                    CommentView(comment = comment)
+                    CommentView(comment = comment, onDelete = {
+                        onDeleteComment(comment.commentId)
+                    }, onReport = {
+                        onReportComment(comment.commentId)
+                    }, onReply = {
+                        onReplyComment(comment.commentId)
+                    })
 
                     if (index != postDetail.comments.size - 1) {
                         Spacer(Modifier.height(11.dp))
@@ -238,6 +256,7 @@ private fun PostScreen(
                         )
                     }
                 }
+
                 Spacer(Modifier.height(100.dp))
             }
         }
@@ -257,11 +276,9 @@ private fun PostScreen(
             Image(
                 painter = painterResource(R.drawable.arrow_back_white_ic),
                 contentDescription = "뒤로 가기",
-                modifier = Modifier
-                    .clickable {
-                        navigateBack()
-                    }
-            )
+                modifier = Modifier.clickable {
+                    navigateBack()
+                })
 
             Spacer(Modifier.width(20.dp))
 
@@ -273,28 +290,24 @@ private fun PostScreen(
                 Image(
                     painter = painterResource(R.drawable.menu_ic),
                     contentDescription = "메뉴",
-                    modifier = Modifier
-                        .clickable(isRipple = true) {
-                            if (postDetail.isOwner) {
-                                isOwnPostDropDownMenuExpanded = true
-                            } else {
-                                isOtherPostDropDownMenuExpanded = true
-                            }
+                    modifier = Modifier.clickable(isRipple = true) {
+                        if (postDetail.isOwner) {
+                            isOwnPostDropDownMenuExpanded = true
+                        } else {
+                            isOtherPostDropDownMenuExpanded = true
                         }
-                )
+                    })
 
                 OwnPostDropdownMenu(
                     expanded = isOwnPostDropDownMenuExpanded,
                     onDismiss = { isOwnPostDropDownMenuExpanded = false },
                     onUpdate = { navigateToUpdatePost(postDetail.postId) },
-                    onDelete = {}
-                )
+                    onDelete = { onDeletePost(postDetail.postId) })
 
                 OtherPostDropdownMenu(
                     expanded = isOtherPostDropDownMenuExpanded,
                     onDismiss = { isOtherPostDropDownMenuExpanded = false },
-                    onReport = {}
-                )
+                    onReport = { onReportPost(postDetail.postId) })
             }
         }
 
@@ -320,9 +333,7 @@ private fun PostScreen(
 private fun ProfileImage(imageUrl: String?) {
     val profileImage = rememberAsyncImagePainter(
         model = ImageRequest.Builder(LocalContext.current)
-            .data(imageUrl ?: R.drawable.default_profile)
-            .crossfade(true)
-            .build()
+            .data(imageUrl ?: R.drawable.default_profile).crossfade(true).build()
     )
     val imageSize = if (imageUrl != null) 38.dp else 34.dp
     val paddingValue = if (imageUrl != null) 1.dp else 3.dp
@@ -348,6 +359,11 @@ fun PostScreenPreview() {
         postDetail = fakePostDetail,
         onCommentInputChange = {},
         navigateBack = {},
-        navigateToUpdatePost = {}
-    )
+        navigateToUpdatePost = {},
+        onAddComment = {},
+        onReplyComment = {},
+        onDeleteComment = {},
+        onDeletePost = {},
+        onReportComment = {},
+        onReportPost = {})
 }

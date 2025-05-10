@@ -42,7 +42,7 @@ class PostViewModel @Inject constructor(
         if (postId != 1) {
             postRepository.getPost(postId).onSuccess {
                 _postDetail.value = it
-                Log.d("postDetail", _postDetail.value.toString() )
+                Log.d("postDetail", _postDetail.value.toString())
             }.onFailure {
                 _postDetail.value = fakePostDetail
             }
@@ -50,36 +50,66 @@ class PostViewModel @Inject constructor(
     }
 }
 
-val fakeComments = listOf(
-    Comment(
-        nickName = "홍길동",
-        profileImageUrl = "https://randomuser.me/api/portraits/men/1.jpg",
-        content = "이 글 정말 감동적이에요!",
-        createdAt = LocalDateTime.now().minusDays(1)
-    ),
-    Comment(
-        nickName = "김민수",
-        profileImageUrl = "https://randomuser.me/api/portraits/men/2.jpg",
-        content = "좋은 글 감사합니다!",
-        createdAt = LocalDateTime.now().minusHours(5)
-    ),
+val fakeChildComments = listOf(
     Comment(
         nickName = "이수지",
         profileImageUrl = "https://randomuser.me/api/portraits/women/3.jpg",
         content = "정말 좋은 내용이에요!",
-        createdAt = LocalDateTime.now().minusMinutes(30)
+        createdAt = LocalDateTime.now().minusMinutes(30), userId = 1, postId = 1,
+        commentId = 1, parentId = 1, isOwner = true,
     ),
     Comment(
         nickName = "박영희",
         profileImageUrl = null,
         content = "완전 공감해요!",
-        createdAt = LocalDateTime.now().minusDays(2)
+        createdAt = LocalDateTime.now().minusDays(2), userId = 1, postId = 1,
+        commentId = 1, parentId = 1, isOwner = true,
     ),
     Comment(
         nickName = "최민준",
         profileImageUrl = null,
         content = "읽기만 했는데 좋네요!",
-        createdAt = LocalDateTime.now().minusHours(10)
+        createdAt = LocalDateTime.now().minusHours(10), userId = 1, postId = 1,
+        commentId = 1, parentId = 1, isOwner = true,
+    )
+)
+
+val fakeComments = listOf(
+    Comment(
+        nickName = "홍길동",
+        profileImageUrl = "https://randomuser.me/api/portraits/men/1.jpg",
+        content = "이 글 정말 감동적이에요!",
+        createdAt = LocalDateTime.now().minusDays(1),
+        userId = 1, postId = 1,
+        commentId = 1, parentId = 1, isOwner = true, replies = fakeChildComments
+    ),
+    Comment(
+        nickName = "김민수",
+        profileImageUrl = "https://randomuser.me/api/portraits/men/2.jpg",
+        content = "좋은 글 감사합니다!",
+        createdAt = LocalDateTime.now().minusHours(5), userId = 1, postId = 1,
+        commentId = 1, parentId = null, isOwner = true,
+    ),
+    Comment(
+        nickName = "이수지",
+        profileImageUrl = "https://randomuser.me/api/portraits/women/3.jpg",
+        content = "정말 좋은 내용이에요!",
+        createdAt = LocalDateTime.now().minusMinutes(30), userId = 1, postId = 1,
+        commentId = 1, parentId = null, isOwner = true,
+    ),
+    Comment(
+        nickName = "박영희",
+        profileImageUrl = null,
+        content = "완전 공감해요!",
+        createdAt = LocalDateTime.now().minusDays(2), userId = 1, postId = 1,
+        commentId = 1, parentId = null, isOwner = true,
+    ),
+    Comment(
+        nickName = "최민준",
+        profileImageUrl = null,
+        content = "읽기만 했는데 좋네요!",
+        createdAt = LocalDateTime.now().minusHours(10), userId = 1, postId = 1,
+        commentId = 1, parentId = null, isOwner = true,
     )
 )
 

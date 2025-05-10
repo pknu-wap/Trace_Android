@@ -2,11 +2,15 @@ package com.example.home.graph.post.component
 
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
@@ -23,6 +27,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
@@ -30,14 +35,18 @@ import coil3.request.crossfade
 import com.example.common.util.clickable
 import com.example.designsystem.R
 import com.example.designsystem.theme.DarkGray
+import com.example.designsystem.theme.GrayLine
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.WarmGray
 import com.example.domain.model.post.Comment
+import java.time.LocalDateTime
 
 @Composable
 internal fun CommentView(
-    userId: String = "",
     comment: Comment,
+    onDelete: (Int) -> Unit,
+    onReply: (Int) -> Unit,
+    onReport: (Int) -> Unit,
 ) {
     var isOwnCommentDropDownMenuExpanded by remember { mutableStateOf(false) }
     var isOtherCommentDropDownMenuExpanded by remember { mutableStateOf(false) }
@@ -70,39 +79,40 @@ internal fun CommentView(
 
         Text(comment.getFormattedTime(), style = TraceTheme.typography.bodyXSM, color = DarkGray)
 
-        if (userId.isEmpty()) {
-            Spacer(Modifier.weight(1f))
 
-            Box() {
-                Image(
-                    painter = painterResource(R.drawable.menu_ic),
-                    contentDescription = "댓글 메뉴",
-                    colorFilter = ColorFilter.tint(WarmGray),
-                    modifier = Modifier
-                        .height(15.dp)
-                        .clickable {
-                            if(userId.isEmpty()) {
-                                isOwnCommentDropDownMenuExpanded = true
-                            }
-                            else {
-                                isOtherCommentDropDownMenuExpanded = true
-                            }
+        Spacer(Modifier.weight(1f))
+
+        Box() {
+            Image(
+                painter = painterResource(R.drawable.menu_ic),
+                contentDescription = "댓글 메뉴",
+                colorFilter = ColorFilter.tint(WarmGray),
+                modifier = Modifier
+                    .height(15.dp)
+                    .clickable {
+                        if (comment.isOwner) {
+                            isOwnCommentDropDownMenuExpanded = true
+                        } else {
+                            isOtherCommentDropDownMenuExpanded = true
                         }
-                )
+                    }
+            )
 
-                OwnCommentDropdownMenu(
-                    expanded = isOwnCommentDropDownMenuExpanded,
-                    onDismiss = { isOwnCommentDropDownMenuExpanded = false },
-                    onEdit = {},
-                    onDelete = {}
-                )
+            OwnCommentDropdownMenu(
+                expanded = isOwnCommentDropDownMenuExpanded,
+                commentId = comment.commentId,
+                onDismiss = { isOwnCommentDropDownMenuExpanded = false },
+                onReply = onReply,
+                onDelete = onDelete,
+            )
 
-                OtherCommentDropdownMenu(
-                    expanded = isOtherCommentDropDownMenuExpanded,
-                    onDismiss = { isOtherCommentDropDownMenuExpanded = false },
-                    onReport = {}
-                )
-            }
+            OtherCommentDropdownMenu(
+                expanded = isOtherCommentDropDownMenuExpanded,
+                commentId = comment.commentId,
+                onDismiss = { isOtherCommentDropDownMenuExpanded = false },
+                onReply = onReply,
+                onReport = onReport,
+            )
         }
 
     }
@@ -110,5 +120,75 @@ internal fun CommentView(
     Spacer(Modifier.height(7.dp))
 
     Text(comment.content, style = TraceTheme.typography.bodyMM)
+
+
+    Spacer(Modifier.height(5.dp))
+
+    Text(
+        "답글 달기",
+        style = TraceTheme.typography.bodySM,
+        color = DarkGray,
+        modifier = Modifier.clickable {
+            onReply(comment.commentId)
+        })
 }
 
+
+val fakeChildComments = listOf(
+    Comment(
+        nickName = "이수지",
+        profileImageUrl = "https://randomuser.me/api/portraits/women/3.jpg",
+        content = "정말 좋은 내용이에요!",
+        createdAt = LocalDateTime.now().minusMinutes(30), userId = 1, postId = 1,
+        commentId = 1, parentId = 1, isOwner = true,
+    ),
+    Comment(
+        nickName = "박영희",
+        profileImageUrl = null,
+        content = "완전 공감해요!",
+        createdAt = LocalDateTime.now().minusDays(2), userId = 1, postId = 1,
+        commentId = 1, parentId = 1, isOwner = true,
+    ),
+    Comment(
+        nickName = "최민준",
+        profileImageUrl = null,
+        content = "읽기만 했는데 좋네요!",
+        createdAt = LocalDateTime.now().minusHours(10), userId = 1, postId = 1,
+        commentId = 1, parentId = 1, isOwner = true,
+    )
+)
+
+@Preview
+@Composable
+private fun CommentViewPreview() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 20.dp, vertical = 8.dp)
+    ) {
+        CommentView(
+            comment = Comment(
+                nickName = "홍길동",
+                profileImageUrl = "https://randomuser.me/api/portraits/men/1.jpg",
+                content = "이 글 정말 감동적이에요!",
+                createdAt = LocalDateTime.now().minusDays(1),
+                userId = 1, postId = 1,
+                commentId = 1, parentId = 1, isOwner = true, replies = fakeChildComments
+            ),
+            onReply = { id -> },
+            onReport = { id -> },
+            onDelete = { id -> }
+        )
+
+        Spacer(Modifier.height(11.dp))
+
+        Spacer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(1.dp)
+                .background(GrayLine)
+        )
+    }
+
+
+}

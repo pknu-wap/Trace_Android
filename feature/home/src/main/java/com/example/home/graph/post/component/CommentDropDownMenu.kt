@@ -28,16 +28,17 @@ import com.example.designsystem.theme.White
 @Composable
 internal fun OwnCommentDropdownMenu(
     expanded: Boolean,
+    commentId : Int,
     onDismiss: () -> Unit,
-    onEdit: () -> Unit,
-    onDelete: () -> Unit,
+    onReply : (Int) -> Unit,
+    onDelete: (Int) -> Unit,
 ) {
     var showDeleteDialog by remember { mutableStateOf(false) }
 
     if (showDeleteDialog) {
         CheckCancelDialog(
             onCheck = {
-                onDelete()
+                onDelete(commentId)
                 showDeleteDialog = false
             },
             onDismiss = { showDeleteDialog = false },
@@ -57,12 +58,12 @@ internal fun OwnCommentDropdownMenu(
                 modifier = Modifier
                     .clickable(isRipple = true) {
                         onDismiss()
-                        onEdit()
+                        onReply(commentId)
                     }
                     .padding(top = 15.dp, bottom = 15.dp, start = 15.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Image(painter = painterResource(R.drawable.edit_ic), contentDescription = "수정하기")
+                Image(painter = painterResource(R.drawable.reply), contentDescription = "답글 달기")
 
                 Spacer(Modifier.width(12.dp))
 
@@ -96,9 +97,11 @@ internal fun OwnCommentDropdownMenu(
 
 @Composable
 internal fun OtherCommentDropdownMenu(
+    commentId: Int,
     expanded: Boolean,
     onDismiss: () -> Unit,
-    onReport: () -> Unit,
+    onReply: (Int) -> Unit,
+    onReport : (Int) -> Unit,
 ) {
     if (expanded) {
         DropdownMenu(
@@ -112,7 +115,7 @@ internal fun OtherCommentDropdownMenu(
                 modifier = Modifier
                     .clickable(isRipple = true) {
                         onDismiss()
-                        onReport()
+                        onReport(commentId)
                     }
                     .padding(top = 15.dp, bottom = 15.dp, start = 15.dp),
                 verticalAlignment = Alignment.CenterVertically,
