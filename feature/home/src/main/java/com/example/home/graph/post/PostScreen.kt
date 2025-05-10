@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -308,20 +307,22 @@ private fun PostScreen(
             }
         }
 
-        Row(
+        Column(
             modifier = Modifier
-                .align(Alignment.BottomCenter)
                 .fillMaxWidth()
-                .height(50.dp)
-                .padding(start = 8.dp, end = 8.dp, bottom = 10.dp)
-                .clip(RoundedCornerShape(15.dp)),
-            verticalAlignment = Alignment.CenterVertically
+                .padding(start = 8.dp, end = 8.dp)
+                .background(Background)
+                .align(Alignment.BottomCenter),
         ) {
+            Spacer(modifier = Modifier.height(10.dp))
+
             TraceCommentField(
                 value = commentInput,
                 onValueChange = onCommentInputChange,
                 onAddComment = { onAddComment() },
             )
+
+            Spacer(modifier = Modifier.height(10.dp))
         }
     }
 }

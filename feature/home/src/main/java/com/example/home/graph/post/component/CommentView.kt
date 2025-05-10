@@ -226,7 +226,6 @@ private fun ChildCommentView(
 
 }
 
-
 val fakeChildComments = listOf(
     Comment(
         nickName = "이수지",
