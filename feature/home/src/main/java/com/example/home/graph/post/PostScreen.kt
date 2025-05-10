@@ -69,12 +69,12 @@ internal fun PostRoute(
         postDetail = postDetail,
         commentInput = commentInput,
         onCommentInputChange = viewModel::setCommentInput,
-        onAddComment = {},
-        onDeletePost = {},
-        onReportPost = {},
-        onDeleteComment = {},
-        onReplyComment = {},
-        onReportComment = {},
+        onAddComment = viewModel::addComment,
+        onDeletePost = viewModel::deletePost,
+        onReportPost = viewModel::reportPost,
+        onDeleteComment = viewModel::deleteComment,
+        onReplyComment = viewModel::replyComment,
+        onReportComment = viewModel::reportComment,
         navigateBack = navigateBack,
         navigateToUpdatePost = navigateToUpdatePost,
     )
@@ -84,10 +84,10 @@ internal fun PostRoute(
 private fun PostScreen(
     postDetail: PostDetail,
     commentInput: String,
+    onDeletePost: () -> Unit,
+    onReportPost: () -> Unit,
     onAddComment: () -> Unit,
     onCommentInputChange: (String) -> Unit,
-    onDeletePost: (Int) -> Unit,
-    onReportPost: (Int) -> Unit,
     onDeleteComment: (Int) -> Unit,
     onReplyComment: (Int) -> Unit,
     onReportComment: (Int) -> Unit,
@@ -298,12 +298,14 @@ private fun PostScreen(
                     expanded = isOwnPostDropDownMenuExpanded,
                     onDismiss = { isOwnPostDropDownMenuExpanded = false },
                     onUpdate = { navigateToUpdatePost(postDetail.postId) },
-                    onDelete = { onDeletePost(postDetail.postId) })
+                    onDelete = onDeletePost,
+                )
 
                 OtherPostDropdownMenu(
                     expanded = isOtherPostDropDownMenuExpanded,
                     onDismiss = { isOtherPostDropDownMenuExpanded = false },
-                    onReport = { onReportPost(postDetail.postId) })
+                    onReport = onReportPost
+                )
             }
         }
 

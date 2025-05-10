@@ -48,6 +48,53 @@ class PostViewModel @Inject constructor(
             }
         }
     }
+
+    fun reportPost() {}
+
+    fun deletePost() {}
+
+    fun addComment() {
+
+    }
+
+    fun replyComment(commentId: Int) {
+
+    }
+
+    fun deleteComment(commentId: Int) {
+        val updatedComments = _postDetail.value.comments.mapNotNull { comment ->
+            when {
+                // 원댓글이 삭제 대상인 경우
+                comment.commentId == commentId -> {
+                    if (comment.replies.isNotEmpty()) {
+                        // 대댓글이 있으면 isDeleted만 true로 바꿈
+                        comment.copy(isDeleted = true)
+                    } else {
+                        null
+                    }
+                }
+
+                // 대댓글 중 삭제 대상이 있는 경우
+                comment.replies.any { it.commentId == commentId } -> {
+                    val updatedReplies = comment.replies.mapNotNull { reply ->
+                        if (reply.commentId == commentId) {
+                            // 대댓글은 무조건 제거
+                            null
+                        } else reply
+                    }
+                    comment.copy(replies = updatedReplies)
+                }
+
+                // 나머지 댓글은 그대로
+                else -> comment
+            }
+        }
+
+        _postDetail.value = _postDetail.value.copy(comments = updatedComments)
+    }
+
+    fun reportComment(commentId: Int) {}
+
 }
 
 val fakeChildComments = listOf(
@@ -56,21 +103,21 @@ val fakeChildComments = listOf(
         profileImageUrl = "https://randomuser.me/api/portraits/women/3.jpg",
         content = "정말 좋은 내용이에요!",
         createdAt = LocalDateTime.now().minusMinutes(30), userId = 1, postId = 1,
-        commentId = 1, parentId = 1, isOwner = true,
+        commentId = 11, parentId = 1, isOwner = true,
     ),
     Comment(
         nickName = "박영희",
         profileImageUrl = null,
         content = "완전 공감해요!",
         createdAt = LocalDateTime.now().minusDays(2), userId = 1, postId = 1,
-        commentId = 1, parentId = 1, isOwner = true,
+        commentId = 12, parentId = 1, isOwner = true,
     ),
     Comment(
         nickName = "최민준",
         profileImageUrl = null,
         content = "읽기만 했는데 좋네요!",
         createdAt = LocalDateTime.now().minusHours(10), userId = 1, postId = 1,
-        commentId = 1, parentId = 1, isOwner = true,
+        commentId = 13, parentId = 1, isOwner = true,
     )
 )
 
@@ -81,35 +128,35 @@ val fakeComments = listOf(
         content = "이 글 정말 감동적이에요!",
         createdAt = LocalDateTime.now().minusDays(1),
         userId = 1, postId = 1,
-        commentId = 1, parentId = 1, isOwner = true, replies = fakeChildComments
+        commentId = 1, parentId = null, isOwner = true, replies = fakeChildComments
     ),
     Comment(
         nickName = "김민수",
         profileImageUrl = "https://randomuser.me/api/portraits/men/2.jpg",
         content = "좋은 글 감사합니다!",
         createdAt = LocalDateTime.now().minusHours(5), userId = 1, postId = 1,
-        commentId = 1, parentId = null, isOwner = true,
+        commentId = 2, parentId = null, isOwner = true,
     ),
     Comment(
         nickName = "이수지",
         profileImageUrl = "https://randomuser.me/api/portraits/women/3.jpg",
         content = "정말 좋은 내용이에요!",
         createdAt = LocalDateTime.now().minusMinutes(30), userId = 1, postId = 1,
-        commentId = 1, parentId = null, isOwner = true,
+        commentId = 3, parentId = null, isOwner = true,
     ),
     Comment(
         nickName = "박영희",
         profileImageUrl = null,
         content = "완전 공감해요!",
         createdAt = LocalDateTime.now().minusDays(2), userId = 1, postId = 1,
-        commentId = 1, parentId = null, isOwner = true,
+        commentId = 4, parentId = null, isOwner = true,
     ),
     Comment(
         nickName = "최민준",
         profileImageUrl = null,
         content = "읽기만 했는데 좋네요!",
         createdAt = LocalDateTime.now().minusHours(10), userId = 1, postId = 1,
-        commentId = 1, parentId = null, isOwner = true,
+        commentId = 5, parentId = null, isOwner = true,
     )
 )
 

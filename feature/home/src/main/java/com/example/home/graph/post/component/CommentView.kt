@@ -36,6 +36,7 @@ import coil3.request.crossfade
 import com.example.common.util.clickable
 import com.example.designsystem.R
 import com.example.designsystem.theme.DarkGray
+import com.example.designsystem.theme.Gray
 import com.example.designsystem.theme.GrayLine
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.WarmGray
@@ -58,84 +59,101 @@ internal fun CommentView(
             .crossfade(true)
             .build()
     )
-    
+
     Column(modifier = Modifier.fillMaxWidth()) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                painter = profileImage,
-                contentDescription = "프로필 이미지",
-                modifier = Modifier
-                    .size(25.dp)
-                    .clip(CircleShape),
-                contentScale = ContentScale.Crop
-            )
-
-            Spacer(Modifier.width(6.dp))
-
-            Text(comment.nickName, style = TraceTheme.typography.bodySSB)
-
-            Spacer(Modifier.width(6.dp))
-
-            Text(comment.getFormattedTime(), style = TraceTheme.typography.bodyXSM, color = DarkGray)
-
-            Spacer(Modifier.weight(1f))
-
-            Box() {
+        if (!comment.isDeleted) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Image(
-                    painter = painterResource(R.drawable.menu_ic),
-                    contentDescription = "댓글 메뉴",
-                    colorFilter = ColorFilter.tint(WarmGray),
+                    painter = profileImage,
+                    contentDescription = "프로필 이미지",
                     modifier = Modifier
-                        .height(15.dp)
-                        .clickable {
-                            if (comment.isOwner) {
-                                isOwnCommentDropDownMenuExpanded = true
-                            } else {
-                                isOtherCommentDropDownMenuExpanded = true
+                        .size(25.dp)
+                        .clip(CircleShape),
+                    contentScale = ContentScale.Crop
+                )
+
+                Spacer(Modifier.width(6.dp))
+
+                Text(comment.nickName, style = TraceTheme.typography.bodySSB)
+
+                Spacer(Modifier.width(6.dp))
+
+                Text(
+                    comment.getFormattedTime(),
+                    style = TraceTheme.typography.bodyXSM,
+                    color = DarkGray
+                )
+
+                Spacer(Modifier.weight(1f))
+
+                Box() {
+                    Image(
+                        painter = painterResource(R.drawable.menu_ic),
+                        contentDescription = "댓글 메뉴",
+                        colorFilter = ColorFilter.tint(WarmGray),
+                        modifier = Modifier
+                            .height(15.dp)
+                            .clickable {
+                                if (comment.isOwner) {
+                                    isOwnCommentDropDownMenuExpanded = true
+                                } else {
+                                    isOtherCommentDropDownMenuExpanded = true
+                                }
                             }
-                        }
-                )
+                    )
 
-                OwnCommentDropdownMenu(
-                    expanded = isOwnCommentDropDownMenuExpanded,
-                    commentId = comment.commentId,
-                    onDismiss = { isOwnCommentDropDownMenuExpanded = false },
-                    onReply = onReply,
-                    onDelete = onDelete,
-                )
+                    OwnCommentDropdownMenu(
+                        expanded = isOwnCommentDropDownMenuExpanded,
+                        commentId = comment.commentId,
+                        onDismiss = { isOwnCommentDropDownMenuExpanded = false },
+                        onReply = onReply,
+                        onDelete = onDelete,
+                    )
 
-                OtherCommentDropdownMenu(
-                    expanded = isOtherCommentDropDownMenuExpanded,
-                    commentId = comment.commentId,
-                    onDismiss = { isOtherCommentDropDownMenuExpanded = false },
-                    onReply = onReply,
-                    onReport = onReport,
-                )
+                    OtherCommentDropdownMenu(
+                        expanded = isOtherCommentDropDownMenuExpanded,
+                        commentId = comment.commentId,
+                        onDismiss = { isOtherCommentDropDownMenuExpanded = false },
+                        onReply = onReply,
+                        onReport = onReport,
+                    )
+                }
             }
 
+            Spacer(Modifier.height(7.dp))
+
+            Text(comment.content, style = TraceTheme.typography.bodyMM)
+
+            Spacer(Modifier.height(5.dp))
+
+            Text(
+                "답글 달기",
+                style = TraceTheme.typography.bodySM.copy(
+                    fontSize = 13.sp,
+                    lineHeight = 16.sp
+                ),
+                color = DarkGray,
+                modifier = Modifier.clickable {
+                    onReply(comment.commentId)
+                })
         }
 
-        Spacer(Modifier.height(7.dp))
-
-        Text(comment.content, style = TraceTheme.typography.bodyMM)
-
-        Spacer(Modifier.height(5.dp))
-
-        Text(
-            "답글 달기",
-            style = TraceTheme.typography.bodySM.copy(fontSize = 13.sp, lineHeight = 16.sp),
-            color = DarkGray,
-            modifier = Modifier.clickable {
-                onReply(comment.commentId)
-            })
+        if(comment.isDeleted) {
+            Text("삭제된 댓글입니다.", style = TraceTheme.typography.bodySM, color = Gray)
+        }
 
         comment.replies.forEachIndexed { index, childComment ->
             if (index == 0) Spacer(Modifier.height(20.dp))
 
-            ChildCommentView(childComment, onDelete = onDelete, onReport = onReport, onReply = onReply)
+            ChildCommentView(
+                childComment,
+                onDelete = onDelete,
+                onReport = onReport,
+                onReply = onReply
+            )
 
             if (index != comment.replies.size - 1) Spacer(Modifier.height(20.dp))
         }
@@ -161,7 +179,10 @@ private fun ChildCommentView(
     var isOwnCommentDropDownMenuExpanded by remember { mutableStateOf(false) }
     var isOtherCommentDropDownMenuExpanded by remember { mutableStateOf(false) }
 
-    Column(modifier = Modifier.fillMaxWidth().padding(start = 20.dp),) {
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .padding(start = 20.dp)
+    ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
@@ -181,7 +202,11 @@ private fun ChildCommentView(
 
             Spacer(Modifier.width(6.dp))
 
-            Text(comment.getFormattedTime(), style = TraceTheme.typography.bodyXSM, color = DarkGray)
+            Text(
+                comment.getFormattedTime(),
+                style = TraceTheme.typography.bodyXSM,
+                color = DarkGray
+            )
 
             Spacer(Modifier.weight(1f))
 

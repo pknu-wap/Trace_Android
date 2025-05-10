@@ -9,6 +9,7 @@ data class Comment(
     val userId: Int,
     val commentId: Int,
     val parentId: Int? = null,
+    val isDeleted : Boolean = false,
     val isOwner : Boolean = false,
     val nickName: String,
     val profileImageUrl: String? = null,
