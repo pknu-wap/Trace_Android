@@ -63,6 +63,7 @@ import com.example.home.graph.post.component.OtherPostDropdownMenu
 import com.example.home.graph.post.component.OwnPostDropdownMenu
 import com.example.home.graph.post.component.PostImageContent
 import com.example.home.graph.post.component.TraceCommentField
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -76,6 +77,8 @@ internal fun PostRoute(
     val postDetail by viewModel.postDetail.collectAsStateWithLifecycle()
     val isCommentLoading by viewModel.isCommentLoading.collectAsStateWithLifecycle()
     val replyTargetId by viewModel.replyTargetId.collectAsStateWithLifecycle()
+
+
 
     PostScreen(
         postDetail = postDetail,
@@ -411,6 +414,7 @@ private fun PostScreen(
                 onReplyComment = {
                     coroutineScope.launch {
                         val commentId = onReplyComment()
+                        delay(500)
                         keyboardController?.hide()
 
                         val targetIndex =

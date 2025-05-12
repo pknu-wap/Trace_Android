@@ -170,7 +170,6 @@ internal fun CommentView(
 private fun ChildCommentView(
     comment: Comment,
     onDelete: (Int) -> Unit,
-    onReply: () -> Unit,
     onReport: (Int) -> Unit
 ) {
 
