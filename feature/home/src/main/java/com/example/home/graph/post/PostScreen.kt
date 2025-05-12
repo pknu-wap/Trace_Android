@@ -32,6 +32,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.rememberAsyncImagePainter
@@ -107,9 +108,11 @@ private fun PostScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 75.dp, start = 20.dp, end = 20.dp, bottom = 50.dp)
+                .padding(top = 45.dp, start = 20.dp, end = 20.dp, bottom = 50.dp)
         ) {
             item {
+                Spacer(Modifier.height(25.dp))
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
@@ -196,7 +199,7 @@ private fun PostScreen(
 
                 Spacer(Modifier.height(15.dp))
 
-                Text(postDetail.content, style = TraceTheme.typography.bodySR)
+                Text(postDetail.content, style = TraceTheme.typography.bodyMR.copy(fontSize = 15.sp, lineHeight = 19.sp))
 
                 Spacer(Modifier.height(50.dp))
 
@@ -265,8 +268,8 @@ private fun PostScreen(
                 .background(
                     PrimaryDefault
                 )
-                .padding(horizontal = 20.dp)
-                .height(50.dp),
+                .padding(horizontal = 20.dp).height(45.dp)
+            ,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(

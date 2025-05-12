@@ -125,7 +125,7 @@ internal fun CommentView(
 
             Spacer(Modifier.height(7.dp))
 
-            Text(comment.content, style = TraceTheme.typography.bodyMM)
+            Text(comment.content, style = TraceTheme.typography.bodyMR)
 
             Spacer(Modifier.height(5.dp))
 
@@ -246,7 +246,7 @@ private fun ChildCommentView(
 
         Spacer(Modifier.height(8.dp))
 
-        Text(comment.content, style = TraceTheme.typography.bodyMM)
+        Text(comment.content, style = TraceTheme.typography.bodyMR)
     }
 
 }
