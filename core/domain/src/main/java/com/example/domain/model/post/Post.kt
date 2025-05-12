@@ -6,6 +6,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 data class PostFeed(
+    val postId : Int,
     val postType: PostType,
     val title: String,
     val content: String,

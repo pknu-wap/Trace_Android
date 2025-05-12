@@ -16,23 +16,30 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.rememberAsyncImagePainter
@@ -44,6 +51,7 @@ import com.example.designsystem.theme.Background
 import com.example.designsystem.theme.Black
 import com.example.designsystem.theme.DarkGray
 import com.example.designsystem.theme.GrayLine
+import com.example.designsystem.theme.PrimaryActive
 import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.WarmGray
@@ -55,6 +63,8 @@ import com.example.home.graph.post.component.OtherPostDropdownMenu
 import com.example.home.graph.post.component.OwnPostDropdownMenu
 import com.example.home.graph.post.component.PostImageContent
 import com.example.home.graph.post.component.TraceCommentField
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -65,13 +75,28 @@ internal fun PostRoute(
 ) {
     val commentInput by viewModel.commentInput.collectAsStateWithLifecycle()
     val postDetail by viewModel.postDetail.collectAsStateWithLifecycle()
+    val isCommentLoading by viewModel.isCommentLoading.collectAsStateWithLifecycle()
+    val replyTargetId by viewModel.replyTargetId.collectAsStateWithLifecycle()
+
+
 
     PostScreen(
         postDetail = postDetail,
         commentInput = commentInput,
+        isCommentLoading = isCommentLoading,
+        isReplying = replyTargetId != null,
+        replyTargetId = replyTargetId,
         onCommentInputChange = viewModel::setCommentInput,
+        onAddComment = viewModel::addComment,
+        onDeletePost = viewModel::deletePost,
+        onReportPost = viewModel::reportPost,
+        onDeleteComment = viewModel::deleteComment,
+        onReplyComment = viewModel::replyComment,
+        onReplyTargetIdChange = viewModel::setReplyTargetId,
+        clearReplayTargetId = viewModel::clearReplyTargetId,
+        onReportComment = viewModel::reportComment,
         navigateBack = navigateBack,
-        navigateToUpdatePost = navigateToUpdatePost
+        navigateToUpdatePost = navigateToUpdatePost,
     )
 }
 
@@ -79,12 +104,31 @@ internal fun PostRoute(
 private fun PostScreen(
     postDetail: PostDetail,
     commentInput: String,
+    isReplying: Boolean,
+    replyTargetId: Int?,
+    isCommentLoading: Boolean,
+    onDeletePost: () -> Unit,
+    onReportPost: () -> Unit,
+    onAddComment: () -> Unit,
     onCommentInputChange: (String) -> Unit,
+    onDeleteComment: (Int) -> Unit,
+    onReplyComment: () -> Int,
+    onReplyTargetIdChange: (Int) -> Unit,
+    clearReplayTargetId: () -> Unit,
+    onReportComment: (Int) -> Unit,
     navigateToUpdatePost: (Int) -> Unit,
     navigateBack: () -> Unit,
 ) {
     var isOwnPostDropDownMenuExpanded by remember { mutableStateOf(false) }
     var isOtherPostDropDownMenuExpanded by remember { mutableStateOf(false) }
+
+    val coroutineScope = rememberCoroutineScope()
+    val listState = rememberLazyListState()
+
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusRequester = remember { FocusRequester() }
+
+    val scrollOffset = with(LocalDensity.current) { -200.dp.toPx().toInt() }
 
     Box(
         modifier = Modifier
@@ -93,12 +137,29 @@ private fun PostScreen(
             .imePadding()
     ) {
 
+        if (isCommentLoading) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.Center)
+            ) {
+                CircularProgressIndicator(
+                    color = PrimaryActive,
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                )
+            }
+        }
+
         LazyColumn(
+            state = listState,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 75.dp, start = 20.dp, end = 20.dp, bottom = 50.dp)
+                .padding(top = 45.dp, start = 20.dp, end = 20.dp, bottom = 50.dp)
         ) {
+
             item {
+                Spacer(Modifier.height(25.dp))
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
@@ -185,11 +246,12 @@ private fun PostScreen(
 
                 Spacer(Modifier.height(15.dp))
 
-                Text(postDetail.content, style = TraceTheme.typography.bodySR)
+                Text(
+                    postDetail.content,
+                    style = TraceTheme.typography.bodyMR.copy(fontSize = 15.sp, lineHeight = 19.sp)
+                )
 
                 Spacer(Modifier.height(50.dp))
-
-
 
                 Spacer(
                     modifier = Modifier
@@ -222,25 +284,52 @@ private fun PostScreen(
 
                 }
 
-                postDetail.comments.forEachIndexed { index, comment ->
-                    Spacer(Modifier.height(13.dp))
-
-                    CommentView(comment = comment)
-
-                    if (index != postDetail.comments.size - 1) {
-                        Spacer(Modifier.height(11.dp))
-
-                        Spacer(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(1.dp)
-                                .background(GrayLine)
-                        )
-                    }
-                }
-                Spacer(Modifier.height(100.dp))
             }
+
+
+            itemsIndexed(
+                items = postDetail.comments,
+                key = { _, comment -> comment.commentId }
+            ) { index, comment ->
+                Spacer(Modifier.height(13.dp))
+
+                CommentView(
+                    comment = comment,
+                    replyTargetId = replyTargetId,
+                    onDelete = onDeleteComment,
+                    onReport = onReportComment,
+                    onReply = {
+                        onReplyTargetIdChange(comment.commentId)
+
+                        coroutineScope.launch {
+                            focusRequester.requestFocus()
+                            keyboardController?.show()
+
+                            listState.animateScrollToItem(
+                                index = index + 1,
+                                scrollOffset = scrollOffset
+                            )
+                        }
+                    }
+                )
+
+                if (index != postDetail.comments.size - 1) {
+                    Spacer(Modifier.height(15.dp))
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(1.dp)
+                            .background(GrayLine)
+                    )
+                }
+            }
+
+            item {
+                Spacer(Modifier.height(300.dp))
+            }
+
         }
+
 
 
         Row(
@@ -251,17 +340,15 @@ private fun PostScreen(
                     PrimaryDefault
                 )
                 .padding(horizontal = 20.dp)
-                .height(50.dp),
+                .height(45.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
                 painter = painterResource(R.drawable.arrow_back_white_ic),
                 contentDescription = "뒤로 가기",
-                modifier = Modifier
-                    .clickable {
-                        navigateBack()
-                    }
-            )
+                modifier = Modifier.clickable {
+                    navigateBack()
+                })
 
             Spacer(Modifier.width(20.dp))
 
@@ -273,45 +360,75 @@ private fun PostScreen(
                 Image(
                     painter = painterResource(R.drawable.menu_ic),
                     contentDescription = "메뉴",
-                    modifier = Modifier
-                        .clickable(isRipple = true) {
-                            if (postDetail.isOwner) {
-                                isOwnPostDropDownMenuExpanded = true
-                            } else {
-                                isOtherPostDropDownMenuExpanded = true
-                            }
+                    modifier = Modifier.clickable(isRipple = true) {
+                        if (postDetail.isOwner) {
+                            isOwnPostDropDownMenuExpanded = true
+                        } else {
+                            isOtherPostDropDownMenuExpanded = true
                         }
-                )
+                    })
 
                 OwnPostDropdownMenu(
                     expanded = isOwnPostDropDownMenuExpanded,
                     onDismiss = { isOwnPostDropDownMenuExpanded = false },
                     onUpdate = { navigateToUpdatePost(postDetail.postId) },
-                    onDelete = {}
+                    onDelete = onDeletePost,
                 )
 
                 OtherPostDropdownMenu(
                     expanded = isOtherPostDropDownMenuExpanded,
                     onDismiss = { isOtherPostDropDownMenuExpanded = false },
-                    onReport = {}
+                    onReport = onReportPost
                 )
             }
         }
 
-        Row(
+        Column(
             modifier = Modifier
-                .align(Alignment.BottomCenter)
                 .fillMaxWidth()
-                .height(50.dp)
-                .padding(start = 8.dp, end = 8.dp, bottom = 10.dp)
-                .clip(RoundedCornerShape(15.dp)),
-            verticalAlignment = Alignment.CenterVertically
+                .padding(start = 8.dp, end = 8.dp)
+                .background(Background)
+                .align(Alignment.BottomCenter),
         ) {
+            Spacer(modifier = Modifier.height(8.dp))
+
             TraceCommentField(
                 value = commentInput,
+                focusRequester = focusRequester,
+                isReplying = isReplying,
                 onValueChange = onCommentInputChange,
-                onAddComment = {},
+                onAddComment = {
+                    keyboardController?.hide()
+
+                    onAddComment()
+
+                    coroutineScope.launch {
+                        val visibleItems = listState.layoutInfo.visibleItemsInfo
+                        val lastVisibleIndex = visibleItems.lastOrNull()?.index ?: 0
+                        val lastItemIndex = postDetail.comments.size
+
+                        if (lastVisibleIndex < lastItemIndex) {
+                            listState.animateScrollToItem(index = lastItemIndex)
+                        }
+                    }
+                },
+                onReplyComment = {
+                    coroutineScope.launch {
+                        val commentId = onReplyComment()
+                        delay(500)
+                        keyboardController?.hide()
+
+                        val targetIndex =
+                            postDetail.comments.indexOfFirst { it.commentId == commentId }
+                        if (targetIndex != -1) {
+                            listState.animateScrollToItem(index = targetIndex)
+                        }
+                    }
+                },
+                clearReplyTargetId = clearReplayTargetId
             )
+
+            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }
@@ -320,9 +437,7 @@ private fun PostScreen(
 private fun ProfileImage(imageUrl: String?) {
     val profileImage = rememberAsyncImagePainter(
         model = ImageRequest.Builder(LocalContext.current)
-            .data(imageUrl ?: R.drawable.default_profile)
-            .crossfade(true)
-            .build()
+            .data(imageUrl ?: R.drawable.default_profile).crossfade(true).build()
     )
     val imageSize = if (imageUrl != null) 38.dp else 34.dp
     val paddingValue = if (imageUrl != null) 1.dp else 3.dp
@@ -346,8 +461,19 @@ fun PostScreenPreview() {
     PostScreen(
         commentInput = "",
         postDetail = fakePostDetail,
+        isCommentLoading = false,
+        isReplying = true,
         onCommentInputChange = {},
         navigateBack = {},
-        navigateToUpdatePost = {}
+        navigateToUpdatePost = {},
+        onAddComment = {},
+        onReplyComment = { 0 },
+        onDeleteComment = {},
+        onDeletePost = {},
+        onReportComment = {},
+        onReportPost = {},
+        onReplyTargetIdChange = {},
+        clearReplayTargetId = {},
+        replyTargetId = null
     )
 }
