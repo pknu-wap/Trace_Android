@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -47,6 +48,7 @@ import com.example.designsystem.theme.Background
 import com.example.designsystem.theme.Black
 import com.example.designsystem.theme.DarkGray
 import com.example.designsystem.theme.GrayLine
+import com.example.designsystem.theme.PrimaryActive
 import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.WarmGray
@@ -58,7 +60,6 @@ import com.example.home.graph.post.component.OtherPostDropdownMenu
 import com.example.home.graph.post.component.OwnPostDropdownMenu
 import com.example.home.graph.post.component.PostImageContent
 import com.example.home.graph.post.component.TraceCommentField
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -70,10 +71,12 @@ internal fun PostRoute(
 ) {
     val commentInput by viewModel.commentInput.collectAsStateWithLifecycle()
     val postDetail by viewModel.postDetail.collectAsStateWithLifecycle()
+    val isCommentLoading by viewModel.isCommentLoading.collectAsStateWithLifecycle()
 
     PostScreen(
         postDetail = postDetail,
         commentInput = commentInput,
+        isCommentLoading = isCommentLoading,
         onCommentInputChange = viewModel::setCommentInput,
         onAddComment = viewModel::addComment,
         onDeletePost = viewModel::deletePost,
@@ -90,6 +93,7 @@ internal fun PostRoute(
 private fun PostScreen(
     postDetail: PostDetail,
     commentInput: String,
+    isCommentLoading: Boolean,
     onDeletePost: () -> Unit,
     onReportPost: () -> Unit,
     onAddComment: () -> Unit,
@@ -114,6 +118,19 @@ private fun PostScreen(
             .background(Background)
             .imePadding()
     ) {
+
+        if (isCommentLoading) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.Center)
+            ) {
+                CircularProgressIndicator(
+                    color = PrimaryActive,
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                )
+            }
+        }
 
         LazyColumn(
             state = listState,
@@ -339,15 +356,14 @@ private fun PostScreen(
                 value = commentInput,
                 onValueChange = onCommentInputChange,
                 onAddComment = {
+                    keyboardController?.hide()
+
                     onAddComment()
 
                     coroutineScope.launch {
-                        keyboardController?.hide()
-
-                        delay(250) // 네트워크 시간
                         val visibleItems = listState.layoutInfo.visibleItemsInfo
                         val lastVisibleIndex = visibleItems.lastOrNull()?.index ?: 0
-                        val lastItemIndex = postDetail.comments.size - 1
+                        val lastItemIndex = postDetail.comments.size
 
                         if (lastVisibleIndex < lastItemIndex) {
                             listState.animateScrollToItem(index = lastItemIndex)
@@ -389,6 +405,7 @@ fun PostScreenPreview() {
     PostScreen(
         commentInput = "",
         postDetail = fakePostDetail,
+        isCommentLoading = false,
         onCommentInputChange = {},
         navigateBack = {},
         navigateToUpdatePost = {},
@@ -397,6 +414,6 @@ fun PostScreenPreview() {
         onDeleteComment = {},
         onDeletePost = {},
         onReportComment = {},
-        onReportPost = {}
+        onReportPost = {},
     )
 }

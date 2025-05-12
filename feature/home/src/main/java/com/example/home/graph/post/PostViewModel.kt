@@ -12,6 +12,7 @@ import com.example.domain.model.post.PostDetail
 import com.example.domain.model.post.PostType
 import com.example.domain.repository.PostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -37,6 +38,9 @@ class PostViewModel @Inject constructor(
     private val _commentInput = MutableStateFlow("")
     val commentInput = _commentInput.asStateFlow()
 
+    private val _isCommentLoading = MutableStateFlow(false)
+    val isCommentLoading = _isCommentLoading.asStateFlow()
+
     fun setCommentInput(commentInput: String) {
         _commentInput.value = commentInput
     }
@@ -56,12 +60,15 @@ class PostViewModel @Inject constructor(
 
     fun deletePost() {}
 
-    fun addComment() {
+    fun addComment() = viewModelScope.launch {
         if(_commentInput.value.isEmpty()) {
             eventHelper.sendEvent(TraceEvent.ShowSnackBar("내용을 입력해주세요."))
-            return
+            return@launch
         }
 
+        _isCommentLoading.value = true
+
+        delay(500)
         val newComment = Comment(
             postId = postId,
             userId = 1,
@@ -80,6 +87,7 @@ class PostViewModel @Inject constructor(
             comments = _postDetail.value.comments + newComment
         )
 
+        _isCommentLoading.value = false
         _commentInput.value = ""
     }
 
