@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -48,6 +49,8 @@ internal fun TraceCommentField(
     hint: String = "댓글을 입력하세요",
     keyboardType: KeyboardType = KeyboardType.Text,
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
         BasicTextField(
             value = value,
@@ -85,6 +88,7 @@ internal fun TraceCommentField(
                             contentDescription = "댓글 작성",
                             modifier = Modifier.clickable {
                                 onAddComment()
+                                keyboardController?.hide()
                             }
                         )
                     }

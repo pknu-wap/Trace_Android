@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.common.event.EventHelper
+import com.example.common.event.TraceEvent
 import com.example.domain.model.post.Comment
 import com.example.domain.model.post.FeelingCount
 import com.example.domain.model.post.PostDetail
@@ -20,6 +22,7 @@ import javax.inject.Inject
 class PostViewModel @Inject constructor(
     private val postRepository: PostRepository,
     private val savedStateHandle: SavedStateHandle,
+    val eventHelper: EventHelper
 ) : ViewModel() {
 
     private val postId: Int = savedStateHandle["postId"] ?: 1
@@ -54,7 +57,27 @@ class PostViewModel @Inject constructor(
     fun deletePost() {}
 
     fun addComment() {
+        val newComment = Comment(
+            postId = postId,
+            userId = 1,
+            commentId = 1,
+            parentId = null,
+            isDeleted = false,
+            isOwner = true,
+            nickName = "흔적몬",
+            profileImageUrl = null,
+            content = commentInput.value,
+            createdAt = LocalDateTime.now(),
+            replies = emptyList()
+        )
 
+        _postDetail.value = _postDetail.value.copy(
+            comments = _postDetail.value.comments + newComment
+        )
+
+        _commentInput.value = ""
+
+        eventHelper.sendEvent(TraceEvent.ShowSnackBar("댓글이 등록되었습니다."))
     }
 
     fun replyComment(commentId: Int) {

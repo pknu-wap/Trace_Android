@@ -319,15 +319,16 @@ private fun PostScreen(
                 .background(Background)
                 .align(Alignment.BottomCenter),
         ) {
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             TraceCommentField(
                 value = commentInput,
                 onValueChange = onCommentInputChange,
-                onAddComment = { onAddComment() },
+                onAddComment = {
+                    onAddComment() },
             )
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }
