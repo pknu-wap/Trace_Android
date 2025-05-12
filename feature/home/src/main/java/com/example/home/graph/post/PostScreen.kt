@@ -16,12 +16,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,6 +31,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -55,6 +58,8 @@ import com.example.home.graph.post.component.OtherPostDropdownMenu
 import com.example.home.graph.post.component.OwnPostDropdownMenu
 import com.example.home.graph.post.component.PostImageContent
 import com.example.home.graph.post.component.TraceCommentField
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -98,6 +103,11 @@ private fun PostScreen(
     var isOwnPostDropDownMenuExpanded by remember { mutableStateOf(false) }
     var isOtherPostDropDownMenuExpanded by remember { mutableStateOf(false) }
 
+    val coroutineScope = rememberCoroutineScope()
+    val listState = rememberLazyListState()
+
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -106,6 +116,7 @@ private fun PostScreen(
     ) {
 
         LazyColumn(
+            state = listState,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(top = 45.dp, start = 20.dp, end = 20.dp, bottom = 50.dp)
@@ -199,7 +210,10 @@ private fun PostScreen(
 
                 Spacer(Modifier.height(15.dp))
 
-                Text(postDetail.content, style = TraceTheme.typography.bodyMR.copy(fontSize = 15.sp, lineHeight = 19.sp))
+                Text(
+                    postDetail.content,
+                    style = TraceTheme.typography.bodyMR.copy(fontSize = 15.sp, lineHeight = 19.sp)
+                )
 
                 Spacer(Modifier.height(50.dp))
 
@@ -268,8 +282,8 @@ private fun PostScreen(
                 .background(
                     PrimaryDefault
                 )
-                .padding(horizontal = 20.dp).height(45.dp)
-            ,
+                .padding(horizontal = 20.dp)
+                .height(45.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
@@ -325,7 +339,21 @@ private fun PostScreen(
                 value = commentInput,
                 onValueChange = onCommentInputChange,
                 onAddComment = {
-                    onAddComment() },
+                    onAddComment()
+
+                    coroutineScope.launch {
+                        keyboardController?.hide()
+
+                        delay(250) // 네트워크 시간
+                        val visibleItems = listState.layoutInfo.visibleItemsInfo
+                        val lastVisibleIndex = visibleItems.lastOrNull()?.index ?: 0
+                        val lastItemIndex = postDetail.comments.size - 1
+
+                        if (lastVisibleIndex < lastItemIndex) {
+                            listState.animateScrollToItem(index = lastItemIndex)
+                        }
+                    }
+                },
             )
 
             Spacer(modifier = Modifier.height(8.dp))

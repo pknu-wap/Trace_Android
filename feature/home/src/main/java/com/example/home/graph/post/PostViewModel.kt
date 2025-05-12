@@ -57,6 +57,11 @@ class PostViewModel @Inject constructor(
     fun deletePost() {}
 
     fun addComment() {
+        if(_commentInput.value.isEmpty()) {
+            eventHelper.sendEvent(TraceEvent.ShowSnackBar("내용을 입력해주세요."))
+            return
+        }
+
         val newComment = Comment(
             postId = postId,
             userId = 1,
@@ -76,8 +81,6 @@ class PostViewModel @Inject constructor(
         )
 
         _commentInput.value = ""
-
-        eventHelper.sendEvent(TraceEvent.ShowSnackBar("댓글이 등록되었습니다."))
     }
 
     fun replyComment(commentId: Int) {
