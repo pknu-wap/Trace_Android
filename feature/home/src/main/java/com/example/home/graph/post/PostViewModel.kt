@@ -68,7 +68,8 @@ class PostViewModel @Inject constructor(
 
         _isCommentLoading.value = true
 
-        delay(500)
+        delay(500) // 임시 네트워크 로딩 시간
+
         val newComment = Comment(
             postId = postId,
             userId = 1,
@@ -91,8 +92,41 @@ class PostViewModel @Inject constructor(
         _commentInput.value = ""
     }
 
-    fun replyComment(commentId: Int) {
+    fun replyComment(commentId: Int) = viewModelScope.launch {
+        if(_commentInput.value.isEmpty()) {
+            eventHelper.sendEvent(TraceEvent.ShowSnackBar("내용을 입력해주세요."))
+            return@launch
+        }
 
+        _isCommentLoading.value = true
+
+        delay(500) // 임시 네트워크 로딩 시간
+
+        val newComment = Comment(
+            postId = postId,
+            userId = 1,
+            commentId = 1,
+            parentId = null,
+            isDeleted = false,
+            isOwner = true,
+            nickName = "흔적몬",
+            profileImageUrl = null,
+            content = commentInput.value,
+            createdAt = LocalDateTime.now(),
+            replies = emptyList()
+        )
+
+        val updatedComments = _postDetail.value.comments.map { comment ->
+            if (comment.commentId == commentId) {
+                comment.copy(replies = comment.replies + newComment)
+            }
+            else comment
+        }
+
+        _postDetail.value = _postDetail.value.copy(comments = updatedComments)
+
+        _isCommentLoading.value = false
+        _commentInput.value = ""
     }
 
     fun deleteComment(commentId: Int) {
