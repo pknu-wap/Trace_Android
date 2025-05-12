@@ -35,9 +35,11 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.example.common.util.clickable
 import com.example.designsystem.R
+import com.example.designsystem.theme.Background
 import com.example.designsystem.theme.DarkGray
 import com.example.designsystem.theme.Gray
 import com.example.designsystem.theme.GrayLine
+import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.WarmGray
 import com.example.domain.model.post.Comment
@@ -46,6 +48,7 @@ import java.time.LocalDateTime
 @Composable
 internal fun CommentView(
     comment: Comment,
+    replyTargetId : Int?,
     onDelete: (Int) -> Unit,
     onReply: () -> Unit,
     onReport: (Int) -> Unit,
@@ -60,7 +63,9 @@ internal fun CommentView(
             .build()
     )
 
-    Column(modifier = Modifier.fillMaxWidth()) {
+    val backgroundColor = if(replyTargetId != null && replyTargetId.equals(comment.commentId)) PrimaryDefault.copy(alpha = 0.2f) else Background
+
+    Column(modifier = Modifier.fillMaxWidth().background(backgroundColor)) {
         if (!comment.isDeleted) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -144,19 +149,19 @@ internal fun CommentView(
         if(comment.isDeleted) {
             Text("삭제된 댓글입니다.", style = TraceTheme.typography.bodySM, color = Gray)
         }
+    }
 
-        comment.replies.forEachIndexed { index, childComment ->
-            if (index == 0) Spacer(Modifier.height(20.dp))
+    comment.replies.forEachIndexed { index, childComment ->
+        if (index == 0) Spacer(Modifier.height(20.dp))
 
-            ChildCommentView(
-                childComment,
-                onDelete = onDelete,
-                onReport = onReport,
-                onReply = onReply
-            )
+        ChildCommentView(
+            childComment,
+            onDelete = onDelete,
+            onReport = onReport,
+            onReply = onReply
+        )
 
-            if (index != comment.replies.size - 1) Spacer(Modifier.height(20.dp))
-        }
+        if (index != comment.replies.size - 1) Spacer(Modifier.height(20.dp))
     }
 
 }
@@ -292,7 +297,8 @@ private fun CommentViewPreview() {
             ),
             onReply = { },
             onReport = { id -> },
-            onDelete = { id -> }
+            onDelete = { id -> },
+            replyTargetId = null
         )
 
         Spacer(Modifier.height(11.dp))

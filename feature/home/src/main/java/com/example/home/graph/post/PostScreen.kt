@@ -82,6 +82,7 @@ internal fun PostRoute(
         commentInput = commentInput,
         isCommentLoading = isCommentLoading,
         isReplying = replyTargetId != null,
+        replyTargetId = replyTargetId,
         onCommentInputChange = viewModel::setCommentInput,
         onAddComment = viewModel::addComment,
         onDeletePost = viewModel::deletePost,
@@ -101,6 +102,7 @@ private fun PostScreen(
     postDetail: PostDetail,
     commentInput: String,
     isReplying: Boolean,
+    replyTargetId: Int?,
     isCommentLoading: Boolean,
     onDeletePost: () -> Unit,
     onReportPost: () -> Unit,
@@ -290,6 +292,7 @@ private fun PostScreen(
 
                 CommentView(
                     comment = comment,
+                    replyTargetId = replyTargetId,
                     onDelete = onDeleteComment,
                     onReport = onReportComment,
                     onReply = {
@@ -298,7 +301,10 @@ private fun PostScreen(
                             keyboardController?.show()
                             onReplyTargetIdChange(comment.commentId)
 
-                            listState.animateScrollToItem(index = index + 1, scrollOffset = scrollOffset)
+                            listState.animateScrollToItem(
+                                index = index + 1,
+                                scrollOffset = scrollOffset
+                            )
                         }
                     }
                 )
@@ -403,11 +409,10 @@ private fun PostScreen(
                     }
                 },
                 onReplyComment = {
-                    keyboardController?.hide()
-
-                    val commentId = onReplyComment()
-
                     coroutineScope.launch {
+                        val commentId = onReplyComment()
+                        keyboardController?.hide()
+
                         val targetIndex =
                             postDetail.comments.indexOfFirst { it.commentId == commentId }
                         if (targetIndex != -1) {
@@ -464,5 +469,6 @@ fun PostScreenPreview() {
         onReportPost = {},
         onReplyTargetIdChange = {},
         clearReplayTargetId = {},
+        replyTargetId = null
     )
 }

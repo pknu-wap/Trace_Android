@@ -19,12 +19,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -51,19 +57,24 @@ internal fun TraceCommentField(
     modifier: Modifier = Modifier,
     focusRequester: FocusRequester,
     value: String,
-    isReplying : Boolean = false,
+    isReplying: Boolean = false,
     onValueChange: (String) -> Unit,
     onAddComment: () -> Unit,
     onReplyComment: () -> Unit,
-    clearReplyTargetId : () -> Unit,
+    clearReplyTargetId: () -> Unit,
     keyboardType: KeyboardType = KeyboardType.Text,
 ) {
     val isKeyboardVisible = WindowInsets.isImeVisible
+    var isFocused by remember { mutableStateOf(false) }
+    val focusManager = LocalFocusManager.current
+
     LaunchedEffect(isKeyboardVisible) {
-        if(!isKeyboardVisible) clearReplyTargetId()
+        if (!isKeyboardVisible) {
+            clearReplyTargetId()
+        }
     }
 
-    val hint = if(isReplying && isKeyboardVisible) "답글을 입력하세요." else "댓글을 입력하세요."
+    val hint = if (isReplying && isKeyboardVisible) "답글을 입력하세요." else "댓글을 입력하세요."
 
     CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
         BasicTextField(
@@ -79,8 +90,7 @@ internal fun TraceCommentField(
                 Box(
                     modifier = Modifier
                         .padding(vertical = 13.dp)
-                        .fillMaxWidth()
-                       ,
+                        .fillMaxWidth(),
                 ) {
                     if (value.isEmpty()) {
                         Text(
@@ -101,13 +111,17 @@ internal fun TraceCommentField(
                             painter = painterResource(R.drawable.send_ic),
                             contentDescription = "댓글 작성",
                             modifier = Modifier.clickable {
-                               if(isReplying) onReplyComment() else onAddComment()
+                                if (isReplying) onReplyComment() else onAddComment()
+                                focusManager.clearFocus()
                             }
                         )
                     }
                 }
             },
             modifier = modifier
+                .onFocusChanged {
+                    isFocused = it.isFocused
+                }
                 .focusRequester(focusRequester)
                 .clip(
                     RoundedCornerShape(12.dp)

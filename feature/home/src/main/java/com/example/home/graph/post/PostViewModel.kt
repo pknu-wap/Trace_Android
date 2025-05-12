@@ -105,7 +105,8 @@ class PostViewModel @Inject constructor(
 
     fun replyComment() : Int {
         viewModelScope.launch {
-            if (_replyTargetId.value == null) return@launch
+            val parentId = _replyTargetId.value
+            if (parentId == null) return@launch
 
             if (_commentInput.value.isEmpty()) {
                 eventHelper.sendEvent(TraceEvent.ShowSnackBar("내용을 입력해주세요."))
@@ -120,7 +121,7 @@ class PostViewModel @Inject constructor(
                 postId = postId,
                 userId = 1,
                 commentId = 50,
-                parentId = null,
+                parentId = parentId,
                 isDeleted = false,
                 isOwner = true,
                 nickName = "흔적몬",
@@ -131,13 +132,14 @@ class PostViewModel @Inject constructor(
             )
 
             val updatedComments = _postDetail.value.comments.map { comment ->
-                if (comment.commentId == _replyTargetId.value) {
+                if (comment.commentId == parentId) {
                     comment.copy(replies = comment.replies + newComment)
                 } else comment
             }
 
             _postDetail.value = _postDetail.value.copy(comments = updatedComments)
 
+            clearReplyTargetId()
             _isCommentLoading.value = false
             _commentInput.value = ""
         }
