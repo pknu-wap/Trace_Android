@@ -31,7 +31,7 @@ internal fun OwnCommentDropdownMenu(
     expanded: Boolean,
     commentId: Int,
     onDismiss: () -> Unit,
-    onReply: (Int) -> Unit,
+    onReply: () -> Unit,
     onDelete: (Int) -> Unit,
 ) {
     var showDeleteDialog by remember { mutableStateOf(false) }
@@ -59,7 +59,7 @@ internal fun OwnCommentDropdownMenu(
                 modifier = Modifier
                     .clickable(isRipple = true) {
                         onDismiss()
-                        onReply(commentId)
+                        onReply()
                     }
                     .padding(top = 15.dp, bottom = 15.dp, start = 15.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -109,7 +109,7 @@ internal fun OtherCommentDropdownMenu(
     commentId: Int,
     expanded: Boolean,
     onDismiss: () -> Unit,
-    onReply: (Int) -> Unit,
+    onReply: () -> Unit,
     onReport: (Int) -> Unit,
 ) {
     if (expanded) {
@@ -124,7 +124,7 @@ internal fun OtherCommentDropdownMenu(
                 modifier = Modifier
                     .clickable(isRipple = true) {
                         onDismiss()
-                        onReply(commentId)
+                        onReply()
                     }
                     .padding(top = 15.dp, bottom = 15.dp, start = 15.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -167,3 +167,96 @@ internal fun OtherCommentDropdownMenu(
     }
 }
 
+@Composable
+internal fun OwnChildCommentDropdownMenu(
+    expanded: Boolean,
+    commentId: Int,
+    onDismiss: () -> Unit,
+    onDelete: (Int) -> Unit,
+) {
+    var showDeleteDialog by remember { mutableStateOf(false) }
+
+    if (showDeleteDialog) {
+        CheckCancelDialog(
+            onCheck = {
+                onDelete(commentId)
+                showDeleteDialog = false
+            },
+            onDismiss = { showDeleteDialog = false },
+            dialogText = "정말 삭제하시겠습니까?"
+        )
+    }
+
+    if (expanded) {
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = onDismiss,
+            shape = RoundedCornerShape(8.dp),
+            modifier = Modifier
+                .background(White),
+        ) {
+            Row(
+                modifier = Modifier
+                    .clickable(isRipple = true) {
+                        onDismiss()
+                        showDeleteDialog = true
+                    }
+                    .padding(top = 15.dp, bottom = 15.dp, start = 15.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.delete_ic),
+                    contentDescription = "삭제하기",
+                    modifier = Modifier.size(24.dp)
+                )
+
+                Spacer(Modifier.width(12.dp))
+
+                Text(stringResource(R.string.delete), style = TraceTheme.typography.bodyMR)
+
+                Spacer(Modifier.width(70.dp))
+            }
+
+        }
+    }
+}
+
+@Composable
+internal fun OtherChildCommentDropdownMenu(
+    commentId: Int,
+    expanded: Boolean,
+    onDismiss: () -> Unit,
+    onReport: (Int) -> Unit,
+) {
+    if (expanded) {
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = onDismiss,
+            shape = RoundedCornerShape(8.dp),
+            modifier = Modifier
+                .background(White),
+        ) {
+            Row(
+                modifier = Modifier
+                    .clickable(isRipple = true) {
+                        onDismiss()
+                        onReport(commentId)
+                    }
+                    .padding(top = 15.dp, bottom = 15.dp, start = 15.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.report_ic),
+                    contentDescription = "신고하기",
+                    modifier = Modifier.size(24.dp)
+                )
+
+                Spacer(Modifier.width(12.dp))
+
+                Text(stringResource(R.string.report), style = TraceTheme.typography.bodyMR)
+
+                Spacer(Modifier.width(70.dp))
+            }
+        }
+    }
+}

@@ -47,7 +47,7 @@ import java.time.LocalDateTime
 internal fun CommentView(
     comment: Comment,
     onDelete: (Int) -> Unit,
-    onReply: (Int) -> Unit,
+    onReply: () -> Unit,
     onReport: (Int) -> Unit,
 ) {
     var isOwnCommentDropDownMenuExpanded by remember { mutableStateOf(false) }
@@ -137,7 +137,7 @@ internal fun CommentView(
                 ),
                 color = DarkGray,
                 modifier = Modifier.clickable {
-                    onReply(comment.commentId)
+                    onReply()
                 })
         }
 
@@ -165,7 +165,7 @@ internal fun CommentView(
 private fun ChildCommentView(
     comment: Comment,
     onDelete: (Int) -> Unit,
-    onReply: (Int) -> Unit,
+    onReply: () -> Unit,
     onReport: (Int) -> Unit
 ) {
 
@@ -226,19 +226,17 @@ private fun ChildCommentView(
                         }
                 )
 
-                OwnCommentDropdownMenu(
+                OwnChildCommentDropdownMenu(
                     expanded = isOwnCommentDropDownMenuExpanded,
                     commentId = comment.commentId,
                     onDismiss = { isOwnCommentDropDownMenuExpanded = false },
-                    onReply = onReply,
                     onDelete = onDelete,
                 )
 
-                OtherCommentDropdownMenu(
+                OtherChildCommentDropdownMenu(
                     expanded = isOtherCommentDropDownMenuExpanded,
                     commentId = comment.commentId,
                     onDismiss = { isOtherCommentDropDownMenuExpanded = false },
-                    onReply = onReply,
                     onReport = onReport,
                 )
             }
@@ -292,7 +290,7 @@ private fun CommentViewPreview() {
                 userId = 1, postId = 1,
                 commentId = 1, parentId = 1, isOwner = true, replies = fakeChildComments
             ),
-            onReply = { id -> },
+            onReply = { },
             onReport = { id -> },
             onDelete = { id -> }
         )

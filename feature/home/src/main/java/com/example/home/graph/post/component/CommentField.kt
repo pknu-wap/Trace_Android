@@ -3,9 +3,12 @@ package com.example.home.graph.post.component
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -15,9 +18,12 @@ import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
@@ -39,15 +45,26 @@ private val customTextSelectionColors = TextSelectionColors(
     )
 )
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun TraceCommentField(
     modifier: Modifier = Modifier,
+    focusRequester: FocusRequester,
     value: String,
+    isReplying : Boolean = false,
     onValueChange: (String) -> Unit,
     onAddComment: () -> Unit,
-    hint: String = "댓글을 입력하세요",
+    onReplyComment: () -> Unit,
+    clearReplyTargetId : () -> Unit,
     keyboardType: KeyboardType = KeyboardType.Text,
 ) {
+    val isKeyboardVisible = WindowInsets.isImeVisible
+    LaunchedEffect(isKeyboardVisible) {
+        if(!isKeyboardVisible) clearReplyTargetId()
+    }
+
+    val hint = if(isReplying && isKeyboardVisible) "답글을 입력하세요." else "댓글을 입력하세요."
+
     CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
         BasicTextField(
             value = value,
@@ -84,13 +101,14 @@ internal fun TraceCommentField(
                             painter = painterResource(R.drawable.send_ic),
                             contentDescription = "댓글 작성",
                             modifier = Modifier.clickable {
-                                onAddComment()
+                               if(isReplying) onReplyComment() else onAddComment()
                             }
                         )
                     }
                 }
             },
             modifier = modifier
+                .focusRequester(focusRequester)
                 .clip(
                     RoundedCornerShape(12.dp)
                 )

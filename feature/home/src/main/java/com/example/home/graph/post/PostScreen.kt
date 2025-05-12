@@ -29,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -72,17 +73,21 @@ internal fun PostRoute(
     val commentInput by viewModel.commentInput.collectAsStateWithLifecycle()
     val postDetail by viewModel.postDetail.collectAsStateWithLifecycle()
     val isCommentLoading by viewModel.isCommentLoading.collectAsStateWithLifecycle()
+    val replyTargetId by viewModel.replyTargetId.collectAsStateWithLifecycle()
 
     PostScreen(
         postDetail = postDetail,
         commentInput = commentInput,
         isCommentLoading = isCommentLoading,
+        isReplying = replyTargetId != null,
         onCommentInputChange = viewModel::setCommentInput,
         onAddComment = viewModel::addComment,
         onDeletePost = viewModel::deletePost,
         onReportPost = viewModel::reportPost,
         onDeleteComment = viewModel::deleteComment,
         onReplyComment = viewModel::replyComment,
+        onReplyTargetIdChange = viewModel::setReplyTargetId,
+        clearReplayTargetId = viewModel::clearReplyTargetId,
         onReportComment = viewModel::reportComment,
         navigateBack = navigateBack,
         navigateToUpdatePost = navigateToUpdatePost,
@@ -93,13 +98,16 @@ internal fun PostRoute(
 private fun PostScreen(
     postDetail: PostDetail,
     commentInput: String,
+    isReplying: Boolean,
     isCommentLoading: Boolean,
     onDeletePost: () -> Unit,
     onReportPost: () -> Unit,
     onAddComment: () -> Unit,
     onCommentInputChange: (String) -> Unit,
     onDeleteComment: (Int) -> Unit,
-    onReplyComment: (Int) -> Unit,
+    onReplyComment: () -> Int,
+    onReplyTargetIdChange: (Int) -> Unit,
+    clearReplayTargetId: () -> Unit,
     onReportComment: (Int) -> Unit,
     navigateToUpdatePost: (Int) -> Unit,
     navigateBack: () -> Unit,
@@ -111,6 +119,7 @@ private fun PostScreen(
     val listState = rememberLazyListState()
 
     val keyboardController = LocalSoftwareKeyboardController.current
+    val focusRequester = remember { FocusRequester() }
 
     Box(
         modifier = Modifier
@@ -137,6 +146,7 @@ private fun PostScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(top = 45.dp, start = 20.dp, end = 20.dp, bottom = 50.dp)
+                .imePadding()
         ) {
             item {
                 Spacer(Modifier.height(25.dp))
@@ -271,8 +281,22 @@ private fun PostScreen(
                     Spacer(Modifier.height(13.dp))
 
                     CommentView(
-                        comment = comment, onDelete = onDeleteComment, onReport = onReportComment,
-                        onReply = onReplyComment
+                        comment = comment,
+                        onDelete = onDeleteComment,
+                        onReport = onReportComment,
+                        onReply = {
+                            coroutineScope.launch {
+                                focusRequester.requestFocus()
+                                keyboardController?.show()
+                                onReplyTargetIdChange(comment.commentId)
+
+
+                                val targetIndex = postDetail.comments.indexOfFirst { it.commentId == comment.commentId }
+                                if (targetIndex != -1) {
+                                    listState.animateScrollToItem(index = targetIndex, scrollOffset = 80)
+                                }
+                            }
+                        }
                     )
 
                     if (index != postDetail.comments.size - 1) {
@@ -354,6 +378,8 @@ private fun PostScreen(
 
             TraceCommentField(
                 value = commentInput,
+                focusRequester = focusRequester,
+                isReplying = isReplying,
                 onValueChange = onCommentInputChange,
                 onAddComment = {
                     keyboardController?.hide()
@@ -370,6 +396,19 @@ private fun PostScreen(
                         }
                     }
                 },
+                onReplyComment = {
+                    keyboardController?.hide()
+
+                    val commentId = onReplyComment()
+
+                    coroutineScope.launch {
+                        val targetIndex = postDetail.comments.indexOfFirst { it.commentId == commentId }
+                        if (targetIndex != -1) {
+                            listState.animateScrollToItem(index = targetIndex)
+                        }
+                    }
+                },
+                clearReplyTargetId = clearReplayTargetId
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -406,14 +445,17 @@ fun PostScreenPreview() {
         commentInput = "",
         postDetail = fakePostDetail,
         isCommentLoading = false,
+        isReplying = true,
         onCommentInputChange = {},
         navigateBack = {},
         navigateToUpdatePost = {},
         onAddComment = {},
-        onReplyComment = {},
+        onReplyComment = { 0 },
         onDeleteComment = {},
         onDeletePost = {},
         onReportComment = {},
         onReportPost = {},
+        onReplyTargetIdChange = {},
+        clearReplayTargetId = {},
     )
 }

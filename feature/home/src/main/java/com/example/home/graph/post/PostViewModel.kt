@@ -41,8 +41,19 @@ class PostViewModel @Inject constructor(
     private val _isCommentLoading = MutableStateFlow(false)
     val isCommentLoading = _isCommentLoading.asStateFlow()
 
+    private val _replyTargetId : MutableStateFlow<Int?> = MutableStateFlow(null)
+    val replyTargetId = _replyTargetId.asStateFlow()
+
     fun setCommentInput(commentInput: String) {
         _commentInput.value = commentInput
+    }
+
+    fun setReplyTargetId(commentId: Int) {
+        _replyTargetId.value = commentId
+    }
+
+    fun clearReplyTargetId() {
+        _replyTargetId.value = null
     }
 
     private fun getPost() = viewModelScope.launch {
@@ -73,7 +84,7 @@ class PostViewModel @Inject constructor(
         val newComment = Comment(
             postId = postId,
             userId = 1,
-            commentId = 1,
+            commentId = 60,
             parentId = null,
             isDeleted = false,
             isOwner = true,
@@ -92,41 +103,46 @@ class PostViewModel @Inject constructor(
         _commentInput.value = ""
     }
 
-    fun replyComment(commentId: Int) = viewModelScope.launch {
-        if(_commentInput.value.isEmpty()) {
-            eventHelper.sendEvent(TraceEvent.ShowSnackBar("내용을 입력해주세요."))
-            return@launch
-        }
+    fun replyComment() : Int {
+        viewModelScope.launch {
+            if (_replyTargetId.value == null) return@launch
 
-        _isCommentLoading.value = true
-
-        delay(500) // 임시 네트워크 로딩 시간
-
-        val newComment = Comment(
-            postId = postId,
-            userId = 1,
-            commentId = 1,
-            parentId = null,
-            isDeleted = false,
-            isOwner = true,
-            nickName = "흔적몬",
-            profileImageUrl = null,
-            content = commentInput.value,
-            createdAt = LocalDateTime.now(),
-            replies = emptyList()
-        )
-
-        val updatedComments = _postDetail.value.comments.map { comment ->
-            if (comment.commentId == commentId) {
-                comment.copy(replies = comment.replies + newComment)
+            if (_commentInput.value.isEmpty()) {
+                eventHelper.sendEvent(TraceEvent.ShowSnackBar("내용을 입력해주세요."))
+                return@launch
             }
-            else comment
+
+            _isCommentLoading.value = true
+
+            delay(500) // 임시 네트워크 로딩 시간
+
+            val newComment = Comment(
+                postId = postId,
+                userId = 1,
+                commentId = 50,
+                parentId = null,
+                isDeleted = false,
+                isOwner = true,
+                nickName = "흔적몬",
+                profileImageUrl = null,
+                content = commentInput.value,
+                createdAt = LocalDateTime.now(),
+                replies = emptyList()
+            )
+
+            val updatedComments = _postDetail.value.comments.map { comment ->
+                if (comment.commentId == _replyTargetId.value) {
+                    comment.copy(replies = comment.replies + newComment)
+                } else comment
+            }
+
+            _postDetail.value = _postDetail.value.copy(comments = updatedComments)
+
+            _isCommentLoading.value = false
+            _commentInput.value = ""
         }
 
-        _postDetail.value = _postDetail.value.copy(comments = updatedComments)
-
-        _isCommentLoading.value = false
-        _commentInput.value = ""
+        return 50
     }
 
     fun deleteComment(commentId: Int) {
@@ -196,35 +212,35 @@ val fakeComments = listOf(
         content = "이 글 정말 감동적이에요!",
         createdAt = LocalDateTime.now().minusDays(1),
         userId = 1, postId = 1,
-        commentId = 1, parentId = null, isOwner = true, replies = fakeChildComments
+        commentId = 14, parentId = null, isOwner = true, replies = fakeChildComments
     ),
     Comment(
         nickName = "김민수",
         profileImageUrl = "https://randomuser.me/api/portraits/men/2.jpg",
         content = "좋은 글 감사합니다!",
         createdAt = LocalDateTime.now().minusHours(5), userId = 1, postId = 1,
-        commentId = 2, parentId = null, isOwner = true,
+        commentId = 24, parentId = null, isOwner = true,
     ),
     Comment(
         nickName = "이수지",
         profileImageUrl = "https://randomuser.me/api/portraits/women/3.jpg",
         content = "정말 좋은 내용이에요!",
         createdAt = LocalDateTime.now().minusMinutes(30), userId = 1, postId = 1,
-        commentId = 3, parentId = null, isOwner = true,
+        commentId = 34, parentId = null, isOwner = true,
     ),
     Comment(
         nickName = "박영희",
         profileImageUrl = null,
         content = "완전 공감해요!",
         createdAt = LocalDateTime.now().minusDays(2), userId = 1, postId = 1,
-        commentId = 4, parentId = null, isOwner = true,
+        commentId = 44, parentId = null, isOwner = true,
     ),
     Comment(
         nickName = "최민준",
         profileImageUrl = null,
         content = "읽기만 했는데 좋네요!",
         createdAt = LocalDateTime.now().minusHours(10), userId = 1, postId = 1,
-        commentId = 5, parentId = null, isOwner = true,
+        commentId = 54, parentId = null, isOwner = true,
     )
 )
 
