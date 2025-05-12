@@ -158,7 +158,6 @@ internal fun CommentView(
             childComment,
             onDelete = onDelete,
             onReport = onReport,
-            onReply = onReply
         )
 
         if (index != comment.replies.size - 1) Spacer(Modifier.height(20.dp))
