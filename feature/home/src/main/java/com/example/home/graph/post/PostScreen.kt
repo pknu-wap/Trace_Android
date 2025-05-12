@@ -299,10 +299,11 @@ private fun PostScreen(
                     onDelete = onDeleteComment,
                     onReport = onReportComment,
                     onReply = {
+                        onReplyTargetIdChange(comment.commentId)
+
                         coroutineScope.launch {
                             focusRequester.requestFocus()
                             keyboardController?.show()
-                            onReplyTargetIdChange(comment.commentId)
 
                             listState.animateScrollToItem(
                                 index = index + 1,
@@ -324,7 +325,7 @@ private fun PostScreen(
             }
 
             item {
-                Spacer(Modifier.height(100.dp))
+                Spacer(Modifier.height(300.dp))
             }
 
         }
