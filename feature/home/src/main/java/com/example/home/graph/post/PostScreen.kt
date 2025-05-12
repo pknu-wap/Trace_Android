@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
@@ -33,6 +34,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -121,6 +123,8 @@ private fun PostScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
 
+    val scrollOffset = with(LocalDensity.current) { -200.dp.toPx().toInt() }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -146,8 +150,8 @@ private fun PostScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(top = 45.dp, start = 20.dp, end = 20.dp, bottom = 50.dp)
-                .imePadding()
         ) {
+
             item {
                 Spacer(Modifier.height(25.dp))
 
@@ -244,8 +248,6 @@ private fun PostScreen(
 
                 Spacer(Modifier.height(50.dp))
 
-
-
                 Spacer(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -277,43 +279,47 @@ private fun PostScreen(
 
                 }
 
-                postDetail.comments.forEachIndexed { index, comment ->
-                    Spacer(Modifier.height(13.dp))
-
-                    CommentView(
-                        comment = comment,
-                        onDelete = onDeleteComment,
-                        onReport = onReportComment,
-                        onReply = {
-                            coroutineScope.launch {
-                                focusRequester.requestFocus()
-                                keyboardController?.show()
-                                onReplyTargetIdChange(comment.commentId)
+            }
 
 
-                                val targetIndex = postDetail.comments.indexOfFirst { it.commentId == comment.commentId }
-                                if (targetIndex != -1) {
-                                    listState.animateScrollToItem(index = targetIndex, scrollOffset = 80)
-                                }
-                            }
+            itemsIndexed(
+                items = postDetail.comments,
+                key = { _, comment -> comment.commentId }
+            ) { index, comment ->
+                Spacer(Modifier.height(13.dp))
+
+                CommentView(
+                    comment = comment,
+                    onDelete = onDeleteComment,
+                    onReport = onReportComment,
+                    onReply = {
+                        coroutineScope.launch {
+                            focusRequester.requestFocus()
+                            keyboardController?.show()
+                            onReplyTargetIdChange(comment.commentId)
+
+                            listState.animateScrollToItem(index = index + 1, scrollOffset = scrollOffset)
                         }
-                    )
-
-                    if (index != postDetail.comments.size - 1) {
-                        Spacer(Modifier.height(15.dp))
-
-                        Spacer(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(1.dp)
-                                .background(GrayLine)
-                        )
                     }
-                }
+                )
 
+                if (index != postDetail.comments.size - 1) {
+                    Spacer(Modifier.height(15.dp))
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(1.dp)
+                            .background(GrayLine)
+                    )
+                }
+            }
+
+            item {
                 Spacer(Modifier.height(100.dp))
             }
+
         }
+
 
 
         Row(
@@ -402,7 +408,8 @@ private fun PostScreen(
                     val commentId = onReplyComment()
 
                     coroutineScope.launch {
-                        val targetIndex = postDetail.comments.indexOfFirst { it.commentId == commentId }
+                        val targetIndex =
+                            postDetail.comments.indexOfFirst { it.commentId == commentId }
                         if (targetIndex != -1) {
                             listState.animateScrollToItem(index = targetIndex)
                         }
