@@ -1,17 +1,31 @@
 package com.example.home.graph.search
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.common.event.EventHelper
+import com.example.common.event.TraceEvent
 import com.example.domain.model.post.PostFeed
 import com.example.domain.model.post.PostType
 import com.example.domain.model.post.SearchType
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
-class SearchViewModel @Inject constructor() : ViewModel() {
+class SearchViewModel @Inject constructor(
+    val eventHelper: EventHelper
+) : ViewModel() {
+    private val _eventChannel = Channel<SearchEvent>()
+    val eventChannel = _eventChannel.receiveAsFlow()
+
+    internal fun onEvent(event: SearchEvent) = viewModelScope.launch {
+        _eventChannel.send(event)
+    }
 
     private val _recentKeywords = MutableStateFlow<List<String>>(fakeRecentKeywords)
     val recentKeywords = _recentKeywords.asStateFlow()
@@ -33,7 +47,7 @@ class SearchViewModel @Inject constructor() : ViewModel() {
 
     init {}
 
-    fun setTabType(searchType: SearchType) {
+    fun setSearchType(searchType: SearchType) {
         _searchType.value = searchType
     }
 
@@ -41,6 +55,24 @@ class SearchViewModel @Inject constructor() : ViewModel() {
         _keywordInput.value = keywordInput
     }
 
+    fun searchByInput() = viewModelScope.launch {
+        if(_keywordInput.value.isEmpty()) {
+            eventHelper.sendEvent(TraceEvent.ShowSnackBar("검색할 키워드를 입력해주세요."))
+            return@launch
+        }
+        _isSearched.value = true
+
+        setKeywordInput("")
+    }
+
+    fun searchByRecentKeyword(keyword : String) {
+
+    }
+
+    sealed class SearchEvent {
+        data object NavigateBack : SearchEvent()
+        data class NavigateToPost(val postId : Int) : SearchEvent()
+    }
 }
 
 val fakePostFeeds: List<PostFeed> = listOf(

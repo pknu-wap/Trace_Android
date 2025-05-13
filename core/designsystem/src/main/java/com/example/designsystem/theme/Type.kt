@@ -57,6 +57,20 @@ val BagelFatOneRegular = FontFamily(
     )
 )
 
+val HsJipTokkiRound = FontFamily(
+    Font(
+        resId = R.font.hs_jiptokki_round,
+    )
+)
+
+val HsGoolTokkiRegular = FontFamily(
+    Font(
+        resId = R.font.hs_gooltokki,
+        weight = FontWeight.Normal
+    )
+)
+
+
 @Immutable
 data class TraceTypography(
     val headingXLB: TextStyle = TextStyle(
@@ -101,6 +115,11 @@ data class TraceTypography(
     ),
     val bodyMSB: TextStyle = TextStyle(
         fontFamily = PretendardSemiBold,
+        fontSize = 20.sp,
+        lineHeight = 24.sp
+    ),
+    val bodyXMR : TextStyle = TextStyle(
+        fontFamily = HsGoolTokkiRegular,
         fontSize = 20.sp,
         lineHeight = 24.sp
     ),

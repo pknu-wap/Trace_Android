@@ -80,7 +80,7 @@ internal fun SearchInitialView(
                 verticalArrangement = Arrangement.spacedBy(7.dp)
             ) {
                 recentKeywords.forEach { keyword ->
-                    RecentKeyword(value = keyword, onSearch = {}, removeKeyword = removeKeyword)
+                    RecentKeyword(value = keyword, onSearch = onSearch, removeKeyword = removeKeyword)
                 }
             }
         }

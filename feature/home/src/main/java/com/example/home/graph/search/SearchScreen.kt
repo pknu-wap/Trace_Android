@@ -30,6 +30,7 @@ import com.example.designsystem.theme.Background
 import com.example.designsystem.theme.PrimaryDefault
 import com.example.domain.model.post.PostFeed
 import com.example.domain.model.post.SearchType
+import com.example.home.graph.search.SearchViewModel.SearchEvent
 import com.example.home.graph.search.component.SearchInitialView
 import com.example.home.graph.search.component.SearchResultView
 import com.example.home.graph.search.component.TraceSearchField
@@ -37,6 +38,7 @@ import com.example.home.graph.search.component.TraceSearchField
 @Composable
 internal fun SearchRoute(
     navigateBack: () -> Unit,
+    navigateToPost: (Int) -> Unit,
     viewModel: SearchViewModel = hiltViewModel()
 ) {
     val keywordInput by viewModel.keywordInput.collectAsStateWithLifecycle()
@@ -46,17 +48,32 @@ internal fun SearchRoute(
     val titleMatchedPosts by viewModel.titleMatchedPosts.collectAsStateWithLifecycle()
     val contentMatchedPosts by viewModel.contentMatchedPosts.collectAsStateWithLifecycle()
 
+    LaunchedEffect(Unit) {
+        viewModel.eventChannel.collect { event ->
+            when (event) {
+                is SearchEvent.NavigateToPost -> navigateToPost(event.postId)
+                is SearchEvent.NavigateBack -> navigateBack()
+            }
+        }
+    }
+
     SearchScreen(
         keywordInput = keywordInput,
         recentKeywords = recentKeywords,
         isSearched = isSearched,
         searchType = searchType,
-        titleMatchedPosts = titleMatchedPosts,
-        contentMatchedPosts = contentMatchedPosts,
+        displayedPosts = when (searchType) {
+            SearchType.CONTENT -> contentMatchedPosts
+            SearchType.TITLE -> titleMatchedPosts
+        },
         onKeywordInputChange = viewModel::setKeywordInput,
+        onSearchTypeChange = viewModel::setSearchType,
         removeKeyword = {},
         clearKeywords = {},
-        navigateBack = navigateBack,
+        searchByInput = viewModel::searchByInput,
+        searchByRecentKeyword = viewModel::searchByRecentKeyword,
+        navigateBack = { viewModel.onEvent(SearchEvent.NavigateBack) },
+        navigateToPost = { postId -> viewModel.onEvent(SearchEvent.NavigateToPost(postId)) }
     )
 }
 
@@ -66,12 +83,15 @@ private fun SearchScreen(
     recentKeywords: List<String>,
     isSearched: Boolean,
     searchType: SearchType,
-    titleMatchedPosts: List<PostFeed>,
-    contentMatchedPosts: List<PostFeed>,
+    displayedPosts: List<PostFeed>,
     onKeywordInputChange: (String) -> Unit,
+    onSearchTypeChange: (SearchType) -> Unit,
+    searchByInput: () -> Unit,
+    searchByRecentKeyword: (String) -> Unit,
     removeKeyword: (String) -> Unit,
     clearKeywords: () -> Unit,
-    navigateBack: () -> Unit
+    navigateBack: () -> Unit,
+    navigateToPost: (Int) -> Unit,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
@@ -81,24 +101,36 @@ private fun SearchScreen(
         keyboardController?.show()
     }
 
-
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Background)
     ) {
-        LazyColumn(modifier = Modifier.fillMaxSize().padding(start = 20.dp, end = 20.dp, top = 70.dp)) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(start = 20.dp, end = 20.dp, top = 50.dp)
+        ) {
             item {
+                Spacer(Modifier.height(20.dp))
+
                 if (!isSearched) {
                     SearchInitialView(
                         recentKeywords = recentKeywords,
                         removeKeyword = removeKeyword,
                         clearKeywords = clearKeywords,
-                        onSearch = {}
+                        onSearch = searchByRecentKeyword,
                     )
                 } else {
-                    SearchResultView()
+                    SearchResultView(
+                        searchType = searchType,
+                        onSearchTypeChange = onSearchTypeChange,
+                        displayedPosts = displayedPosts,
+                        navigateToPost = navigateToPost,
+                    )
                 }
+
+                Spacer(Modifier.height(100.dp))
             }
         }
 
@@ -128,6 +160,7 @@ private fun SearchScreen(
                 onValueChange = onKeywordInputChange,
                 onSearch = {
                     keyboardController?.hide()
+                    searchByInput()
                 },
             )
 
@@ -142,11 +175,14 @@ private fun SearchScreenPreview() {
         navigateBack = {},
         keywordInput = "",
         recentKeywords = listOf("선행", "제비", "흥부", "선행자", "쓰레기"),
-        isSearched = false,
+        isSearched = true,
         searchType = SearchType.CONTENT,
-        titleMatchedPosts = fakePostFeeds,
-        contentMatchedPosts = emptyList(),
+        displayedPosts = fakePostFeeds,
         onKeywordInputChange = {}, clearKeywords = {},
-        removeKeyword = {}
+        onSearchTypeChange = {},
+        removeKeyword = {},
+        searchByInput = {},
+        searchByRecentKeyword = {},
+        navigateToPost = {}
     )
 }

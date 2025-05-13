@@ -52,6 +52,7 @@ fun NavGraphBuilder.homeNavGraph(
         composable<HomeGraph.SearchRoute> {
             SearchRoute(
                 navigateBack = navigateBack,
+                navigateToPost = navigateToPost,
             )
         }
 
