@@ -1,49 +1,46 @@
-package com.example.home.graph.home
+package com.example.home.graph.search
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.domain.model.post.PostFeed
 import com.example.domain.model.post.PostType
-import com.example.domain.model.post.TabType
+import com.example.domain.model.post.SearchType
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
+class SearchViewModel @Inject constructor() : ViewModel() {
 
-) : ViewModel() {
-    private val _eventChannel = Channel<HomeEvent>()
-    val eventChannel = _eventChannel.receiveAsFlow()
+    private val _recentKeywords = MutableStateFlow<List<String>>(emptyList())
+    val recentKeywords = _recentKeywords.asStateFlow()
 
-    internal fun onEvent(event: HomeEvent) = viewModelScope.launch {
-        _eventChannel.send(event)
+    private val _keywordInput = MutableStateFlow("")
+    val keywordInput = _keywordInput.asStateFlow()
+
+    private val _isSearched = MutableStateFlow(false)
+    val isSearched = _isSearched.asStateFlow()
+
+    private val _searchType = MutableStateFlow(SearchType.CONTENT)
+    val searchType = _searchType.asStateFlow()
+
+    private val _titleMatchedPosts = MutableStateFlow<List<PostFeed>>(fakePostFeeds)
+    val titleMatchedPosts = _titleMatchedPosts.asStateFlow()
+
+    private val _contentMatchedPosts = MutableStateFlow<List<PostFeed>>(emptyList())
+    val contentMatchedPosts = _contentMatchedPosts.asStateFlow()
+
+    init {}
+
+    fun setTabType(searchType: SearchType) {
+        _searchType.value = searchType
     }
 
-    private val _postFeeds: MutableStateFlow<List<PostFeed>> = MutableStateFlow(fakePostFeeds)
-    val postFeeds = _postFeeds.asStateFlow()
-
-    private val _tabType : MutableStateFlow<TabType> = MutableStateFlow(TabType.ALL)
-    val tabType = _tabType.asStateFlow()
-
-    private fun setPostFeeds(postFeeds: List<PostFeed>) {
-        _postFeeds.value = postFeeds
+    fun setKeywordInput(keywordInput : String) {
+        _keywordInput.value = keywordInput
     }
 
-    fun setTabType(tabType: TabType) {
-        _tabType.value = tabType
-    }
-
-    sealed class HomeEvent {
-        data class NavigateToPost(val postId : Int) : HomeEvent()
-        data object NavigateToWritePost : HomeEvent()
-        data object NavigateToSearch : HomeEvent()
-    }
 }
 
 val fakePostFeeds: List<PostFeed> = listOf(
@@ -164,4 +161,3 @@ val fakePostFeeds: List<PostFeed> = listOf(
         postId = 1
     )
 )
-
