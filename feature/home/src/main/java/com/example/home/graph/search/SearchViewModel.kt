@@ -13,7 +13,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor() : ViewModel() {
 
-    private val _recentKeywords = MutableStateFlow<List<String>>(emptyList())
+    private val _recentKeywords = MutableStateFlow<List<String>>(fakeRecentKeywords)
     val recentKeywords = _recentKeywords.asStateFlow()
 
     private val _keywordInput = MutableStateFlow("")
@@ -161,3 +161,5 @@ val fakePostFeeds: List<PostFeed> = listOf(
         postId = 1
     )
 )
+
+val fakeRecentKeywords = listOf("선행", "제비", "흥부", "선행자", "쓰레기")

@@ -30,6 +30,8 @@ import com.example.designsystem.theme.Background
 import com.example.designsystem.theme.PrimaryDefault
 import com.example.domain.model.post.PostFeed
 import com.example.domain.model.post.SearchType
+import com.example.home.graph.search.component.SearchInitialView
+import com.example.home.graph.search.component.SearchResultView
 import com.example.home.graph.search.component.TraceSearchField
 
 @Composable
@@ -52,6 +54,8 @@ internal fun SearchRoute(
         titleMatchedPosts = titleMatchedPosts,
         contentMatchedPosts = contentMatchedPosts,
         onKeywordInputChange = viewModel::setKeywordInput,
+        removeKeyword = {},
+        clearKeywords = {},
         navigateBack = navigateBack,
     )
 }
@@ -65,6 +69,8 @@ private fun SearchScreen(
     titleMatchedPosts: List<PostFeed>,
     contentMatchedPosts: List<PostFeed>,
     onKeywordInputChange: (String) -> Unit,
+    removeKeyword: (String) -> Unit,
+    clearKeywords: () -> Unit,
     navigateBack: () -> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -81,9 +87,18 @@ private fun SearchScreen(
             .fillMaxSize()
             .background(Background)
     ) {
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(modifier = Modifier.fillMaxSize().padding(start = 20.dp, end = 20.dp, top = 70.dp)) {
             item {
-                Spacer(Modifier.height(17.dp))
+                if (!isSearched) {
+                    SearchInitialView(
+                        recentKeywords = recentKeywords,
+                        removeKeyword = removeKeyword,
+                        clearKeywords = clearKeywords,
+                        onSearch = {}
+                    )
+                } else {
+                    SearchResultView()
+                }
             }
         }
 
@@ -110,7 +125,8 @@ private fun SearchScreen(
             TraceSearchField(
                 focusRequester = focusRequester,
                 value = keywordInput,
-                onValueChange = onKeywordInputChange, onSearch = {
+                onValueChange = onKeywordInputChange,
+                onSearch = {
                     keyboardController?.hide()
                 },
             )
@@ -125,11 +141,12 @@ private fun SearchScreenPreview() {
     SearchScreen(
         navigateBack = {},
         keywordInput = "",
-        recentKeywords = emptyList(),
+        recentKeywords = listOf("선행", "제비", "흥부", "선행자", "쓰레기"),
         isSearched = false,
         searchType = SearchType.CONTENT,
         titleMatchedPosts = fakePostFeeds,
         contentMatchedPosts = emptyList(),
-        onKeywordInputChange = {},
+        onKeywordInputChange = {}, clearKeywords = {},
+        removeKeyword = {}
     )
 }
