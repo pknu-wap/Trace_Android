@@ -15,6 +15,13 @@ val SearchField = Color(0xFFCBD4BE)
 val CommentField = Color(0xFFE4E3D6)
 
 
+val MissionHeader = Color(0xFF235240)
+val MissionBackground = Color(0xFFC4D4BE)
+val MissionCompletedBackground = Color(0xFF419474)
+val VerificationButton = Color(0xFF419474)
+val MissionPending = Color(0xFFDADED9)
+
+
 val Red = Color(0xFFFF0000)
 val Black = Color(0xFF000000)
 val White = Color(0xFFFFFFFF)

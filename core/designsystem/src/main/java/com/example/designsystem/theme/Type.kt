@@ -93,6 +93,26 @@ data class TraceTypography(
         fontSize = 20.sp,
         lineHeight = 24.sp
     ),
+    val missionVerification : TextStyle = TextStyle(
+        fontFamily = BagelFatOneRegular,
+        fontSize = 14.sp,
+        lineHeight = 18.sp
+    ),
+    val missionHeader: TextStyle = TextStyle(
+        fontFamily = HsJipTokkiRound,
+        fontSize = 18.sp,
+        lineHeight = 22.sp
+    ),
+    val missionTitle: TextStyle = TextStyle(
+        fontFamily = HsGoolTokkiRegular,
+        fontSize = 32.sp,
+        lineHeight = 40.sp
+    ),
+    val missionCompletedTitle : TextStyle = TextStyle(
+        fontFamily = HsGoolTokkiRegular,
+        fontSize = 24.sp,
+        lineHeight = 28.sp
+    ),
     val bodyMB: TextStyle = TextStyle(
         fontFamily = PretendardBold,
         fontSize = 20.sp,

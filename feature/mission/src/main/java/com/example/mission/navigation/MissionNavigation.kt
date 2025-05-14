@@ -5,13 +5,18 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.example.mission.graph.MissionRoute
+import com.example.mission.graph.mission.MissionRoute
 import com.example.navigation.MissionBaseRoute
 import com.example.navigation.MissionGraph
 
 fun NavController.navigateToMission(navOptions: NavOptions?= null) {
     navigate(MissionGraph.MissionRoute)
 }
+
+fun NavController.navigateToWriteMission(navOptions: NavOptions?= null) {
+    navigate(MissionGraph.SubmitMissionRoute)
+}
+
 
 fun NavGraphBuilder.missionNavGraph(
 
@@ -20,5 +25,7 @@ fun NavGraphBuilder.missionNavGraph(
         composable<MissionGraph.MissionRoute> {
             MissionRoute()
         }
+
+
     }
 }
