@@ -62,7 +62,7 @@ internal fun MyPageRoute(
     val commentedPosts by viewModel.commentedPosts.collectAsStateWithLifecycle()
     val reactedPosts by viewModel.reactedPosts.collectAsStateWithLifecycle()
 
-    LaunchedEffect(true) {
+    LaunchedEffect(Unit) {
         viewModel.eventChannel.collect { event ->
             when (event) {
                 is MyPageEvent.NavigateToPost -> navigateToPost(event.postId)

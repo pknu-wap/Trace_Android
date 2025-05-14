@@ -1,10 +1,14 @@
-package com.example.home.graph.home
+package com.example.home.graph.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.common.event.EventHelper
+import com.example.common.event.TraceEvent
 import com.example.domain.model.post.PostFeed
 import com.example.domain.model.post.PostType
+import com.example.domain.model.post.SearchType
 import com.example.domain.model.post.TabType
+import com.example.domain.repository.SearchRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,34 +19,96 @@ import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
-
+class SearchViewModel @Inject constructor(
+    private val searchRepository : SearchRepository,
+    val eventHelper: EventHelper
 ) : ViewModel() {
-    private val _eventChannel = Channel<HomeEvent>()
+    private val _eventChannel = Channel<SearchEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
 
-    internal fun onEvent(event: HomeEvent) = viewModelScope.launch {
+    internal fun onEvent(event: SearchEvent) = viewModelScope.launch {
         _eventChannel.send(event)
     }
 
-    private val _postFeeds: MutableStateFlow<List<PostFeed>> = MutableStateFlow(fakePostFeeds)
-    val postFeeds = _postFeeds.asStateFlow()
+    private val _recentKeywords = MutableStateFlow<List<String>>(emptyList())
+    val recentKeywords = _recentKeywords.asStateFlow()
 
-    private val _tabType : MutableStateFlow<TabType> = MutableStateFlow(TabType.ALL)
+    private val _keywordInput = MutableStateFlow("")
+    val keywordInput = _keywordInput.asStateFlow()
+
+    private val _isSearched = MutableStateFlow(false)
+    val isSearched = _isSearched.asStateFlow()
+
+    private val _searchType = MutableStateFlow(SearchType.CONTENT)
+    val searchType = _searchType.asStateFlow()
+
+    private val _tabType = MutableStateFlow(TabType.ALL)
     val tabType = _tabType.asStateFlow()
 
-    private fun setPostFeeds(postFeeds: List<PostFeed>) {
-        _postFeeds.value = postFeeds
+    private val _titleMatchedPosts = MutableStateFlow<List<PostFeed>>(fakePostFeeds)
+    val titleMatchedPosts = _titleMatchedPosts.asStateFlow()
+
+    private val _contentMatchedPosts = MutableStateFlow<List<PostFeed>>(emptyList())
+    val contentMatchedPosts = _contentMatchedPosts.asStateFlow()
+
+    init {
+        loadRecentKeywords()
+    }
+
+    fun resetSearch() {
+        _isSearched.value = false
+    }
+
+    fun setSearchType(searchType: SearchType) {
+        _searchType.value = searchType
     }
 
     fun setTabType(tabType: TabType) {
         _tabType.value = tabType
     }
 
-    sealed class HomeEvent {
-        data class NavigateToPost(val postId : Int) : HomeEvent()
-        data object NavigateToWritePost : HomeEvent()
-        data object NavigateToSearch : HomeEvent()
+    fun setKeywordInput(keywordInput : String) {
+        _keywordInput.value = keywordInput
+    }
+
+    fun searchByInput() = viewModelScope.launch {
+        if(_keywordInput.value.isEmpty()) {
+            eventHelper.sendEvent(TraceEvent.ShowSnackBar("검색할 키워드를 입력해주세요."))
+            return@launch
+        }
+
+        _isSearched.value = true
+        addKeyword(_keywordInput.value)
+    }
+
+    fun searchByRecentKeyword(keyword : String) {
+        addKeyword(keyword)
+
+        _isSearched.value = true
+    }
+
+    fun loadRecentKeywords() = viewModelScope.launch {
+        _recentKeywords.value = searchRepository.getRecentKeywords().getOrNull() ?: emptyList()
+    }
+
+    private fun addKeyword(keyword: String) = viewModelScope.launch {
+        searchRepository.addKeyword(keyword)
+    }
+
+    fun removeKeyword(keyword: String) = viewModelScope.launch {
+        searchRepository.removeKeyword(keyword)
+        loadRecentKeywords()
+    }
+
+    fun clearKeywords() = viewModelScope.launch {
+        searchRepository.clearKeywords()
+        loadRecentKeywords()
+    }
+
+
+    sealed class SearchEvent {
+        data object NavigateBack : SearchEvent()
+        data class NavigateToPost(val postId : Int) : SearchEvent()
     }
 }
 
@@ -165,3 +231,4 @@ val fakePostFeeds: List<PostFeed> = listOf(
     )
 )
 
+val fakeRecentKeywords = listOf("선행", "제비", "흥부", "선행자", "쓰레기")

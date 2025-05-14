@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.example.home.graph.home.HomeRoute
 import com.example.home.graph.post.PostRoute
+import com.example.home.graph.search.SearchRoute
 import com.example.home.graph.updatepost.UpdatePostRoute
 import com.example.home.graph.writepost.WritePostRoute
 import com.example.navigation.HomeBaseRoute
@@ -14,6 +15,10 @@ import com.example.navigation.HomeGraph
 
 fun NavController.navigateToHome(navOptions: NavOptions? = null) {
     navigate(HomeGraph.HomeRoute, navOptions)
+}
+
+fun NavController.navigateToSearch(navOptions: NavOptions? = null) {
+    navigate(HomeGraph.SearchRoute, navOptions)
 }
 
 fun NavController.navigateToWritePost(navOptions: NavOptions? = null) {
@@ -29,6 +34,7 @@ fun NavController.navigateToUpdatePost(postId : Int, navOptions: NavOptions? = n
 }
 
 fun NavGraphBuilder.homeNavGraph(
+    navigateToSearch : () -> Unit,
     navigateToPost: (Int) -> Unit,
     navigateToWritePost: () -> Unit,
     navigateToUpdatePost : (Int) -> Unit,
@@ -38,7 +44,15 @@ fun NavGraphBuilder.homeNavGraph(
         composable<HomeGraph.HomeRoute> {
             HomeRoute(
                 navigateToPost = navigateToPost,
-                navigateToWritePost = navigateToWritePost
+                navigateToWritePost = navigateToWritePost,
+                navigateToSearch = navigateToSearch
+            )
+        }
+
+        composable<HomeGraph.SearchRoute> {
+            SearchRoute(
+                navigateBack = navigateBack,
+                navigateToPost = navigateToPost,
             )
         }
 
@@ -62,6 +76,7 @@ fun NavGraphBuilder.homeNavGraph(
                 navigateToPost = navigateToPost
             )
         }
+
     }
 }
 

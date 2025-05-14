@@ -43,6 +43,7 @@ import com.example.home.graph.home.component.TabSelector
 
 @Composable
 internal fun HomeRoute(
+    navigateToSearch: () -> Unit,
     navigateToPost: (Int) -> Unit,
     navigateToWritePost: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
@@ -56,6 +57,7 @@ internal fun HomeRoute(
             when (event) {
                 is HomeEvent.NavigateToPost -> navigateToPost(event.postId)
                 is HomeEvent.NavigateToWritePost -> navigateToWritePost()
+                is HomeEvent.NavigateToSearch -> navigateToSearch()
             }
         }
     }
@@ -66,6 +68,7 @@ internal fun HomeRoute(
         onTabTypeChange = viewModel::setTabType,
         navigateToPost = { postId -> viewModel.onEvent(HomeEvent.NavigateToPost(postId)) },
         navigateToWritePost = { viewModel.onEvent(HomeEvent.NavigateToWritePost) },
+        navigateToSearch = { viewModel.onEvent(HomeEvent.NavigateToSearch) }
     )
 }
 
@@ -75,6 +78,7 @@ private fun HomeScreen(
     postFeeds: List<PostFeed>,
     tabType: TabType,
     onTabTypeChange: (TabType) -> Unit,
+    navigateToSearch: () -> Unit,
     navigateToPost: (Int) -> Unit,
     navigateToWritePost: () -> Unit,
 ) {
@@ -116,7 +120,8 @@ private fun HomeScreen(
                         PrimaryDefault
                     )
                     .padding(horizontal = 20.dp)
-                    .size(50.dp),
+                    .height(45.dp)
+                 ,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text("흔적들", style = TraceTheme.typography.headingMB, color = White)
@@ -127,7 +132,7 @@ private fun HomeScreen(
                     painter = painterResource(R.drawable.search_ic),
                     contentDescription = "검색",
                     modifier = Modifier.clickable {
-
+                        navigateToSearch()
                     })
 
                 Spacer(Modifier.width(35.dp))
@@ -190,11 +195,12 @@ private fun HomeScreen(
 @Composable
 fun HomeScreenPreview() {
     HomeScreen(
-        navigateToPost = {},
-        navigateToWritePost = {},
         postFeeds = fakePostFeeds,
         tabType = TabType.ALL,
         onTabTypeChange = {},
+        navigateToPost = {},
+        navigateToWritePost = {},
+        navigateToSearch = {},
     )
 }
 

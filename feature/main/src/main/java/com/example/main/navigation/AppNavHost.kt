@@ -11,6 +11,7 @@ import com.example.auth.navigation.navigateToLogin
 import com.example.home.navigation.homeNavGraph
 import com.example.home.navigation.navigateToHome
 import com.example.home.navigation.navigateToPost
+import com.example.home.navigation.navigateToSearch
 import com.example.home.navigation.navigateToUpdatePost
 import com.example.home.navigation.navigateToWritePost
 import com.example.mission.navigation.missionNavGraph
@@ -77,6 +78,9 @@ fun AppNavHost(
             },
             navigateToUpdatePost = { postId ->
                 navController.navigateToUpdatePost(postId)
+            },
+            navigateToSearch = {
+                navController.navigateToSearch()
             },
             navigateBack = { navigateBack(navController) },
         )
