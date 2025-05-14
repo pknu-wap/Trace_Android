@@ -65,7 +65,7 @@ fun MissionScreenPreview() {
         dailyMission = DailyMission(
             mission = Mission(
                 description = "길거리에서 쓰레기 줍기",
-                isVerified = true,
+                isVerified = false,
             ),
 
             changeCount = 0

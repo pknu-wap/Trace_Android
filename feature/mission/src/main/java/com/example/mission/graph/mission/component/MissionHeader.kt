@@ -47,39 +47,45 @@ internal fun MissionHeaderView(
                 RoundedCornerShape(16.dp)
             )
             .background(MissionBackground)
-            .padding(start = 20.dp, end = 20.dp, top = 25.dp,)
+            .padding(start = 20.dp, end = 12.dp, top = 4.dp)
 
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
+        Box(
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Canvas(modifier = Modifier.size(6.dp)) {
-                drawCircle(
-                    color = MissionHeader,
-                    radius = size.minDimension / 2f
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.align(Alignment.BottomCenter)
+            ) {
+                Canvas(modifier = Modifier.size(6.dp)) {
+                    drawCircle(
+                        color = MissionHeader,
+                        radius = size.minDimension / 2f
+                    )
+                }
+
+                Spacer(Modifier.width(4.dp))
+
+                Text(
+                    "오늘의 선행 미션",
+                    style = TraceTheme.typography.missionHeader,
+                    color = MissionHeader
                 )
+
+                Spacer(Modifier.width(4.dp))
+
+                Canvas(modifier = Modifier.size(6.dp)) {
+                    drawCircle(
+                        color = MissionHeader,
+                        radius = size.minDimension / 2f
+                    )
+                }
+
             }
 
-            Spacer(Modifier.width(4.dp))
-
-            Text(
-                "오늘의 선행 미션",
-                style = TraceTheme.typography.missionHeader,
-                color = MissionHeader
-            )
-
-            Spacer(Modifier.width(4.dp))
-
-            Canvas(modifier = Modifier.size(6.dp)) {
-                drawCircle(
-                    color = MissionHeader,
-                    radius = size.minDimension / 2f
-                )
-            }
-
-            Spacer(Modifier.weight(1f))
-
-            Box() {
+            Box(
+                modifier = Modifier.align(Alignment.TopEnd),
+            ) {
                 IconButton(
                     onClick = { changeMission() },
                     content = {
@@ -88,7 +94,7 @@ internal fun MissionHeaderView(
                             contentDescription = "미션 변경",
                         )
                     },
-                    modifier = Modifier.align(Alignment.Center)
+                    modifier = Modifier.align(Alignment.TopCenter)
                 )
 
                 Text(
@@ -140,6 +146,7 @@ internal fun MissionHeaderView(
             }
         }
 
+        Spacer(Modifier.height(15.dp))
     }
 }
 
@@ -156,7 +163,7 @@ internal fun MissionCompletedHeaderView(
             )
             .background(MissionCompletedBackground)
             .padding(start = 20.dp, end = 20.dp, top = 25.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
