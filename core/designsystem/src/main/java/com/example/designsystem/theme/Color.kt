@@ -16,6 +16,7 @@ val Tab = Color(0xFF464545)
 
 val MissionHeader = Color(0xFF235240)
 val MissionBackground = Color(0xFFC4D4BE)
+val MissionCompletedBackground = Color(0xFF419474)
 val VerificationButton = Color(0xFF419474)
 val MissionPending = Color(0xFFDADED9)
 
