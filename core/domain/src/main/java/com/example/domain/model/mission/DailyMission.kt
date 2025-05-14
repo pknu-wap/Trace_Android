@@ -14,5 +14,5 @@ data class DailyMission(
 
 data class Mission(
     val description : String,
-    val isVerficated : Boolean,
+    val isVerified : Boolean,
 )

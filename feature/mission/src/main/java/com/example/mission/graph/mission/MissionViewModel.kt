@@ -2,6 +2,7 @@ package com.example.mission.graph.mission
 
 import androidx.lifecycle.ViewModel
 import com.example.domain.model.mission.DailyMission
+import com.example.domain.model.mission.Mission
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,7 +30,6 @@ class MissionViewModel @Inject constructor(
 }
 
 private val fakeDailyMission = DailyMission(
-    mission = "길거리에서 쓰레기 줍기",
-    isVerficated = false,
+    mission = Mission("길거리에서 쓰레기 줍기", isVerified = false),
     changeCount = 0
 )

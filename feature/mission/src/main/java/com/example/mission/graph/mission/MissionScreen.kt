@@ -33,7 +33,6 @@ import com.example.designsystem.R
 import com.example.designsystem.theme.Black
 import com.example.designsystem.theme.MissionBackground
 import com.example.designsystem.theme.MissionHeader
-import com.example.designsystem.theme.MissionPending
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.VerificationButton
 import com.example.designsystem.theme.White
@@ -143,24 +142,6 @@ private fun MissionScreen(
                 Spacer(Modifier.height(35.dp))
 
                 Row(modifier = Modifier.fillMaxWidth()) {
-                    Box(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(MissionPending)
-                            .width(57.dp)
-                            .height(32.dp)
-                    ) {
-                        Text(
-                            "진행 전",
-                            style = TraceTheme.typography.missionHeader.copy(
-                                fontSize = 16.sp,
-                                lineHeight = 20.sp
-                            ),
-                            color = VerificationButton,
-                            modifier = Modifier.align(Alignment.Center)
-                        )
-                    }
-
                     Spacer(Modifier.weight(1f))
 
                     Box(
@@ -194,7 +175,7 @@ fun MissionScreenPreview() {
         dailyMission = DailyMission(
             mission = Mission(
                 description = "길거리에서 쓰레기 줍기",
-                isVerficated = false,
+                isVerified = false,
             ),
 
             changeCount = 0
