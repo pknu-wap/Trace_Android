@@ -33,8 +33,8 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.example.designsystem.theme.CommentField
 import com.example.designsystem.theme.PrimaryDefault
+import com.example.designsystem.theme.SearchField
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.WarmGray
 
@@ -111,7 +111,7 @@ internal fun TraceSearchField(
                 .clip(
                     RoundedCornerShape(8.dp)
                 )
-                .background(CommentField)
+                .background(SearchField)
                 .padding(start = 14.dp, end = 10.dp)
         )
     }

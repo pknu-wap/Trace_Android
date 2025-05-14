@@ -11,6 +11,7 @@ val TabIndicator = Color(0xFF429474)
 val Background = Color(0xFFFFFEEE)
 
 val TextField = Color(0xFFF2F1E1)
+val SearchField = Color(0xFFCBD4BE)
 val CommentField = Color(0xFFE4E3D6)
 
 
