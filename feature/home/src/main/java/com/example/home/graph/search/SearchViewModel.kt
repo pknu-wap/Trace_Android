@@ -7,6 +7,7 @@ import com.example.common.event.TraceEvent
 import com.example.domain.model.post.PostFeed
 import com.example.domain.model.post.PostType
 import com.example.domain.model.post.SearchType
+import com.example.domain.model.post.TabType
 import com.example.domain.repository.SearchRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -41,6 +42,9 @@ class SearchViewModel @Inject constructor(
     private val _searchType = MutableStateFlow(SearchType.CONTENT)
     val searchType = _searchType.asStateFlow()
 
+    private val _tabType = MutableStateFlow(TabType.ALL)
+    val tabType = _tabType.asStateFlow()
+
     private val _titleMatchedPosts = MutableStateFlow<List<PostFeed>>(fakePostFeeds)
     val titleMatchedPosts = _titleMatchedPosts.asStateFlow()
 
@@ -57,6 +61,10 @@ class SearchViewModel @Inject constructor(
 
     fun setSearchType(searchType: SearchType) {
         _searchType.value = searchType
+    }
+
+    fun setTabType(tabType: TabType) {
+        _tabType.value = tabType
     }
 
     fun setKeywordInput(keywordInput : String) {

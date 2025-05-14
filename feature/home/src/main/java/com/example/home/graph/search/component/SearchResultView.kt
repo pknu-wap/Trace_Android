@@ -18,6 +18,10 @@ import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -33,37 +37,51 @@ import com.example.designsystem.theme.TabIndicator
 import com.example.designsystem.theme.TraceTheme
 import com.example.domain.model.post.PostFeed
 import com.example.domain.model.post.SearchType
+import com.example.domain.model.post.TabType
 import com.example.home.graph.home.component.PostFeed
 
 @Composable
 internal fun SearchResultView(
     searchType: SearchType,
-    onSearchTypeChange: (SearchType) -> Unit,
+    tabType: TabType,
     displayedPosts: List<PostFeed>,
+    onSearchTypeChange: (SearchType) -> Unit,
+    onTabTypeChange: (TabType) -> Unit,
     navigateToPost: (Int) -> Unit,
 ) {
     val tabs = SearchType.entries
+
+    var isSearchTypeDropDownMenuExpanded by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(Background)
     ) {
-        Row(
-            modifier = Modifier
-                .wrapContentWidth()
-                .clickable {
+        Box() {
+            Row(
+                modifier = Modifier
+                    .wrapContentWidth()
+                    .clickable {
+                        isSearchTypeDropDownMenuExpanded = true
+                    },
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(tabType.label, style = TraceTheme.typography.bodySSB)
 
-                },
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text("전체 글", style = TraceTheme.typography.bodySSB)
+                Spacer(Modifier.width(5.dp))
 
-            Spacer(Modifier.width(5.dp))
+                Icon(
+                    imageVector = Icons.Filled.KeyboardArrowDown,
+                    contentDescription = "드롭다운 아이콘"
+                )
+            }
 
-            Icon(
-                imageVector = Icons.Filled.KeyboardArrowDown,
-                contentDescription = "드롭다운 아이콘"
+            TabTypeDropdownMenu(
+                expanded = isSearchTypeDropDownMenuExpanded,
+                onTabTypeChange = onTabTypeChange,
+                onDismiss = { isSearchTypeDropDownMenuExpanded = false },
+                selectedTabType = tabType
             )
         }
 
@@ -126,8 +144,14 @@ internal fun SearchResultView(
             Box(
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("검색 결과가 없습니다.", style = TraceTheme.typography.bodySM, color = Gray, modifier = Modifier.align(
-                    Alignment.Center))
+                Text(
+                    "검색 결과가 없습니다.",
+                    style = TraceTheme.typography.bodySM,
+                    color = Gray,
+                    modifier = Modifier.align(
+                        Alignment.Center
+                    )
+                )
             }
 
             Spacer(Modifier.height(3.dp))
@@ -149,7 +173,7 @@ internal fun SearchResultView(
 
             Spacer(Modifier.height(8.dp))
 
-            if(index != displayedPosts.size -1) {
+            if (index != displayedPosts.size - 1) {
                 Spacer(
                     Modifier
                         .fillMaxWidth()

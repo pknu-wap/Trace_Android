@@ -30,6 +30,7 @@ import com.example.designsystem.theme.Background
 import com.example.designsystem.theme.PrimaryDefault
 import com.example.domain.model.post.PostFeed
 import com.example.domain.model.post.SearchType
+import com.example.domain.model.post.TabType
 import com.example.home.graph.search.SearchViewModel.SearchEvent
 import com.example.home.graph.search.component.SearchInitialView
 import com.example.home.graph.search.component.SearchResultView
@@ -45,6 +46,7 @@ internal fun SearchRoute(
     val recentKeywords by viewModel.recentKeywords.collectAsStateWithLifecycle()
     val isSearched by viewModel.isSearched.collectAsStateWithLifecycle()
     val searchType by viewModel.searchType.collectAsStateWithLifecycle()
+    val tabType by viewModel.tabType.collectAsStateWithLifecycle()
     val titleMatchedPosts by viewModel.titleMatchedPosts.collectAsStateWithLifecycle()
     val contentMatchedPosts by viewModel.contentMatchedPosts.collectAsStateWithLifecycle()
 
@@ -66,12 +68,14 @@ internal fun SearchRoute(
         recentKeywords = recentKeywords,
         isSearched = isSearched,
         searchType = searchType,
+        tabType = tabType,
         displayedPosts = when (searchType) {
             SearchType.CONTENT -> contentMatchedPosts
             SearchType.TITLE -> titleMatchedPosts
         },
         onKeywordInputChange = viewModel::setKeywordInput,
         onSearchTypeChange = viewModel::setSearchType,
+        onTabTypeChange = viewModel::setTabType,
         removeKeyword = viewModel::removeKeyword,
         clearKeywords = viewModel::clearKeywords,
         searchByInput = viewModel::searchByInput,
@@ -88,14 +92,16 @@ private fun SearchScreen(
     recentKeywords: List<String>,
     isSearched: Boolean,
     searchType: SearchType,
+    tabType: TabType,
     displayedPosts: List<PostFeed>,
     onKeywordInputChange: (String) -> Unit,
     onSearchTypeChange: (SearchType) -> Unit,
+    onTabTypeChange: (TabType) -> Unit,
     searchByInput: () -> Unit,
     searchByRecentKeyword: (String) -> Unit,
     removeKeyword: (String) -> Unit,
     clearKeywords: () -> Unit,
-    resetSearch : () -> Unit,
+    resetSearch: () -> Unit,
     navigateBack: () -> Unit,
     navigateToPost: (Int) -> Unit,
 ) {
@@ -130,7 +136,9 @@ private fun SearchScreen(
                 } else {
                     SearchResultView(
                         searchType = searchType,
+                        tabType = tabType,
                         onSearchTypeChange = onSearchTypeChange,
+                        onTabTypeChange = onTabTypeChange,
                         displayedPosts = displayedPosts,
                         navigateToPost = navigateToPost,
                     )
@@ -184,9 +192,12 @@ private fun SearchScreenPreview() {
         recentKeywords = listOf("선행", "제비", "흥부", "선행자", "쓰레기"),
         isSearched = true,
         searchType = SearchType.CONTENT,
+        tabType = TabType.ALL,
         displayedPosts = fakePostFeeds,
-        onKeywordInputChange = {}, clearKeywords = {},
+        onKeywordInputChange = {},
+        clearKeywords = {},
         onSearchTypeChange = {},
+        onTabTypeChange = {},
         removeKeyword = {},
         searchByInput = {},
         searchByRecentKeyword = {},

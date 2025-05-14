@@ -47,7 +47,7 @@ internal fun SearchInitialView(
             .fillMaxWidth()
             .background(Background)
     ) {
-        Row(modifier = Modifier.fillMaxWidth()) {
+        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             Text("최근 검색어", style = TraceTheme.typography.bodySSB)
 
             Spacer(Modifier.weight(1f))
@@ -128,7 +128,7 @@ private fun RecentKeyword(
 
             Box(
                 modifier = Modifier
-                    .size(36.dp) // 리플 크기 조정
+                    .size(24.dp) // 리플 크기 조정
                     .align(Alignment.CenterEnd)
                     .clip(CircleShape)
                     .clickable() {
