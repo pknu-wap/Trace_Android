@@ -76,6 +76,7 @@ internal fun SearchRoute(
         clearKeywords = viewModel::clearKeywords,
         searchByInput = viewModel::searchByInput,
         searchByRecentKeyword = viewModel::searchByRecentKeyword,
+        resetSearch = viewModel::resetSearch,
         navigateBack = { viewModel.onEvent(SearchEvent.NavigateBack) },
         navigateToPost = { postId -> viewModel.onEvent(SearchEvent.NavigateToPost(postId)) }
     )
@@ -94,6 +95,7 @@ private fun SearchScreen(
     searchByRecentKeyword: (String) -> Unit,
     removeKeyword: (String) -> Unit,
     clearKeywords: () -> Unit,
+    resetSearch : () -> Unit,
     navigateBack: () -> Unit,
     navigateToPost: (Int) -> Unit,
 ) {
@@ -166,6 +168,7 @@ private fun SearchScreen(
                     keyboardController?.hide()
                     searchByInput()
                 },
+                resetSearch = resetSearch
             )
 
         }
@@ -187,6 +190,7 @@ private fun SearchScreenPreview() {
         removeKeyword = {},
         searchByInput = {},
         searchByRecentKeyword = {},
+        resetSearch = {},
         navigateToPost = {}
     )
 }

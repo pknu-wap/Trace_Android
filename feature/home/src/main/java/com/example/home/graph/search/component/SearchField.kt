@@ -1,16 +1,13 @@
 package com.example.home.graph.search.component
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -31,14 +28,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.example.designsystem.R
 import com.example.designsystem.theme.CommentField
 import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.TraceTheme
@@ -62,14 +56,15 @@ internal fun TraceSearchField(
     hint: String = "검색어를 입력하세요.",
     onValueChange: (String) -> Unit,
     onSearch: () -> Unit,
+    resetSearch : () -> Unit,
 ) {
     val isKeyboardVisible = WindowInsets.isImeVisible
     var isFocused by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
 
     LaunchedEffect(isKeyboardVisible) {
-        if (!isKeyboardVisible) {
-
+        if (isKeyboardVisible) {
+            resetSearch()
         }
     }
 
@@ -82,7 +77,10 @@ internal fun TraceSearchField(
                 keyboardType = keyboardType,
                 imeAction = ImeAction.Search
             ),
-            keyboardActions = KeyboardActions(onSearch = { onSearch() }),
+            keyboardActions = KeyboardActions(onSearch = {
+                onSearch()
+                focusManager.clearFocus()
+            }),
             textStyle = TraceTheme.typography.bodySM,
             cursorBrush = SolidColor(PrimaryDefault),
             decorationBox = { innerTextField ->
@@ -101,17 +99,7 @@ internal fun TraceSearchField(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.fillMaxWidth().align(Alignment.Center)
                     ) {
-
                         innerTextField()
-
-                        Spacer(Modifier.weight(1f))
-
-                        Image(
-                            painter = painterResource(R.drawable.search_ic),
-                            contentDescription = "검색 아이콘",
-                            colorFilter = ColorFilter.tint(PrimaryDefault),
-                            modifier = Modifier.size(16.dp)
-                        )
                     }
                 }
             },

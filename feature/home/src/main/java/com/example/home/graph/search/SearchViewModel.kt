@@ -51,6 +51,10 @@ class SearchViewModel @Inject constructor(
         loadRecentKeywords()
     }
 
+    fun resetSearch() {
+        _isSearched.value = false
+    }
+
     fun setSearchType(searchType: SearchType) {
         _searchType.value = searchType
     }
