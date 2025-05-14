@@ -131,8 +131,7 @@ internal fun MissionHeaderView(
                 modifier = Modifier
                     .clip(RoundedCornerShape(10.dp))
                     .background(VerificationButton)
-                    .width(61.dp)
-                    .height(32.dp)
+                    .padding(horizontal = 8.dp, vertical = 8.dp)
                     .clickable {
                         verifyMission()
                     }
