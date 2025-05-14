@@ -48,6 +48,10 @@ internal fun SearchRoute(
     val titleMatchedPosts by viewModel.titleMatchedPosts.collectAsStateWithLifecycle()
     val contentMatchedPosts by viewModel.contentMatchedPosts.collectAsStateWithLifecycle()
 
+    LaunchedEffect(isSearched) {
+        viewModel.loadRecentKeywords()
+    }
+
     LaunchedEffect(Unit) {
         viewModel.eventChannel.collect { event ->
             when (event) {
@@ -68,8 +72,8 @@ internal fun SearchRoute(
         },
         onKeywordInputChange = viewModel::setKeywordInput,
         onSearchTypeChange = viewModel::setSearchType,
-        removeKeyword = {},
-        clearKeywords = {},
+        removeKeyword = viewModel::removeKeyword,
+        clearKeywords = viewModel::clearKeywords,
         searchByInput = viewModel::searchByInput,
         searchByRecentKeyword = viewModel::searchByRecentKeyword,
         navigateBack = { viewModel.onEvent(SearchEvent.NavigateBack) },

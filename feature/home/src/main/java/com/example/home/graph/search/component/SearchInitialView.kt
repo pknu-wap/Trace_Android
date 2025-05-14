@@ -21,6 +21,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,42 +52,48 @@ internal fun SearchInitialView(
 
             Spacer(Modifier.weight(1f))
 
-            if (recentKeywords.isNotEmpty()) Text(
-                "전체 삭제",
-                style = TraceTheme.typography.bodySM,
-                color = LightGray
+            if (recentKeywords.isNotEmpty()) {
+                TextButton(onClick = clearKeywords) {
+                    Text(
+                        "전체 삭제",
+                        style = TraceTheme.typography.bodySM,
+                        color = LightGray
+                    )
+                }
+
+            }
+        }
+    }
+
+    Spacer(Modifier.height(10.dp))
+
+    if (recentKeywords.isEmpty()) {
+        Spacer(Modifier.height(50.dp))
+
+        Box(modifier = Modifier.fillMaxWidth()) {
+            Text(
+                "최근 검색어 내역이 없습니다.",
+                style = TraceTheme.typography.bodyMM,
+                color = Gray,
+                modifier = Modifier.align(Alignment.Center)
             )
         }
-
-        Spacer(Modifier.height(10.dp))
-
-        if (recentKeywords.isEmpty()) {
-            Spacer(Modifier.height(50.dp))
-
-            Box(modifier = Modifier.fillMaxWidth()) {
-                Text(
-                    "최근 검색어 내역이 없습니다.",
-                    style = TraceTheme.typography.bodyMM,
-                    color = Gray,
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            }
-        }
-
-        if (recentKeywords.isNotEmpty()) {
-            FlowRow(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalArrangement = Arrangement.spacedBy(7.dp)
-            ) {
-                recentKeywords.forEach { keyword ->
-                    RecentKeyword(value = keyword, onSearch = onSearch, removeKeyword = removeKeyword)
-                }
-            }
-        }
-
     }
+
+    if (recentKeywords.isNotEmpty()) {
+        FlowRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalArrangement = Arrangement.spacedBy(7.dp)
+        ) {
+            recentKeywords.forEach { keyword ->
+                RecentKeyword(value = keyword, onSearch = onSearch, removeKeyword = removeKeyword)
+            }
+        }
+    }
+
 }
+
 
 @Composable
 private fun RecentKeyword(
@@ -139,5 +146,5 @@ private fun RecentKeyword(
 
         }
 
-        }
     }
+}

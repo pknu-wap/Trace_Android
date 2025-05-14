@@ -7,6 +7,7 @@ import com.example.common.event.TraceEvent
 import com.example.domain.model.post.PostFeed
 import com.example.domain.model.post.PostType
 import com.example.domain.model.post.SearchType
+import com.example.domain.repository.SearchRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,6 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
+    private val searchRepository : SearchRepository,
     val eventHelper: EventHelper
 ) : ViewModel() {
     private val _eventChannel = Channel<SearchEvent>()
@@ -27,7 +29,7 @@ class SearchViewModel @Inject constructor(
         _eventChannel.send(event)
     }
 
-    private val _recentKeywords = MutableStateFlow<List<String>>(fakeRecentKeywords)
+    private val _recentKeywords = MutableStateFlow<List<String>>(emptyList())
     val recentKeywords = _recentKeywords.asStateFlow()
 
     private val _keywordInput = MutableStateFlow("")
@@ -45,7 +47,9 @@ class SearchViewModel @Inject constructor(
     private val _contentMatchedPosts = MutableStateFlow<List<PostFeed>>(emptyList())
     val contentMatchedPosts = _contentMatchedPosts.asStateFlow()
 
-    init {}
+    init {
+        loadRecentKeywords()
+    }
 
     fun setSearchType(searchType: SearchType) {
         _searchType.value = searchType
@@ -60,14 +64,35 @@ class SearchViewModel @Inject constructor(
             eventHelper.sendEvent(TraceEvent.ShowSnackBar("검색할 키워드를 입력해주세요."))
             return@launch
         }
+
         _isSearched.value = true
+        addKeyword(_keywordInput.value)
 
         setKeywordInput("")
     }
 
     fun searchByRecentKeyword(keyword : String) {
-
+        addKeyword(_keywordInput.value)
     }
+
+    fun loadRecentKeywords() = viewModelScope.launch {
+        _recentKeywords.value = searchRepository.getRecentKeywords().getOrNull() ?: emptyList()
+    }
+
+    private fun addKeyword(keyword: String) = viewModelScope.launch {
+        searchRepository.addKeyword(keyword)
+    }
+
+    fun removeKeyword(keyword: String) = viewModelScope.launch {
+        searchRepository.removeKeyword(keyword)
+        loadRecentKeywords()
+    }
+
+    fun clearKeywords() = viewModelScope.launch {
+        searchRepository.clearKeywords()
+        loadRecentKeywords()
+    }
+
 
     sealed class SearchEvent {
         data object NavigateBack : SearchEvent()
