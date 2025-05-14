@@ -71,8 +71,6 @@ class SearchViewModel @Inject constructor(
 
         _isSearched.value = true
         addKeyword(_keywordInput.value)
-
-        setKeywordInput("")
     }
 
     fun searchByRecentKeyword(keyword : String) {

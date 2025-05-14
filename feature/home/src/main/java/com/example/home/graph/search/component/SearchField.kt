@@ -1,9 +1,11 @@
 package com.example.home.graph.search.component
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.isImeVisible
@@ -30,9 +32,11 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.example.common.util.clickable
 import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.SearchField
 import com.example.designsystem.theme.TraceTheme
@@ -56,7 +60,7 @@ internal fun TraceSearchField(
     hint: String = "검색어를 입력하세요.",
     onValueChange: (String) -> Unit,
     onSearch: () -> Unit,
-    resetSearch : () -> Unit,
+    resetSearch: () -> Unit,
 ) {
     val isKeyboardVisible = WindowInsets.isImeVisible
     var isFocused by remember { mutableStateOf(false) }
@@ -85,7 +89,9 @@ internal fun TraceSearchField(
             cursorBrush = SolidColor(PrimaryDefault),
             decorationBox = { innerTextField ->
                 Box(
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
                 ) {
                     if (value.isEmpty()) {
                         Text(
@@ -97,9 +103,22 @@ internal fun TraceSearchField(
 
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxWidth().align(Alignment.Center)
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.Center)
                     ) {
                         innerTextField()
+
+                        if (value.isNotEmpty()) {
+                            Spacer(Modifier.weight(1f))
+
+                            Image(
+                                painter = painterResource(com.example.designsystem.R.drawable.remove_keyword_ic),
+                                contentDescription = "검색어 초기화",
+                                modifier = Modifier.clickable {
+                                    onValueChange("")
+                                })
+                        }
                     }
                 }
             },
