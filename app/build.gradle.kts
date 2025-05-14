@@ -1,3 +1,4 @@
+
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -36,6 +37,7 @@ android {
     buildFeatures {
         buildConfig = true
     }
+
 
 }
 

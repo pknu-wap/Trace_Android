@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.model.post.PostFeed
 import com.example.domain.model.post.PostType
+import com.example.domain.model.post.TabType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,20 +28,21 @@ class HomeViewModel @Inject constructor(
     private val _postFeeds: MutableStateFlow<List<PostFeed>> = MutableStateFlow(fakePostFeeds)
     val postFeeds = _postFeeds.asStateFlow()
 
-    private val _tabType : MutableStateFlow<PostType> = MutableStateFlow(PostType.ALL)
+    private val _tabType : MutableStateFlow<TabType> = MutableStateFlow(TabType.ALL)
     val tabType = _tabType.asStateFlow()
 
     private fun setPostFeeds(postFeeds: List<PostFeed>) {
         _postFeeds.value = postFeeds
     }
 
-    fun setTabType(tabType: PostType) {
+    fun setTabType(tabType: TabType) {
         _tabType.value = tabType
     }
 
     sealed class HomeEvent {
-        data object NavigateToPost : HomeEvent()
+        data class NavigateToPost(val postId : Int) : HomeEvent()
         data object NavigateToWritePost : HomeEvent()
+        data object NavigateToSearch : HomeEvent()
     }
 }
 
@@ -54,6 +56,7 @@ val fakePostFeeds: List<PostFeed> = listOf(
         viewCount = 150,
         commentCount = 5,
         isVerified = true,
+        postId = 1
     ),
     PostFeed(
         postType = PostType.GOOD_DEED,
@@ -64,7 +67,8 @@ val fakePostFeeds: List<PostFeed> = listOf(
         viewCount = 220,
         commentCount = 10,
         isVerified = false,
-        imageUri = "https://picsum.photos/200/300?random=2"
+        imageUri = "https://picsum.photos/200/300?random=2",
+        postId = 1
     ),
     PostFeed(
         postType = PostType.GOOD_DEED,
@@ -75,6 +79,7 @@ val fakePostFeeds: List<PostFeed> = listOf(
         viewCount = 300,
         commentCount = 8,
         isVerified = true,
+        postId = 1
     ),
     PostFeed(
         postType = PostType.GOOD_DEED,
@@ -85,7 +90,8 @@ val fakePostFeeds: List<PostFeed> = listOf(
         viewCount = 175,
         commentCount = 12,
         isVerified = true,
-        imageUri = "https://picsum.photos/200/300?random=4"
+        imageUri = "https://picsum.photos/200/300?random=4",
+        postId = 1
     ),
     PostFeed(
         postType = PostType.GOOD_DEED,
@@ -96,6 +102,7 @@ val fakePostFeeds: List<PostFeed> = listOf(
         viewCount = 500,
         commentCount = 35,
         isVerified = false,
+        postId = 1
     ),
     PostFeed(
         postType = PostType.GOOD_DEED,
@@ -106,7 +113,8 @@ val fakePostFeeds: List<PostFeed> = listOf(
         viewCount = 400,
         commentCount = 28,
         isVerified = true,
-        imageUri = "https://picsum.photos/200/300?random=6"
+        imageUri = "https://picsum.photos/200/300?random=6",
+        postId = 1
     ),
     PostFeed(
         postType = PostType.GOOD_DEED,
@@ -117,6 +125,7 @@ val fakePostFeeds: List<PostFeed> = listOf(
         viewCount = 320,
         commentCount = 15,
         isVerified = true,
+        postId = 1
     ),
     PostFeed(
         postType = PostType.GOOD_DEED,
@@ -127,7 +136,8 @@ val fakePostFeeds: List<PostFeed> = listOf(
         viewCount = 220,
         commentCount = 18,
         isVerified = false,
-        imageUri = "https://picsum.photos/200/300?random=8"
+        imageUri = "https://picsum.photos/200/300?random=8",
+        postId = 1
     ),
     PostFeed(
         postType = PostType.GOOD_DEED,
@@ -138,7 +148,8 @@ val fakePostFeeds: List<PostFeed> = listOf(
         viewCount = 250,
         commentCount = 13,
         isVerified = false,
-        imageUri = "https://picsum.photos/200/300?random=9"
+        imageUri = "https://picsum.photos/200/300?random=9",
+        postId = 1
     ),
     PostFeed(
         postType = PostType.GOOD_DEED,
@@ -149,7 +160,8 @@ val fakePostFeeds: List<PostFeed> = listOf(
         viewCount = 100,
         commentCount = 5,
         isVerified = true,
-        imageUri = "https://picsum.photos/200/300?random=10"
+        imageUri = "https://picsum.photos/200/300?random=10",
+        postId = 1
     )
 )
 

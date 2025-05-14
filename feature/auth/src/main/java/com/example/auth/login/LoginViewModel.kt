@@ -25,17 +25,31 @@ class LoginViewModel @Inject constructor(
     }
 
     internal fun loginKakao(idToken: String) = viewModelScope.launch {
-        authRepository.loginKakao(idToken).onSuccess { userRole ->
-            if (userRole == UserRole.NONE) _eventChannel.send(LoginEvent.NavigateEditProfile(idToken))
-            else _eventChannel.send(LoginEvent.NavigateToHome)
+        authRepository.loginKakao(idToken).onSuccess { user ->
+            if (user.role == UserRole.NONE) {
+                val signUpToken = user.signUpToken
+                val providerId = user.providerId
+
+                if (signUpToken != null && providerId != null) {
+                    _eventChannel.send(
+                        LoginEvent.NavigateEditProfile(
+                            signUpToken,
+                            providerId
+                        )
+                    )
+                } else {
+                    eventHelper.sendEvent(TraceEvent.ShowSnackBar("필수 토큰 정보가 누락되었습니다"))
+                }
+            } else _eventChannel.send(LoginEvent.NavigateToHome)
         }.onFailure {
             eventHelper.sendEvent(TraceEvent.ShowSnackBar("로그인에 실패했습니다"))
-            _eventChannel.send(LoginEvent.NavigateEditProfile(idToken))
         }
     }
 
     sealed class LoginEvent {
-        data class NavigateEditProfile(val idToken: String) : LoginEvent()
+        data class NavigateEditProfile(val signUpToken: String, val providerId: String) :
+            LoginEvent()
+
         data object NavigateToHome : LoginEvent()
     }
 

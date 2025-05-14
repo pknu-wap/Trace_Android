@@ -35,7 +35,7 @@ import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.White
 import com.example.domain.model.post.PostFeed
-import com.example.domain.model.post.PostType
+import com.example.domain.model.post.TabType
 import com.example.home.graph.home.HomeViewModel.HomeEvent
 import com.example.home.graph.home.component.PostFeed
 import com.example.home.graph.home.component.TabSelector
@@ -43,7 +43,8 @@ import com.example.home.graph.home.component.TabSelector
 
 @Composable
 internal fun HomeRoute(
-    navigateToPost: () -> Unit,
+    navigateToSearch: () -> Unit,
+    navigateToPost: (Int) -> Unit,
     navigateToWritePost: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
@@ -54,8 +55,9 @@ internal fun HomeRoute(
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
             when (event) {
-                is HomeEvent.NavigateToPost -> navigateToPost()
+                is HomeEvent.NavigateToPost -> navigateToPost(event.postId)
                 is HomeEvent.NavigateToWritePost -> navigateToWritePost()
+                is HomeEvent.NavigateToSearch -> navigateToSearch()
             }
         }
     }
@@ -64,17 +66,20 @@ internal fun HomeRoute(
         postFeeds = postFeeds,
         tabType = tabType,
         onTabTypeChange = viewModel::setTabType,
-        navigateToPost = { viewModel.onEvent(HomeEvent.NavigateToPost) },
-        navigateToWritePost = { viewModel.onEvent(HomeEvent.NavigateToWritePost) })
+        navigateToPost = { postId -> viewModel.onEvent(HomeEvent.NavigateToPost(postId)) },
+        navigateToWritePost = { viewModel.onEvent(HomeEvent.NavigateToWritePost) },
+        navigateToSearch = { viewModel.onEvent(HomeEvent.NavigateToSearch) }
+    )
 }
 
 
 @Composable
 private fun HomeScreen(
     postFeeds: List<PostFeed>,
-    tabType: PostType,
-    onTabTypeChange: (PostType) -> Unit,
-    navigateToPost: () -> Unit,
+    tabType: TabType,
+    onTabTypeChange: (TabType) -> Unit,
+    navigateToSearch: () -> Unit,
+    navigateToPost: (Int) -> Unit,
     navigateToWritePost: () -> Unit,
 ) {
     Box(
@@ -115,7 +120,8 @@ private fun HomeScreen(
                         PrimaryDefault
                     )
                     .padding(horizontal = 20.dp)
-                    .size(50.dp),
+                    .height(45.dp)
+                 ,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text("흔적들", style = TraceTheme.typography.headingMB, color = White)
@@ -126,7 +132,7 @@ private fun HomeScreen(
                     painter = painterResource(R.drawable.search_ic),
                     contentDescription = "검색",
                     modifier = Modifier.clickable {
-
+                        navigateToSearch()
                     })
 
                 Spacer(Modifier.width(35.dp))
@@ -152,14 +158,14 @@ private fun HomeScreen(
                     },
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    PostType.entries.forEachIndexed { index, type ->
+                    TabType.entries.forEachIndexed { index, type ->
                         TabSelector(
                             type = type,
                             selectedType = tabType,
                             onTabSelected = onTabTypeChange
                         )
 
-                        if (index != PostType.entries.size - 1) Spacer(Modifier.width(12.dp))
+                        if (index != TabType.entries.size - 1) Spacer(Modifier.width(12.dp))
                     }
                 }
             }
@@ -189,11 +195,12 @@ private fun HomeScreen(
 @Composable
 fun HomeScreenPreview() {
     HomeScreen(
+        postFeeds = fakePostFeeds,
+        tabType = TabType.ALL,
+        onTabTypeChange = {},
         navigateToPost = {},
         navigateToWritePost = {},
-        postFeeds = fakePostFeeds,
-        tabType = PostType.ALL,
-        onTabTypeChange = {},
+        navigateToSearch = {},
     )
 }
 

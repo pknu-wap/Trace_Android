@@ -11,12 +11,15 @@ import com.example.auth.navigation.navigateToLogin
 import com.example.home.navigation.homeNavGraph
 import com.example.home.navigation.navigateToHome
 import com.example.home.navigation.navigateToPost
+import com.example.home.navigation.navigateToSearch
+import com.example.home.navigation.navigateToUpdatePost
 import com.example.home.navigation.navigateToWritePost
 import com.example.mission.navigation.missionNavGraph
 import com.example.mypage.navigation.myPageNavGraph
 import com.example.mypage.navigation.navigateToSetting
 import com.example.mypage.navigation.navigateToUpdateProfile
-import com.example.navigation.AuthGraphBaseRoute
+import com.example.navigation.HomeGraph
+import com.example.navigation.SplashRoute
 import com.example.splash.navigation.splashScreen
 
 @Composable
@@ -26,11 +29,11 @@ fun AppNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = AuthGraphBaseRoute,
+        startDestination = SplashRoute,
         modifier = modifier,
     ) {
         val currentRoute = navController.currentDestination?.route
-      
+
         splashScreen(
             navigateToHome = {
                 navController.navigateToHome(
@@ -52,30 +55,40 @@ fun AppNavHost(
             navigateToHome = {
                 navController.navigateToHome(
                     navOptions {
-                        currentRoute?.let { popUpTo(currentRoute) { inclusive = true } }
+                        popUpTo(0) { inclusive = true }
                     }
                 )
             },
             navigateBack = { navigateBack(navController) },
-            navigateToEditProfile = { idToken ->
-                navController.navigateToEditProfile(idToken)
+            navigateToEditProfile = { signUpToken, providerId ->
+                navController.navigateToEditProfile(signUpToken, providerId)
             }
         )
 
         homeNavGraph(
-            navigateToPost = {
-                navController.navigateToPost()
+            navigateToPost = { postId ->
+                navController.navigateToPost(postId, navOptions {
+                    popUpTo<HomeGraph.HomeRoute> {
+                        inclusive = false
+                    }
+                })
             },
             navigateToWritePost = {
                 navController.navigateToWritePost()
             },
-            navigateBack = { navigateBack(navController) }
+            navigateToUpdatePost = { postId ->
+                navController.navigateToUpdatePost(postId)
+            },
+            navigateToSearch = {
+                navController.navigateToSearch()
+            },
+            navigateBack = { navigateBack(navController) },
         )
 
         missionNavGraph()
 
         myPageNavGraph(
-            navigateToPost = { navController.navigateToPost() },
+            navigateToPost = { postId -> navController.navigateToPost(postId) },
             navigateToUpdateProfile = { navController.navigateToUpdateProfile() },
             navigateToSetting = { navController.navigateToSetting() },
             navigateBack = { navigateBack(navController) },

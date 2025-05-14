@@ -70,8 +70,14 @@ val HsGoolTokkiRegular = FontFamily(
     )
 )
 
+
 @Immutable
 data class TraceTypography(
+    val headingXLB: TextStyle = TextStyle(
+        fontFamily = BookkBold,
+        fontSize = 50.sp,
+        lineHeight = 60.sp
+    ),
     val headingLB: TextStyle = TextStyle(
         fontFamily = BookkBold,
         fontSize = 24.sp,
@@ -132,6 +138,11 @@ data class TraceTypography(
         fontSize = 20.sp,
         lineHeight = 24.sp
     ),
+    val bodyXMR : TextStyle = TextStyle(
+        fontFamily = HsGoolTokkiRegular,
+        fontSize = 20.sp,
+        lineHeight = 24.sp
+    ),
     val bodyMR: TextStyle = TextStyle(
         fontFamily = PretendardRegular,
         fontSize = 16.sp,
@@ -141,6 +152,11 @@ data class TraceTypography(
         fontFamily = PretendardLight,
         fontSize = 15.sp,
         lineHeight = 19.sp
+    ),
+    val bodyXSM: TextStyle = TextStyle(
+        fontFamily = PretendardMedium,
+        fontSize = 11.sp,
+        lineHeight = 15.sp
     ),
     val bodySM: TextStyle = TextStyle(
         fontFamily = PretendardMedium,
@@ -156,11 +172,6 @@ data class TraceTypography(
         fontFamily = PretendardRegular,
         fontSize = 14.sp,
         lineHeight = 18.sp
-    ),
-    val bodyXSM: TextStyle = TextStyle(
-        fontFamily = PretendardMedium,
-        fontSize = 11.sp,
-        lineHeight = 15.sp
     ),
     val bodyLSB: TextStyle = TextStyle(
         fontFamily = PretendardSemiBold,

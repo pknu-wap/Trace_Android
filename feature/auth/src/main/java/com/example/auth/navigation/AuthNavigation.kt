@@ -16,20 +16,20 @@ fun NavController.navigateToLogin(navOptions: NavOptions? = null) {
     navigate(AuthGraph.LoginRoute, navOptions)
 }
 
-fun NavController.navigateToEditProfile(idToken : String, navOptions: NavOptions? = null) {
-    navigate(AuthGraph.EditProfileRoute(idToken), navOptions)
+fun NavController.navigateToEditProfile(signUpToken : String, providerId : String, navOptions: NavOptions? = null) {
+    navigate(AuthGraph.EditProfileRoute(signUpToken, providerId), navOptions)
 }
 
 fun NavGraphBuilder.authNavGraph(
     navigateToHome: () -> Unit,
-    navigateToEditProfile: (String) -> Unit,
+    navigateToEditProfile: (String, String) -> Unit,
     navigateBack: () -> Unit
 ) {
     navigation<AuthGraphBaseRoute>(startDestination = AuthGraph.LoginRoute) {
         composable<AuthGraph.LoginRoute> {
             LoginRoute(
                 navigateToHome = navigateToHome,
-                navigateToEditProfile = { idToken -> navigateToEditProfile(idToken) }
+                navigateToEditProfile = { signUpToken, providerId -> navigateToEditProfile(signUpToken, providerId) }
             )
         }
 

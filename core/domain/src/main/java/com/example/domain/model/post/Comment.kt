@@ -5,10 +5,17 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 data class Comment(
+    val postId: Int,
+    val userId: Int,
+    val commentId: Int,
+    val parentId: Int? = null,
+    val isDeleted : Boolean = false,
+    val isOwner : Boolean = false,
     val nickName: String,
-    val profileImageUrl : String? = null,
-    val content : String,
-    val createdAt : LocalDateTime,
+    val profileImageUrl: String? = null,
+    val content: String,
+    val createdAt: LocalDateTime,
+    val replies: List<Comment> = emptyList(),
 ) {
     fun getFormattedTime(): String {
         val now = LocalDateTime.now()

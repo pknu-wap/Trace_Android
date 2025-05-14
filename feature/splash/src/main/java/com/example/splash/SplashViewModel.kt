@@ -1,5 +1,6 @@
 package com.example.splash
 
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.repository.UserRepository
