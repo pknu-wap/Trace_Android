@@ -13,4 +13,6 @@ interface AuthDataSource {
         nickname: String,
         profileImage: InputStream? = null
     ): Result<TokenResponse>
+
+    suspend fun checkTokenHealth(token : String) : Boolean
 }

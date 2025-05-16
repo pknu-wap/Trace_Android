@@ -5,6 +5,7 @@ import com.example.data.image.ImageResizer
 import com.example.domain.model.post.FeelingCount
 import com.example.domain.model.post.PostDetail
 import com.example.domain.model.post.PostType
+import com.example.domain.model.post.WritePostType
 import com.example.domain.repository.PostRepository
 import com.example.network.source.post.PostDataSource
 import jakarta.inject.Inject
@@ -42,6 +43,7 @@ class PostRepositoryImpl @Inject constructor(
     }
 
     override suspend fun addPost(
+        postType: WritePostType,
         title: String,
         content: String,
         images: List<String>?
@@ -50,7 +52,7 @@ class PostRepositoryImpl @Inject constructor(
             imageResizer.resizeImage(imageUrl)
         }
 
-        val response = postDataSource.addPost(title, content, imageStreams).getOrThrow()
+        val response = postDataSource.addPost(postType, title, content, imageStreams).getOrThrow()
 
         response.id
     }

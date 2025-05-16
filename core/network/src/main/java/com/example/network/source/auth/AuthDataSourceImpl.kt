@@ -67,6 +67,8 @@ class AuthDataSourceImpl @Inject constructor(
         )
     }
 
+    override suspend fun checkTokenHealth(token: String): Boolean = traceApi.checkTokenHealth(token).isSuccess
+
     companion object {
         private const val WEBP_MEDIA_TYPE = "image/webp"
         private const val JPEG_MEDIA_TYPE = "image/jpeg"

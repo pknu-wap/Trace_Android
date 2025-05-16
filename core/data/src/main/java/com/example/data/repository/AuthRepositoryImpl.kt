@@ -63,4 +63,11 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun saveFake() = suspendRunCatching {
+        coroutineScope {
+            localTokenDataSource.setAccessToken("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0MjM3NzkyNDE0Iiwicm9sZSI6IlJPTEVfVVNFUiIsImlhdCI6MTc0NzMwNjY1MSwiZXhwIjoxNzQ3MzEwMjUxfQ._-lEqLcOtEU2tKtSOTKUWO_ly9fdGyLf1mpuqqzviD_Nh4aipo5Knw9gQ84kMzI8_hV21yS5w2mDE4g6R9suGA")
+        }
+    }
+
+
 }

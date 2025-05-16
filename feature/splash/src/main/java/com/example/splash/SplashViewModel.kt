@@ -22,8 +22,11 @@ class SplashViewModel @Inject constructor(
     }
 
     private fun checkSession() = viewModelScope.launch {
-        if (userRepository.checkSession()) _eventChannel.send(SplashEvent.NavigateToHome)
-        else _eventChannel.send(SplashEvent.NavigateToLogin)
+        userRepository.checkTokenHealth().onSuccess {
+            _eventChannel.send(SplashEvent.NavigateToHome)
+        }.onFailure {
+            _eventChannel.send(SplashEvent.NavigateToLogin)
+        }
     }
 
     sealed class SplashEvent {

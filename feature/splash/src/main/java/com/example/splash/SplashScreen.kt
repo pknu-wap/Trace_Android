@@ -23,7 +23,7 @@ internal fun SplashRoute(
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
             when (event) {
-                is SplashEvent.NavigateToHome -> navigateToLogin()
+                is SplashEvent.NavigateToHome -> navigateToHome()
                 is SplashEvent.NavigateToLogin -> navigateToLogin()
             }
         }
