@@ -61,6 +61,8 @@ private class TraceCall<T : Any>(
             }
 
             override fun onFailure(call: Call<T>, throwable: Throwable) {
+                Log.d("traceResponseFailure", "$throwable")
+
                 callback.onResponse(
                     this@TraceCall,
                     Response.success(Result.failure(throwable as Exception))

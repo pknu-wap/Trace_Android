@@ -1,8 +1,6 @@
 package com.example.network.authenticator
 
-import android.util.Log
 import com.example.network.api.TraceApi
-import com.example.network.model.token.RefreshTokenRequest
 import com.example.network.token.TokenManager
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
@@ -21,19 +19,21 @@ class TraceAuthenticator @Inject constructor(
     private val traceApi: Provider<TraceApi>
 ) : Authenticator {
     private val refreshMutex = Mutex()
+
     override fun authenticate(route: Route?, response: Response): Request? {
         val originRequest = response.request
 
-
-        if (originRequest.header("Authorization").isNullOrEmpty()) {
+        if (originRequest.header("Authorization").isNullOrEmpty() && !originRequest.url.encodedPath.contains("/api/v1/token/expiration")) {
             return null
         }
+
 
         if (originRequest.url.encodedPath.contains("/api/v1/token/refresh")) {
             runBlocking {
                 tokenManager.setAccessToken("")
                 tokenManager.setRefreshToken("")
             }
+
             return null
         }
 
@@ -48,11 +48,9 @@ class TraceAuthenticator @Inject constructor(
 
         val token = runBlocking {
             refreshMutex.withLock {
-                traceApi.get().refreshToken(RefreshTokenRequest(tokenManager.getRefreshToken()))
+                traceApi.get().refreshToken(tokenManager.getRefreshToken())
             }
-        }.getOrNull() ?: return null
-
-        Log.d("refreshToken", "토큰 재발급 성공 ${token}")
+        }.getOrNull() ?: return  null
 
         runBlocking {
             val accessTokenJob = launch { tokenManager.setAccessToken(token.accessToken) }
@@ -60,10 +58,14 @@ class TraceAuthenticator @Inject constructor(
             joinAll(accessTokenJob, refreshTokenJob)
         }
 
+        if (originRequest.url.encodedPath.contains("/api/v1/token/expiration")) {
+            return null
+        }
+
         val newRequest = response.request
             .newBuilder()
-            .header("Authorization", "Bearer ${token.accessToken}")
             .header(RETRY_HEADER, (retryCount + 1).toString())
+            .header("Authorization", "Bearer ${token.accessToken}")
             .build()
 
         return newRequest

@@ -1,6 +1,5 @@
 package com.example.network.interceptor
 
-import android.util.Log
 import com.example.network.token.TokenManager
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
@@ -29,6 +28,8 @@ class TraceInterceptor @Inject constructor(
         return when (request.url.encodedPath) {
             "/api/v1/auth/oauth/login" -> false
             "/api/v1/auth/oauth/signup" -> false
+            "/api/v1/token/refresh" -> false
+            "/api/v1/token/expiration" -> false
             else -> true
         }
     }
