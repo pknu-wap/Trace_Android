@@ -1,5 +1,6 @@
 package com.example.network.authenticator
 
+import android.util.Log
 import com.example.network.api.TraceApi
 import com.example.network.model.token.RefreshTokenRequest
 import com.example.network.token.TokenManager
@@ -23,11 +24,12 @@ class TraceAuthenticator @Inject constructor(
     override fun authenticate(route: Route?, response: Response): Request? {
         val originRequest = response.request
 
+
         if (originRequest.header("Authorization").isNullOrEmpty()) {
             return null
         }
 
-        if (originRequest.url.encodedPath.contains("/api/v1/auth/refresh")) {
+        if (originRequest.url.encodedPath.contains("/api/v1/token/refresh")) {
             runBlocking {
                 tokenManager.setAccessToken("")
                 tokenManager.setRefreshToken("")
@@ -49,6 +51,8 @@ class TraceAuthenticator @Inject constructor(
                 traceApi.get().refreshToken(RefreshTokenRequest(tokenManager.getRefreshToken()))
             }
         }.getOrNull() ?: return null
+
+        Log.d("refreshToken", "토큰 재발급 성공 ${token}")
 
         runBlocking {
             val accessTokenJob = launch { tokenManager.setAccessToken(token.accessToken) }

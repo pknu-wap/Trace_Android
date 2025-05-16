@@ -62,6 +62,7 @@ class WritePostViewModel @Inject constructor(
 
     fun addPost() = viewModelScope.launch {
         postRepository.addPost(
+            _type.value,
             _title.value,
             _content.value,
             _images.value

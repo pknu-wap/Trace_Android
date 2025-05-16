@@ -1,6 +1,7 @@
 package com.example.network.source.post
 
 import android.os.Build
+import com.example.domain.model.post.WritePostType
 import com.example.network.api.TraceApi
 import com.example.network.model.post.AddPostRequest
 import com.example.network.model.post.AddPostResponse
@@ -20,12 +21,14 @@ class PostDataSourceImpl @Inject constructor(
     override suspend fun getPost(postId: Int): Result<GetPostResponse> = traceApi.getPost(postId)
 
     override suspend fun addPost(
+        postType: WritePostType,
         title: String,
         content: String,
         images: List<InputStream>?
     ): Result<AddPostResponse> {
         val jsonString = Json.encodeToString(
             AddPostRequest(
+                postType = postType.name,
                 title = title,
                 content = content
             )

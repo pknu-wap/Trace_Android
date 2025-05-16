@@ -27,14 +27,14 @@ interface TraceApi {
         @Part profileImage: MultipartBody.Part? = null
     ): Result<TokenResponse>
 
-    @HTTP(method = "GET", path = "/api/f1/auth/refresh", hasBody = true)
+    @HTTP(method = "GET", path = "/api/v1/token/refresh", hasBody = true)
     suspend fun refreshToken(@Body refreshTokenRequest: RefreshTokenRequest): Result<TokenResponse>
 
-    @GET("/api/v1/api/posts/{id}")
+    @GET("/api/v1/posts/{id}")
     suspend fun getPost(@Path("id") postId : Int) : Result<GetPostResponse>
 
     @Multipart
-    @POST("/api/v1/api/posts")
+    @POST("/api/v1/posts")
     suspend fun addPost(
         @Part("request") addPostRequest: RequestBody,
         @Part imageFile: List<MultipartBody.Part>? = null
