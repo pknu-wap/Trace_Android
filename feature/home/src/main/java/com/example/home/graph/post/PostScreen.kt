@@ -66,7 +66,6 @@ import com.example.home.graph.post.component.OtherPostDropdownMenu
 import com.example.home.graph.post.component.OwnPostDropdownMenu
 import com.example.home.graph.post.component.PostImageContent
 import com.example.home.graph.post.component.TraceCommentField
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -92,7 +91,6 @@ internal fun PostRoute(
                is PostEvent.DeletePostFailure -> {
                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글 삭제에 실패했습니다."))
                }
-
             }
         }
     }
@@ -427,7 +425,6 @@ private fun PostScreen(
             onReplyComment = {
                 coroutineScope.launch {
                     val commentId = onReplyComment()
-                    delay(500)
                     keyboardController?.hide()
 
                     val targetIndex =

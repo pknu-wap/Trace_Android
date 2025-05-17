@@ -7,10 +7,10 @@ interface CommentDataSource {
         postId : Int, content : String,
     ) : Result<CommentResponse>
 
-//    suspend fun addReplyToComment(
-//        postId: Int, commentId : Int, content : String,
-//    ) : Result<CommentResponse>
-//
+    suspend fun addReplyToComment(
+        postId: Int, commentId : Int, content : String,
+    ) : Result<CommentResponse>
+
     suspend fun deleteComment(
         commentId: Int,
     ) : Result<Unit>

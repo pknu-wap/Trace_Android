@@ -14,7 +14,6 @@ import com.example.domain.repository.CommentRepository
 import com.example.domain.repository.PostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -107,6 +106,8 @@ class PostViewModel @Inject constructor(
     }
 
     fun replyComment(): Int {
+        var commentId = -1
+
         viewModelScope.launch {
             val parentId = _replyTargetId.value ?: return@launch
 
@@ -117,37 +118,34 @@ class PostViewModel @Inject constructor(
 
             _isCommentLoading.value = true
 
-            delay(500) // 임시 네트워크 로딩 시간
-
-            val newComment = Comment(
+            commentRepository.addReplyToComment(
                 postId = postId,
-                providerId = "1234",
-                commentId = 50,
-                parentId = parentId,
-                isDeleted = false,
-                isOwner = true,
-                nickName = "흔적몬",
-                profileImageUrl = null,
-                content = commentInput.value,
-                createdAt = LocalDateTime.now(),
-                replies = emptyList()
-            )
+                commentId = parentId,
+                content = _commentInput.value
+            ).onSuccess { replyComment ->
+                val updatedComments = _postDetail.value.comments.map { comment ->
+                    if (comment.commentId == parentId) {
+                        comment.copy(replies = comment.replies + replyComment)
+                    } else comment
+                }
 
-            val updatedComments = _postDetail.value.comments.map { comment ->
-                if (comment.commentId == parentId) {
-                    comment.copy(replies = comment.replies + newComment)
-                } else comment
+                _postDetail.value = _postDetail.value.copy(comments = updatedComments)
+
+                clearReplyTargetId()
+                _isCommentLoading.value = false
+                _commentInput.value = ""
+
+               commentId = replyComment.commentId
+            }.onFailure {
+                eventHelper.sendEvent(TraceEvent.ShowSnackBar("답글 작성에 실패했습니다."))
+                _isCommentLoading.value = false
             }
-
-            _postDetail.value = _postDetail.value.copy(comments = updatedComments)
-
-            clearReplyTargetId()
-            _isCommentLoading.value = false
-            _commentInput.value = ""
         }
 
-        return 50
+        Log.d("commentId", commentId.toString())
+        return commentId
     }
+
 
     fun deleteComment(commentId: Int) = viewModelScope.launch {
         commentRepository.deleteComment(commentId).onSuccess {
@@ -232,28 +230,28 @@ val fakeComments = listOf(
         nickName = "김민수",
         profileImageUrl = "https://randomuser.me/api/portraits/men/2.jpg",
         content = "좋은 글 감사합니다!",
-        createdAt = LocalDateTime.now().minusHours(5),providerId = "1234", postId = 1,
+        createdAt = LocalDateTime.now().minusHours(5), providerId = "1234", postId = 1,
         commentId = 24, parentId = null, isOwner = true,
     ),
     Comment(
         nickName = "이수지",
         profileImageUrl = "https://randomuser.me/api/portraits/women/3.jpg",
         content = "정말 좋은 내용이에요!",
-        createdAt = LocalDateTime.now().minusMinutes(30),providerId = "1234", postId = 1,
+        createdAt = LocalDateTime.now().minusMinutes(30), providerId = "1234", postId = 1,
         commentId = 34, parentId = null, isOwner = true,
     ),
     Comment(
         nickName = "박영희",
         profileImageUrl = null,
         content = "완전 공감해요!",
-        createdAt = LocalDateTime.now().minusDays(2), providerId = "1234",postId = 1,
+        createdAt = LocalDateTime.now().minusDays(2), providerId = "1234", postId = 1,
         commentId = 44, parentId = null, isOwner = true,
     ),
     Comment(
         nickName = "최민준",
         profileImageUrl = null,
         content = "읽기만 했는데 좋네요!",
-        createdAt = LocalDateTime.now().minusHours(10), providerId = "1234",postId = 1,
+        createdAt = LocalDateTime.now().minusHours(10), providerId = "1234", postId = 1,
         commentId = 54, parentId = null, isOwner = true,
     )
 )
