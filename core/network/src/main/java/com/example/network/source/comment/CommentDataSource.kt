@@ -11,7 +11,7 @@ interface CommentDataSource {
 //        postId: Int, commentId : Int, content : String,
 //    ) : Result<CommentResponse>
 //
-//    suspend fun deleteComment(
-//        commentId: Int,
-//    ) : Result<Unit>
+    suspend fun deleteComment(
+        commentId: Int,
+    ) : Result<Unit>
 }

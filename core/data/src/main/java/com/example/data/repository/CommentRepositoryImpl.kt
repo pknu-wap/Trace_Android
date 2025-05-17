@@ -30,4 +30,8 @@ class CommentRepositoryImpl @Inject constructor(
             )
 
         }
+
+    override suspend fun deleteComment(commentId : Int): Result<Unit> = suspendRunCatching {
+        commentDataSource.deleteComment(commentId = commentId)
+    }
 }

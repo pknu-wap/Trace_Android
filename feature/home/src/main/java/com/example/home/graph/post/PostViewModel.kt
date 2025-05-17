@@ -149,36 +149,41 @@ class PostViewModel @Inject constructor(
         return 50
     }
 
-    fun deleteComment(commentId: Int) {
-        val updatedComments = _postDetail.value.comments.mapNotNull { comment ->
-            when {
-                // 원댓글이 삭제 대상인 경우
-                comment.commentId == commentId -> {
-                    if (comment.replies.isNotEmpty()) {
-                        // 대댓글이 있으면 isDeleted만 true로 바꿈
-                        comment.copy(isDeleted = true)
-                    } else {
-                        null
-                    }
-                }
-
-                // 대댓글 중 삭제 대상이 있는 경우
-                comment.replies.any { it.commentId == commentId } -> {
-                    val updatedReplies = comment.replies.mapNotNull { reply ->
-                        if (reply.commentId == commentId) {
-                            // 대댓글은 무조건 제거
+    fun deleteComment(commentId: Int) = viewModelScope.launch {
+        commentRepository.deleteComment(commentId).onSuccess {
+            val updatedComments = _postDetail.value.comments.mapNotNull { comment ->
+                when {
+                    // 원댓글이 삭제 대상인 경우
+                    comment.commentId == commentId -> {
+                        if (comment.replies.isNotEmpty()) {
+                            // 대댓글이 있으면 isDeleted만 true로 바꿈
+                            comment.copy(isDeleted = true)
+                        } else {
                             null
-                        } else reply
+                        }
                     }
-                    comment.copy(replies = updatedReplies)
-                }
 
-                // 나머지 댓글은 그대로
-                else -> comment
+                    // 대댓글 중 삭제 대상이 있는 경우
+                    comment.replies.any { it.commentId == commentId } -> {
+                        val updatedReplies = comment.replies.mapNotNull { reply ->
+                            if (reply.commentId == commentId) {
+                                // 대댓글은 무조건 제거
+                                null
+                            } else reply
+                        }
+                        comment.copy(replies = updatedReplies)
+                    }
+
+                    // 나머지 댓글은 그대로
+                    else -> comment
+                }
             }
+
+            _postDetail.value = _postDetail.value.copy(comments = updatedComments)
+        }.onFailure {
+            eventHelper.sendEvent(TraceEvent.ShowSnackBar("댓글 삭제에 실패했습니다."))
         }
 
-        _postDetail.value = _postDetail.value.copy(comments = updatedComments)
     }
 
     fun reportComment(commentId: Int) {}

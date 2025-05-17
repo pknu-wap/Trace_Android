@@ -13,5 +13,6 @@ class CommentDataSourceImpl @Inject constructor(
             postId = postId, addCommentRequest = AddCommentRequest(content)
         )
 
-
+    override suspend fun deleteComment(commentId: Int): Result<Unit> =
+        traceApi.deleteComment(commentId)
 }
