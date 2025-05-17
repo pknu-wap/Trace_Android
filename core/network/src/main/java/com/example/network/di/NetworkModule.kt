@@ -2,6 +2,8 @@ package com.example.network.di
 
 import com.example.network.source.auth.AuthDataSource
 import com.example.network.source.auth.AuthDataSourceImpl
+import com.example.network.source.comment.CommentDataSource
+import com.example.network.source.comment.CommentDataSourceImpl
 import com.example.network.source.post.PostDataSource
 import com.example.network.source.post.PostDataSourceImpl
 import dagger.Binds
@@ -21,4 +23,8 @@ abstract class NetworkModule {
     @Binds
     @Singleton
     abstract fun bindsPostDataSource(postDataSourceImpl: PostDataSourceImpl): PostDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindsCommentDataSource(commentDataSourceImpl: CommentDataSourceImpl): CommentDataSource
 }

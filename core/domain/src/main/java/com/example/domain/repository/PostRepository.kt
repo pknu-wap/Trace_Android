@@ -5,6 +5,7 @@ import com.example.domain.model.post.WritePostType
 
 interface PostRepository {
     suspend fun getPost(postId: Int): Result<PostDetail>
+
     suspend fun addPost(
         postType: WritePostType,
         title: String,

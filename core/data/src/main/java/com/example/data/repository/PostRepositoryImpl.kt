@@ -1,6 +1,5 @@
 package com.example.data.repository
 
-import com.example.common.event.EventHelper
 import com.example.common.util.suspendRunCatching
 import com.example.data.image.ImageResizer
 import com.example.domain.model.post.EmotionCount
@@ -15,7 +14,6 @@ import kotlinx.datetime.toJavaLocalDateTime
 class PostRepositoryImpl @Inject constructor(
     private val postDataSource: PostDataSource,
     private val imageResizer: ImageResizer,
-    private val eventHelper: EventHelper,
 ) : PostRepository {
 
     override suspend fun getPost(postId: Int): Result<PostDetail> = suspendRunCatching {
