@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.common.event.EventHelper
 import com.example.common.event.TraceEvent
 import com.example.domain.model.post.Comment
-import com.example.domain.model.post.FeelingCount
+import com.example.domain.model.post.EmotionCount
 import com.example.domain.model.post.PostDetail
 import com.example.domain.model.post.PostType
 import com.example.domain.repository.PostRepository
@@ -248,27 +248,30 @@ val fakeComments = listOf(
 
 val fakePostDetail = PostDetail(
     postId = 0,
-    userId = 0,
+    providerId = "1234",
     postType = PostType.GOOD_DEED,
     title = "작은 선행을 나누다",
     content = "오늘은 작은 선행을 나누었습니다. 많은 사람들에게 도움이 되었으면 좋겠습니다.",
     nickname = "홍길동",
     viewCount = 120,
     comments = fakeComments,
-    feelingCount = FeelingCount(
+    emotionCount = EmotionCount(
         heartWarmingCount = 35,
         likeableCount = 50,
         touchingCount = 15,
         impressiveCount = 20,
         gratefulCount = 10
     ),
-    profileImageUrl = "https://picsum.photos/200/300?random=1",
-    createdAt = LocalDateTime.now().minusDays(3),
-    isVerified = true,
     images = listOf(
         "https://picsum.photos/200/300?random=1",
         "https://picsum.photos/200/300?random=2",
         "https://picsum.photos/200/300?random=3"
-    )
+    ),
+    profileImageUrl = "https://picsum.photos/200/300?random=1",
+    createdAt = LocalDateTime.now().minusDays(3),
+    updatedAt = LocalDateTime.now(),
+    isVerified = true,
+    isOwner = true,
+
 )
 

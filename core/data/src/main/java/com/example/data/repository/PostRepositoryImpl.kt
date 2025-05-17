@@ -2,7 +2,7 @@ package com.example.data.repository
 
 import com.example.common.util.suspendRunCatching
 import com.example.data.image.ImageResizer
-import com.example.domain.model.post.FeelingCount
+import com.example.domain.model.post.EmotionCount
 import com.example.domain.model.post.PostDetail
 import com.example.domain.model.post.PostType
 import com.example.domain.model.post.WritePostType
@@ -20,25 +20,21 @@ class PostRepositoryImpl @Inject constructor(
         val response = postDataSource.getPost(postId).getOrThrow()
 
         PostDetail(
-            postType = PostType.GOOD_DEED,
-            nickname = response.nickname,
+            postId = response.id,
+            postType = PostType.fromString(response.postType),
+            viewCount = response.viewCount,
+            emotionCount = EmotionCount.fromMap(response.emotionCount),
             title = response.title,
             content = response.content,
-            profileImageUrl = null,
-            isVerified = false,
-            createdAt = response.createdAt.toJavaLocalDateTime(),
-            viewCount = (1..1000).random(),
-            comments = emptyList(),
-            feelingCount = FeelingCount(
-                heartWarmingCount = 0,
-                gratefulCount = 0,
-                likeableCount = 0,
-                touchingCount = 0,
-                impressiveCount = 0
-            ),
+            providerId = response.providerId,
+            nickname = response.nickname,
             images = response.imageUrls,
-            postId = 0,
-            userId = 0
+            profileImageUrl = response.profileImageUrl,
+            createdAt = response.createdAt.toJavaLocalDateTime(),
+            updatedAt = response.updatedAt.toJavaLocalDateTime(),
+            comments = emptyList(),
+            isOwner = response.isOwner,
+            isVerified = response.isVerified,
         )
     }
 

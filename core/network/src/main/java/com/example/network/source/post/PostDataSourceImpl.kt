@@ -1,6 +1,7 @@
 package com.example.network.source.post
 
 import android.os.Build
+import android.util.Log
 import com.example.domain.model.post.WritePostType
 import com.example.network.api.TraceApi
 import com.example.network.model.post.AddPostRequest
@@ -46,14 +47,16 @@ class PostDataSourceImpl @Inject constructor(
         val mediaType = imageFileExtension.toMediaTypeOrNull()
             ?: throw IllegalArgumentException("Invalid media type: $imageFileExtension")
 
-        val requestImage = images?.map {  image ->
+        val requestImage = images?.map { image ->
             val body = image.readBytes().toRequestBody(mediaType)
             MultipartBody.Part.createFormData(
-                name = "imageFile",
+                name = "imageFiles",
                 filename = imageFileName,
                 body = body
             )
         }
+
+        Log.d("traceRequest", requestImage.toString() + " size : ${requestImage?.size}")
 
         return traceApi.addPost(
             addPostRequest = requestBody,
