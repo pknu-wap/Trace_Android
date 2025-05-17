@@ -5,14 +5,18 @@ import com.example.network.model.auth.LoginKakaoResponse
 import com.example.network.model.auth.TokenResponse
 import com.example.network.model.post.AddPostResponse
 import com.example.network.model.post.GetPostResponse
+import com.example.network.model.post.UpdatePostRequest
+import com.example.network.model.post.UpdatePostResponse
 import com.example.network.model.token.CheckTokenHealthResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.HTTP
 import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -43,4 +47,15 @@ interface TraceApi {
         @Part("request") addPostRequest: RequestBody,
         @Part imageFile: List<MultipartBody.Part>? = null
     ) : Result<AddPostResponse>
+
+    @PUT("/api/v1/posts/{id}")
+    suspend fun updatePost(
+        @Path("id") postId : Int,
+        @Body updatePostRequest: UpdatePostRequest
+    ) : Result<UpdatePostResponse>
+
+    @DELETE("/api/v1/posts/{id}")
+    suspend fun deletePost(
+        @Path("id") postId : Int,
+    ) : Result<Unit>
 }

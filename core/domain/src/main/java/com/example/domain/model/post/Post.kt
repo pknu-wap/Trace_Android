@@ -49,18 +49,19 @@ data class PostFeed(
 data class PostDetail(
     val postId : Int,
     val postType: PostType,
+    val viewCount: Int,
+    val emotionCount: EmotionCount,
     val title: String,
     val content: String,
+    val providerId :String,
     val nickname: String,
+    val images: List<String> = emptyList(),
     val profileImageUrl: String? = null,
     val createdAt: LocalDateTime,
-    val isVerified: Boolean = false,
-    val userId : Int,
+    val updatedAt: LocalDateTime,
     val isOwner : Boolean = true,
-    val viewCount: Int,
+    val isVerified: Boolean = false,
     val comments: List<Comment>,
-    val feelingCount: FeelingCount,
-    val images: List<String> = emptyList(),
 ) {
     fun getFormattedDate(): String {
         val formatter = DateTimeFormatter.ofPattern("M/d HH:mm")
@@ -78,7 +79,13 @@ enum class TabType(val label: String) {
 enum class PostType(val label: String) {
     FREE("자유"),
     GOOD_DEED("선행"),
-    MISSION("미션")
+    MISSION("미션");
+
+    companion object {
+        fun fromString(postType : String) : PostType {
+            return entries.find { it.name == postType } ?: throw IllegalArgumentException("Invalid PostType: $postType")
+        }
+    }
 }
 
 enum class WritePostType(val label: String) {

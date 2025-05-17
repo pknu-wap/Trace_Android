@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -40,6 +42,7 @@ import com.example.common.event.TraceEvent
 import com.example.common.util.clickable
 import com.example.designsystem.R
 import com.example.designsystem.theme.Background
+import com.example.designsystem.theme.Black
 import com.example.designsystem.theme.GrayLine
 import com.example.designsystem.theme.PrimaryActive
 import com.example.designsystem.theme.TextHint
@@ -62,6 +65,7 @@ internal fun WritePostRoute(
     val content by viewModel.content.collectAsStateWithLifecycle()
     val images by viewModel.images.collectAsStateWithLifecycle()
     val isVerified by viewModel.isVerified.collectAsStateWithLifecycle()
+    val isCreatingPost by viewModel.isCreatingPost.collectAsStateWithLifecycle()
 
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
@@ -70,7 +74,11 @@ internal fun WritePostRoute(
                     navigateToPost(event.postId)
                     viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글이 등록되었습니다."))
                 }
-                is WritePostEvent.AddPostFailure -> { viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글 등록에 실패했습니다.")) }
+
+                is WritePostEvent.AddPostFailure -> {
+                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글 등록에 실패했습니다."))
+                }
+
                 is WritePostEvent.NavigateToBack -> navigateBack()
             }
         }
@@ -82,14 +90,15 @@ internal fun WritePostRoute(
         content = content,
         images = images,
         isVerified = isVerified,
-        navigateBack = navigateBack,
+        isCreatingPost = isCreatingPost,
         onTitleChange = viewModel::setTitle,
         onContentChange = viewModel::setContent,
         addImages = viewModel::addImages,
         removeImage = viewModel::removeImage,
         onTypeChange = viewModel::setType,
         onIsVerifiedChange = viewModel::setIsVerified,
-        addPost = viewModel::addPost
+        addPost = viewModel::addPost,
+        navigateBack = navigateBack,
     )
 }
 
@@ -100,6 +109,7 @@ private fun WritePostScreen(
     content: String,
     images: List<String>,
     isVerified: Boolean,
+    isCreatingPost: Boolean,
     onTypeChange: (WritePostType) -> Unit,
     onTitleChange: (String) -> Unit,
     onContentChange: (String) -> Unit,
@@ -110,6 +120,7 @@ private fun WritePostScreen(
     navigateBack: () -> Unit,
 ) {
     val contentFieldFocusRequester = remember { FocusRequester() }
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     val lazyListState = rememberLazyListState()
 
@@ -245,6 +256,7 @@ private fun WritePostScreen(
                 style = TraceTheme.typography.bodyMM,
                 color = if (requestAvailable) PrimaryActive else TextHint,
                 modifier = Modifier.clickable(isRipple = true, enabled = requestAvailable) {
+                    keyboardController?.hide()
                     addPost()
                 }
             )
@@ -288,12 +300,25 @@ private fun WritePostScreen(
 
 
         }
+
+        if (isCreatingPost) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Black.copy(alpha = 0.1f))
+                    .align(Alignment.Center)
+            ) {
+                CircularProgressIndicator(
+                    color = PrimaryActive,
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            }
+        }
     }
 }
 
 @Composable
 private fun GalleryPicker(
-    modifier: Modifier = Modifier,
     imagesSize: Int,
     maxSelection: Int = 5,
     addImages: (List<String>) -> Unit,
@@ -357,6 +382,7 @@ fun WritePostScreenPreview() {
         title = "",
         content = "",
         isVerified = true,
+        isCreatingPost = false,
         onTypeChange = {},
         onTitleChange = {},
         onContentChange = {},
@@ -365,6 +391,6 @@ fun WritePostScreenPreview() {
         images = emptyList(),
         addImages = {},
         removeImage = {},
-        addPost = {}
+        addPost = {},
     )
 }

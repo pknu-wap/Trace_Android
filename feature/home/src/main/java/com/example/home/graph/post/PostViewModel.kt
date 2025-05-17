@@ -7,14 +7,16 @@ import androidx.lifecycle.viewModelScope
 import com.example.common.event.EventHelper
 import com.example.common.event.TraceEvent
 import com.example.domain.model.post.Comment
-import com.example.domain.model.post.FeelingCount
+import com.example.domain.model.post.EmotionCount
 import com.example.domain.model.post.PostDetail
 import com.example.domain.model.post.PostType
 import com.example.domain.repository.PostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -25,8 +27,10 @@ class PostViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     val eventHelper: EventHelper
 ) : ViewModel() {
+    private val _eventChannel = Channel<PostEvent>()
+    val eventChannel = _eventChannel.receiveAsFlow()
 
-    private val postId: Int = savedStateHandle["postId"] ?: 1
+    private val postId: Int = savedStateHandle["postId"] ?: 5
 
     init {
         getPost()
@@ -41,7 +45,7 @@ class PostViewModel @Inject constructor(
     private val _isCommentLoading = MutableStateFlow(false)
     val isCommentLoading = _isCommentLoading.asStateFlow()
 
-    private val _replyTargetId : MutableStateFlow<Int?> = MutableStateFlow(null)
+    private val _replyTargetId: MutableStateFlow<Int?> = MutableStateFlow(null)
     val replyTargetId = _replyTargetId.asStateFlow()
 
     fun setCommentInput(commentInput: String) {
@@ -69,10 +73,16 @@ class PostViewModel @Inject constructor(
 
     fun reportPost() {}
 
-    fun deletePost() {}
+    fun deletePost() = viewModelScope.launch {
+        postRepository.deletePost(postId = postId).onSuccess {
+            _eventChannel.send(PostEvent.DeletePostSuccess)
+        }.onFailure {
+            _eventChannel.send(PostEvent.DeletePostFailure)
+        }
+    }
 
     fun addComment() = viewModelScope.launch {
-        if(_commentInput.value.isEmpty()) {
+        if (_commentInput.value.isEmpty()) {
             eventHelper.sendEvent(TraceEvent.ShowSnackBar("내용을 입력해주세요."))
             return@launch
         }
@@ -103,10 +113,9 @@ class PostViewModel @Inject constructor(
         _commentInput.value = ""
     }
 
-    fun replyComment() : Int {
+    fun replyComment(): Int {
         viewModelScope.launch {
-            val parentId = _replyTargetId.value
-            if (parentId == null) return@launch
+            val parentId = _replyTargetId.value ?: return@launch
 
             if (_commentInput.value.isEmpty()) {
                 eventHelper.sendEvent(TraceEvent.ShowSnackBar("내용을 입력해주세요."))
@@ -181,6 +190,11 @@ class PostViewModel @Inject constructor(
 
     fun reportComment(commentId: Int) {}
 
+    sealed class PostEvent {
+        data object DeletePostSuccess : PostEvent()
+        data object DeletePostFailure : PostEvent()
+    }
+
 }
 
 val fakeChildComments = listOf(
@@ -248,27 +262,30 @@ val fakeComments = listOf(
 
 val fakePostDetail = PostDetail(
     postId = 0,
-    userId = 0,
+    providerId = "1234",
     postType = PostType.GOOD_DEED,
     title = "작은 선행을 나누다",
     content = "오늘은 작은 선행을 나누었습니다. 많은 사람들에게 도움이 되었으면 좋겠습니다.",
     nickname = "홍길동",
     viewCount = 120,
     comments = fakeComments,
-    feelingCount = FeelingCount(
+    emotionCount = EmotionCount(
         heartWarmingCount = 35,
         likeableCount = 50,
         touchingCount = 15,
         impressiveCount = 20,
         gratefulCount = 10
     ),
-    profileImageUrl = "https://picsum.photos/200/300?random=1",
-    createdAt = LocalDateTime.now().minusDays(3),
-    isVerified = true,
     images = listOf(
         "https://picsum.photos/200/300?random=1",
         "https://picsum.photos/200/300?random=2",
         "https://picsum.photos/200/300?random=3"
+    ),
+    profileImageUrl = "https://picsum.photos/200/300?random=1",
+    createdAt = LocalDateTime.now().minusDays(3),
+    updatedAt = LocalDateTime.now(),
+    isVerified = true,
+    isOwner = true,
+
     )
-)
 

@@ -1,11 +1,14 @@
 package com.example.network.source.post
 
 import android.os.Build
+import android.util.Log
 import com.example.domain.model.post.WritePostType
 import com.example.network.api.TraceApi
 import com.example.network.model.post.AddPostRequest
 import com.example.network.model.post.AddPostResponse
 import com.example.network.model.post.GetPostResponse
+import com.example.network.model.post.UpdatePostRequest
+import com.example.network.model.post.UpdatePostResponse
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -46,14 +49,16 @@ class PostDataSourceImpl @Inject constructor(
         val mediaType = imageFileExtension.toMediaTypeOrNull()
             ?: throw IllegalArgumentException("Invalid media type: $imageFileExtension")
 
-        val requestImage = images?.map {  image ->
+        val requestImage = images?.map { image ->
             val body = image.readBytes().toRequestBody(mediaType)
             MultipartBody.Part.createFormData(
-                name = "imageFile",
+                name = "imageFiles",
                 filename = imageFileName,
                 body = body
             )
         }
+
+        Log.d("traceRequest", requestImage.toString() + " size : ${requestImage?.size}")
 
         return traceApi.addPost(
             addPostRequest = requestBody,
@@ -61,6 +66,24 @@ class PostDataSourceImpl @Inject constructor(
         )
 
     }
+
+    override suspend fun updatePost(
+        postId: Int,
+
+        title: String,
+        content: String,
+        images: List<InputStream>?
+    ): Result<UpdatePostResponse> =
+        traceApi.updatePost(
+            postId = postId,
+            updatePostRequest = UpdatePostRequest(
+                title = title,
+                content = content
+            )
+        )
+
+    override suspend fun deletePost(postId: Int): Result<Unit> = traceApi.deletePost(postId)
+
 
     companion object {
         private const val WEBP_MEDIA_TYPE = "image/webp"

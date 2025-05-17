@@ -89,6 +89,7 @@ internal fun UpdatePostRoute(
         addImages = viewModel::addImages,
         removeImage = viewModel::removeImage,
         onTypeChange = viewModel::setType,
+        updatePost = viewModel::updatePost
     )
 }
 
@@ -103,6 +104,7 @@ private fun UpdatePostScreen(
     onContentChange: (String) -> Unit,
     addImages: (List<String>) -> Unit,
     removeImage: (String) -> Unit,
+    updatePost : () -> Unit,
     navigateBack: () -> Unit,
 ) {
     val contentFieldFocusRequester = remember { FocusRequester() }
@@ -232,7 +234,7 @@ private fun UpdatePostScreen(
 
             Spacer(Modifier.width(30.dp))
 
-            Text("글 쓰기", style = TraceTheme.typography.headingMR)
+            Text("수정", style = TraceTheme.typography.headingMR)
 
             Spacer(Modifier.weight(1f))
 
@@ -241,7 +243,7 @@ private fun UpdatePostScreen(
                 style = TraceTheme.typography.bodyMM,
                 color = if (requestAvailable) PrimaryActive else TextHint,
                 modifier = Modifier.clickable(isRipple = true, enabled = requestAvailable) {
-
+                    updatePost()
                 }
             )
         }
@@ -329,5 +331,6 @@ fun UpdatePostScreenPreview() {
         images = emptyList(),
         addImages = {},
         removeImage = {},
+        updatePost = {}
     )
 }
