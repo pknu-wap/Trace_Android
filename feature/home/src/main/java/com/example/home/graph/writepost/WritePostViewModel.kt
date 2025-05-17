@@ -36,6 +36,9 @@ class WritePostViewModel @Inject constructor(
     private val _isVerified = MutableStateFlow(true)
     val isVerified = _isVerified.asStateFlow()
 
+    private val _isCreatingPost = MutableStateFlow(false)
+    val isCreatingPost = _isCreatingPost.asStateFlow()
+
     fun setType(type: WritePostType) {
         _type.value = type
     }
@@ -61,6 +64,8 @@ class WritePostViewModel @Inject constructor(
     }
 
     fun addPost() = viewModelScope.launch {
+        _isCreatingPost.value = true
+
         postRepository.addPost(
             _type.value,
             _title.value,
@@ -71,6 +76,8 @@ class WritePostViewModel @Inject constructor(
         }.onFailure {
             _eventChannel.send(WritePostEvent.AddPostFailure)
         }
+
+        _isCreatingPost.value = false
     }
 
     sealed class WritePostEvent {
