@@ -1,5 +1,6 @@
 package com.example.data.repository
 
+import com.example.common.event.EventHelper
 import com.example.common.util.suspendRunCatching
 import com.example.data.image.ImageResizer
 import com.example.domain.model.post.EmotionCount
@@ -13,7 +14,8 @@ import kotlinx.datetime.toJavaLocalDateTime
 
 class PostRepositoryImpl @Inject constructor(
     private val postDataSource: PostDataSource,
-    private val imageResizer: ImageResizer
+    private val imageResizer: ImageResizer,
+    private val eventHelper: EventHelper,
 ) : PostRepository {
 
     override suspend fun getPost(postId: Int): Result<PostDetail> = suspendRunCatching {
@@ -54,7 +56,7 @@ class PostRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updatePost(
-        postId : Int,
+        postId: Int,
         title: String,
         content: String,
         images: List<String>?
@@ -68,8 +70,8 @@ class PostRepositoryImpl @Inject constructor(
         response.id
     }
 
-    override suspend fun deletePost(): Result<Unit> {
-        return Result.success(Unit)
+    override suspend fun deletePost(postId: Int): Result<Unit> = suspendRunCatching {
+        postDataSource.deletePost(postId)
     }
 
 }

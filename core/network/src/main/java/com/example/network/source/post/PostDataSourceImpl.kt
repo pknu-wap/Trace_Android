@@ -68,7 +68,7 @@ class PostDataSourceImpl @Inject constructor(
     }
 
     override suspend fun updatePost(
-        postId : Int,
+        postId: Int,
 
         title: String,
         content: String,
@@ -81,6 +81,8 @@ class PostDataSourceImpl @Inject constructor(
                 content = content
             )
         )
+
+    override suspend fun deletePost(postId: Int): Result<Unit> = traceApi.deletePost(postId)
 
 
     companion object {

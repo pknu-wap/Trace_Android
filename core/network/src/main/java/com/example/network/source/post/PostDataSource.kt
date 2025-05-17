@@ -19,4 +19,8 @@ interface PostDataSource {
     suspend fun updatePost(
         postId : Int, title: String, content: String, images: List<InputStream>?,
     ) : Result<UpdatePostResponse>
+
+    suspend fun deletePost(
+        postId : Int,
+    ) : Result<Unit>
 }

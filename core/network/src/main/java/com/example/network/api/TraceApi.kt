@@ -11,6 +11,7 @@ import com.example.network.model.token.CheckTokenHealthResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.HTTP
 import retrofit2.http.Multipart
@@ -52,4 +53,9 @@ interface TraceApi {
         @Path("id") postId : Int,
         @Body updatePostRequest: UpdatePostRequest
     ) : Result<UpdatePostResponse>
+
+    @DELETE("/api/v1/posts/{id}")
+    suspend fun deletePost(
+        @Path("id") postId : Int,
+    ) : Result<Unit>
 }

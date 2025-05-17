@@ -19,5 +19,5 @@ interface PostRepository {
         images: List<String>?
     ): Result<Int>
 
-    suspend fun deletePost(): Result<Unit>
+    suspend fun deletePost(postId: Int): Result<Unit>
 }

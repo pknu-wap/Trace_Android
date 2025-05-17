@@ -22,6 +22,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,6 +46,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import com.example.common.event.TraceEvent
 import com.example.common.util.clickable
 import com.example.designsystem.R
 import com.example.designsystem.theme.Background
@@ -58,6 +60,7 @@ import com.example.designsystem.theme.WarmGray
 import com.example.designsystem.theme.White
 import com.example.domain.model.post.PostDetail
 import com.example.domain.model.post.PostType
+import com.example.home.graph.post.PostViewModel.PostEvent
 import com.example.home.graph.post.component.CommentView
 import com.example.home.graph.post.component.OtherPostDropdownMenu
 import com.example.home.graph.post.component.OwnPostDropdownMenu
@@ -78,7 +81,21 @@ internal fun PostRoute(
     val isCommentLoading by viewModel.isCommentLoading.collectAsStateWithLifecycle()
     val replyTargetId by viewModel.replyTargetId.collectAsStateWithLifecycle()
 
+    LaunchedEffect(true) {
+        viewModel.eventChannel.collect { event ->
+            when (event) {
+                is PostEvent.DeletePostSuccess -> {
+                    navigateBack()
+                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글이 삭제되었습니다."))
+                }
 
+               is PostEvent.DeletePostFailure -> {
+                   viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글 삭제에 실패했습니다."))
+               }
+
+            }
+        }
+    }
 
     PostScreen(
         postDetail = postDetail,

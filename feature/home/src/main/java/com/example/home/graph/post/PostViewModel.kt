@@ -12,9 +12,11 @@ import com.example.domain.model.post.PostDetail
 import com.example.domain.model.post.PostType
 import com.example.domain.repository.PostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -25,6 +27,8 @@ class PostViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     val eventHelper: EventHelper
 ) : ViewModel() {
+    private val _eventChannel = Channel<PostEvent>()
+    val eventChannel = _eventChannel.receiveAsFlow()
 
     private val postId: Int = savedStateHandle["postId"] ?: 5
 
@@ -41,7 +45,7 @@ class PostViewModel @Inject constructor(
     private val _isCommentLoading = MutableStateFlow(false)
     val isCommentLoading = _isCommentLoading.asStateFlow()
 
-    private val _replyTargetId : MutableStateFlow<Int?> = MutableStateFlow(null)
+    private val _replyTargetId: MutableStateFlow<Int?> = MutableStateFlow(null)
     val replyTargetId = _replyTargetId.asStateFlow()
 
     fun setCommentInput(commentInput: String) {
@@ -69,10 +73,16 @@ class PostViewModel @Inject constructor(
 
     fun reportPost() {}
 
-    fun deletePost() {}
+    fun deletePost() = viewModelScope.launch {
+        postRepository.deletePost(postId = postId).onSuccess {
+            _eventChannel.send(PostEvent.DeletePostSuccess)
+        }.onFailure {
+            _eventChannel.send(PostEvent.DeletePostFailure)
+        }
+    }
 
     fun addComment() = viewModelScope.launch {
-        if(_commentInput.value.isEmpty()) {
+        if (_commentInput.value.isEmpty()) {
             eventHelper.sendEvent(TraceEvent.ShowSnackBar("내용을 입력해주세요."))
             return@launch
         }
@@ -103,10 +113,9 @@ class PostViewModel @Inject constructor(
         _commentInput.value = ""
     }
 
-    fun replyComment() : Int {
+    fun replyComment(): Int {
         viewModelScope.launch {
-            val parentId = _replyTargetId.value
-            if (parentId == null) return@launch
+            val parentId = _replyTargetId.value ?: return@launch
 
             if (_commentInput.value.isEmpty()) {
                 eventHelper.sendEvent(TraceEvent.ShowSnackBar("내용을 입력해주세요."))
@@ -180,6 +189,11 @@ class PostViewModel @Inject constructor(
     }
 
     fun reportComment(commentId: Int) {}
+
+    sealed class PostEvent {
+        data object DeletePostSuccess : PostEvent()
+        data object DeletePostFailure : PostEvent()
+    }
 
 }
 
@@ -273,5 +287,5 @@ val fakePostDetail = PostDetail(
     isVerified = true,
     isOwner = true,
 
-)
+    )
 
