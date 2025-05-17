@@ -4,8 +4,20 @@ import com.example.domain.model.post.PostDetail
 import com.example.domain.model.post.WritePostType
 
 interface PostRepository {
-    suspend fun getPost(postId : Int) : Result<PostDetail>
-    suspend fun addPost(postType : WritePostType, title : String, content: String, images: List<String>?) : Result<Int>
-    suspend fun updatePost() : Result<Unit>
-    suspend fun deletePost() : Result<Unit>
+    suspend fun getPost(postId: Int): Result<PostDetail>
+    suspend fun addPost(
+        postType: WritePostType,
+        title: String,
+        content: String,
+        images: List<String>?
+    ): Result<Int>
+
+    suspend fun updatePost(
+        postId: Int,
+        title: String,
+        content: String,
+        images: List<String>?
+    ): Result<Int>
+
+    suspend fun deletePost(): Result<Unit>
 }

@@ -53,8 +53,19 @@ class PostRepositoryImpl @Inject constructor(
         response.id
     }
 
-    override suspend fun updatePost(): Result<Unit> {
-        return Result.success(Unit)
+    override suspend fun updatePost(
+        postId : Int,
+        title: String,
+        content: String,
+        images: List<String>?
+    ): Result<Int> = suspendRunCatching {
+//        val imageStreams = images?.mapIndexed { index, imageUrl ->
+//            imageResizer.resizeImage(imageUrl)
+//        }
+
+        val response = postDataSource.updatePost(postId, title, content, null).getOrThrow()
+
+        response.id
     }
 
     override suspend fun deletePost(): Result<Unit> {

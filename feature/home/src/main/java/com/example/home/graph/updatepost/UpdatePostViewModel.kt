@@ -63,16 +63,21 @@ class UpdatePostViewModel @Inject constructor(
     }
 
     private fun getPost() = viewModelScope.launch {
-            postRepository.getPost(postId).onSuccess { postDetail ->
-                setType(postDetail.postType)
-                setTitle(postDetail.title)
-                setContent(postDetail.content)
-                addImages(postDetail.images)
-            }
-
+        postRepository.getPost(postId).onSuccess { postDetail ->
+            setType(postDetail.postType)
+            setTitle(postDetail.title)
+            setContent(postDetail.content)
+            addImages(postDetail.images)
+        }
     }
 
-    // fun updatePost = viewModelScope.launch {  }
+    fun updatePost() = viewModelScope.launch {
+        postRepository.updatePost(postId = postId, title = _title.value, content = _content.value, images = _images.value).onSuccess {
+            postId -> _eventChannel.send(UpdatePostEvent.UpdatePostSuccess(postId))
+        }.onFailure {
+            _eventChannel.send(UpdatePostEvent.UpdatePostFailure)
+        }
+    }
 
     sealed class UpdatePostEvent {
         data object NavigateToBack : UpdatePostEvent()

@@ -4,6 +4,7 @@ package com.example.network.source.post
 import com.example.domain.model.post.WritePostType
 import com.example.network.model.post.AddPostResponse
 import com.example.network.model.post.GetPostResponse
+import com.example.network.model.post.UpdatePostResponse
 import java.io.InputStream
 
 interface PostDataSource {
@@ -14,4 +15,8 @@ interface PostDataSource {
     suspend fun addPost(
         postType : WritePostType, title: String, content: String, images: List<InputStream>?
     ): Result<AddPostResponse>
+
+    suspend fun updatePost(
+        postId : Int, title: String, content: String, images: List<InputStream>?,
+    ) : Result<UpdatePostResponse>
 }

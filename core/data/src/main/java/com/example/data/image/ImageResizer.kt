@@ -11,7 +11,6 @@ import androidx.exifinterface.media.ExifInterface
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
-import java.io.File
 import java.io.InputStream
 import javax.inject.Inject
 
@@ -19,34 +18,34 @@ class ImageResizer @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
     internal fun resizeImage(uri: String, width: Int = 512, height: Int = 512): InputStream {
-        logFileSize(uri)
-
+        // logFileSize(uri)
         val bitmap = decodeBitmap(uri, width, height)
         val orientation = readOrientation(uri)
         val rotated = rotateBitmap(bitmap, orientation)
         return compressBitmap(rotated)
     }
 
-    private fun logFileSize(uri: String) {
-        val parsedUri = uri.toUri()
-        val afd = context.contentResolver.openAssetFileDescriptor(parsedUri, "r")
-        if (afd != null) {
-            val sizeBytes = afd.length
-            afd.close()
+//    private fun logFileSize(uri: String) {
+//        val parsedUri = uri.toUri()
+//        val afd = context.contentResolver.openAssetFileDescriptor(parsedUri, "r")
+//        if (afd != null) {
+//            val sizeBytes = afd.length
+//            afd.close()
+//
+//            val kb = sizeBytes / 1024.0
+//            Log.d("ImageSize", "original Image Size : ${"%.2f".format(kb)} KB")
+//        }
+//    }
 
-            val kb = sizeBytes / 1024.0
-            Log.d("Imagesize", "original Image Size : ${"%.2f".format(kb)} KB")
-        }
-    }
-
-    private fun logStreamSize(input: InputStream) {
-        val bytes = input.readBytes()
-        val kb = bytes.size / 1024.0
-        Log.d("Imagesize", "Stream size: ${"%.2f".format(kb)} KB")
-
-        val outFile = File(context.cacheDir, "test.jpg")
-        outFile.outputStream().use { it.write(bytes) }
-    }
+//
+//    private fun logStreamSize(input: InputStream) {
+//        val bytes = input.readBytes()
+//        val kb = bytes.size / 1024.0
+//        Log.d("ImageSize", "Stream size: ${"%.2f".format(kb)} KB")
+//
+//        val outFile = File(context.cacheDir, "test.jpg")
+//        outFile.outputStream().use { it.write(bytes) }
+//    }
 
 
     private fun decodeBitmap(uri: String, width: Int, height: Int): Bitmap {
@@ -119,7 +118,7 @@ class ImageResizer @Inject constructor(
 
         bitmap.compress(format, 100, outputStream)
 
-        logStreamSize(ByteArrayInputStream(outputStream.toByteArray()))
+        // logStreamSize(ByteArrayInputStream(outputStream.toByteArray()))
         return ByteArrayInputStream(outputStream.toByteArray())
     }
 

@@ -7,6 +7,8 @@ import com.example.network.api.TraceApi
 import com.example.network.model.post.AddPostRequest
 import com.example.network.model.post.AddPostResponse
 import com.example.network.model.post.GetPostResponse
+import com.example.network.model.post.UpdatePostRequest
+import com.example.network.model.post.UpdatePostResponse
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -64,6 +66,22 @@ class PostDataSourceImpl @Inject constructor(
         )
 
     }
+
+    override suspend fun updatePost(
+        postId : Int,
+
+        title: String,
+        content: String,
+        images: List<InputStream>?
+    ): Result<UpdatePostResponse> =
+        traceApi.updatePost(
+            postId = postId,
+            updatePostRequest = UpdatePostRequest(
+                title = title,
+                content = content
+            )
+        )
+
 
     companion object {
         private const val WEBP_MEDIA_TYPE = "image/webp"

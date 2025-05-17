@@ -26,7 +26,7 @@ class PostViewModel @Inject constructor(
     val eventHelper: EventHelper
 ) : ViewModel() {
 
-    private val postId: Int = savedStateHandle["postId"] ?: 1
+    private val postId: Int = savedStateHandle["postId"] ?: 5
 
     init {
         getPost()
