@@ -3,6 +3,9 @@ package com.example.network.api
 import com.example.network.model.auth.LoginKakaoRequest
 import com.example.network.model.auth.LoginKakaoResponse
 import com.example.network.model.auth.TokenResponse
+import com.example.network.model.comment.AddCommentRequest
+import com.example.network.model.comment.AddReplyToCommentRequest
+import com.example.network.model.comment.CommentResponse
 import com.example.network.model.post.AddPostResponse
 import com.example.network.model.post.GetPostResponse
 import com.example.network.model.post.UpdatePostRequest
@@ -33,29 +36,48 @@ interface TraceApi {
     ): Result<TokenResponse>
 
     @HTTP(method = "GET", path = "/api/v1/token/refresh")
-    suspend fun refreshToken(@Query("refreshToken") refreshToken : String): Result<TokenResponse>
+    suspend fun refreshToken(@Query("refreshToken") refreshToken: String): Result<TokenResponse>
 
     @GET("/api/v1/token/expiration")
-    suspend fun checkTokenHealth(@Query("token") token : String): Result<CheckTokenHealthResponse>
+    suspend fun checkTokenHealth(@Query("token") token: String): Result<CheckTokenHealthResponse>
 
     @GET("/api/v1/posts/{id}")
-    suspend fun getPost(@Path("id") postId : Int) : Result<GetPostResponse>
+    suspend fun getPost(@Path("id") postId: Int): Result<GetPostResponse>
 
     @Multipart
     @POST("/api/v1/posts")
     suspend fun addPost(
         @Part("request") addPostRequest: RequestBody,
         @Part imageFile: List<MultipartBody.Part>? = null
-    ) : Result<AddPostResponse>
+    ): Result<AddPostResponse>
 
     @PUT("/api/v1/posts/{id}")
     suspend fun updatePost(
-        @Path("id") postId : Int,
+        @Path("id") postId: Int,
         @Body updatePostRequest: UpdatePostRequest
-    ) : Result<UpdatePostResponse>
+    ): Result<UpdatePostResponse>
 
     @DELETE("/api/v1/posts/{id}")
     suspend fun deletePost(
-        @Path("id") postId : Int,
-    ) : Result<Unit>
+        @Path("id") postId: Int,
+    ): Result<Unit>
+
+    @POST("/api/v1/comments/{postId}")
+    suspend fun addComment(
+        @Path("postId") postId: Int,
+        @Body addCommentRequest: AddCommentRequest,
+    ): Result<CommentResponse>
+
+    @POST("/api/v1/comments/{postId}/{commentId}")
+    suspend fun addReplyToComment(
+        @Path("postId") postId: Int,
+        @Path("commentId") commentId: Int,
+        @Body addReplyToCommentRequest: AddReplyToCommentRequest,
+    ): Result<CommentResponse>
+
+    @DELETE("/api/v1/comments/{commentId}")
+    suspend fun deleteComment(
+        @Path("commentId") commentId: Int,
+    ): Result<Unit>
+
 }

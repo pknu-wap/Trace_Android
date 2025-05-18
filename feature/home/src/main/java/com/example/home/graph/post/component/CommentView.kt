@@ -48,7 +48,7 @@ import java.time.LocalDateTime
 @Composable
 internal fun CommentView(
     comment: Comment,
-    replyTargetId : Int?,
+    replyTargetId: Int?,
     onDelete: (Int) -> Unit,
     onReply: () -> Unit,
     onReport: (Int) -> Unit,
@@ -63,9 +63,14 @@ internal fun CommentView(
             .build()
     )
 
-    val backgroundColor = if(replyTargetId != null && replyTargetId.equals(comment.commentId)) PrimaryDefault.copy(alpha = 0.2f) else Background
+    val backgroundColor =
+        if (replyTargetId != null && replyTargetId.equals(comment.commentId)) PrimaryDefault.copy(
+            alpha = 0.2f
+        ) else Background
 
-    Column(modifier = Modifier.fillMaxWidth().background(backgroundColor)) {
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .background(backgroundColor)) {
         if (!comment.isDeleted) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -146,7 +151,7 @@ internal fun CommentView(
                 })
         }
 
-        if(comment.isDeleted) {
+        if (comment.isDeleted) {
             Text("삭제된 댓글입니다.", style = TraceTheme.typography.bodySM, color = Gray)
         }
     }
@@ -182,9 +187,10 @@ private fun ChildCommentView(
     var isOwnCommentDropDownMenuExpanded by remember { mutableStateOf(false) }
     var isOtherCommentDropDownMenuExpanded by remember { mutableStateOf(false) }
 
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .padding(start = 20.dp)
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 20.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -257,21 +263,21 @@ val fakeChildComments = listOf(
         nickName = "이수지",
         profileImageUrl = "https://randomuser.me/api/portraits/women/3.jpg",
         content = "정말 좋은 내용이에요!",
-        createdAt = LocalDateTime.now().minusMinutes(30), userId = 1, postId = 1,
+        createdAt = LocalDateTime.now().minusMinutes(30), providerId = "1234", postId = 1,
         commentId = 1, parentId = 1, isOwner = true,
     ),
     Comment(
         nickName = "박영희",
         profileImageUrl = null,
         content = "완전 공감해요!",
-        createdAt = LocalDateTime.now().minusDays(2), userId = 1, postId = 1,
+        createdAt = LocalDateTime.now().minusDays(2), providerId = "1234", postId = 1,
         commentId = 1, parentId = 1, isOwner = true,
     ),
     Comment(
         nickName = "최민준",
         profileImageUrl = null,
         content = "읽기만 했는데 좋네요!",
-        createdAt = LocalDateTime.now().minusHours(10), userId = 1, postId = 1,
+        createdAt = LocalDateTime.now().minusHours(10), providerId = "1234", postId = 1,
         commentId = 1, parentId = 1, isOwner = true,
     )
 )
@@ -290,7 +296,7 @@ private fun CommentViewPreview() {
                 profileImageUrl = "https://randomuser.me/api/portraits/men/1.jpg",
                 content = "이 글 정말 감동적이에요!",
                 createdAt = LocalDateTime.now().minusDays(1),
-                userId = 1, postId = 1,
+                providerId = "1234", postId = 1,
                 commentId = 1, parentId = 1, isOwner = true, replies = fakeChildComments
             ),
             onReply = { },

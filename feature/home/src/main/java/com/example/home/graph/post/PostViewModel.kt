@@ -10,10 +10,10 @@ import com.example.domain.model.post.Comment
 import com.example.domain.model.post.EmotionCount
 import com.example.domain.model.post.PostDetail
 import com.example.domain.model.post.PostType
+import com.example.domain.repository.CommentRepository
 import com.example.domain.repository.PostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -24,6 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PostViewModel @Inject constructor(
     private val postRepository: PostRepository,
+    private val commentRepository: CommentRepository,
     private val savedStateHandle: SavedStateHandle,
     val eventHelper: EventHelper
 ) : ViewModel() {
@@ -89,31 +90,22 @@ class PostViewModel @Inject constructor(
 
         _isCommentLoading.value = true
 
-        delay(500) // 임시 네트워크 로딩 시간
+        commentRepository.addComment(postId = postId, content = _commentInput.value)
+            .onSuccess { comment ->
+                _postDetail.value = _postDetail.value.copy(
+                    comments = _postDetail.value.comments + comment
+                )
 
-        val newComment = Comment(
-            postId = postId,
-            userId = 1,
-            commentId = 60,
-            parentId = null,
-            isDeleted = false,
-            isOwner = true,
-            nickName = "흔적몬",
-            profileImageUrl = null,
-            content = commentInput.value,
-            createdAt = LocalDateTime.now(),
-            replies = emptyList()
-        )
-
-        _postDetail.value = _postDetail.value.copy(
-            comments = _postDetail.value.comments + newComment
-        )
+                _commentInput.value = ""
+            }.onFailure {
+                eventHelper.sendEvent(TraceEvent.ShowSnackBar("댓글 작성에 실패했습니다."))
+            }
 
         _isCommentLoading.value = false
-        _commentInput.value = ""
+
     }
 
-    fun replyComment(): Int {
+    fun replyComment(onSuccess : (Int) -> Unit) =
         viewModelScope.launch {
             val parentId = _replyTargetId.value ?: return@launch
 
@@ -124,68 +116,68 @@ class PostViewModel @Inject constructor(
 
             _isCommentLoading.value = true
 
-            delay(500) // 임시 네트워크 로딩 시간
-
-            val newComment = Comment(
+            commentRepository.addReplyToComment(
                 postId = postId,
-                userId = 1,
-                commentId = 50,
-                parentId = parentId,
-                isDeleted = false,
-                isOwner = true,
-                nickName = "흔적몬",
-                profileImageUrl = null,
-                content = commentInput.value,
-                createdAt = LocalDateTime.now(),
-                replies = emptyList()
-            )
+                commentId = parentId,
+                content = _commentInput.value
+            ).onSuccess { replyComment ->
+                val updatedComments = _postDetail.value.comments.map { comment ->
+                    if (comment.commentId == parentId) {
+                        comment.copy(replies = comment.replies + replyComment)
+                    } else comment
+                }
 
-            val updatedComments = _postDetail.value.comments.map { comment ->
-                if (comment.commentId == parentId) {
-                    comment.copy(replies = comment.replies + newComment)
-                } else comment
+                _postDetail.value = _postDetail.value.copy(comments = updatedComments)
+
+                clearReplyTargetId()
+                _isCommentLoading.value = false
+                _commentInput.value = ""
+
+                onSuccess(parentId)
+            }.onFailure {
+                eventHelper.sendEvent(TraceEvent.ShowSnackBar("답글 작성에 실패했습니다."))
+                _isCommentLoading.value = false
+            }
+
+
+        }
+
+
+    fun deleteComment(commentId: Int) = viewModelScope.launch {
+        commentRepository.deleteComment(commentId).onSuccess {
+            val updatedComments = _postDetail.value.comments.mapNotNull { comment ->
+                when {
+                    // 원댓글이 삭제 대상인 경우
+                    comment.commentId == commentId -> {
+                        if (comment.replies.isNotEmpty()) {
+                            // 대댓글이 있으면 isDeleted만 true로 바꿈
+                            comment.copy(isDeleted = true)
+                        } else {
+                            null
+                        }
+                    }
+
+                    // 대댓글 중 삭제 대상이 있는 경우
+                    comment.replies.any { it.commentId == commentId } -> {
+                        val updatedReplies = comment.replies.mapNotNull { reply ->
+                            if (reply.commentId == commentId) {
+                                // 대댓글은 무조건 제거
+                                null
+                            } else reply
+                        }
+                        comment.copy(replies = updatedReplies)
+                    }
+
+                    // 나머지 댓글은 그대로
+                    else -> comment
+                }
             }
 
             _postDetail.value = _postDetail.value.copy(comments = updatedComments)
-
-            clearReplyTargetId()
-            _isCommentLoading.value = false
-            _commentInput.value = ""
+        }.onFailure {
+            eventHelper.sendEvent(TraceEvent.ShowSnackBar("댓글 삭제에 실패했습니다."))
         }
 
-        return 50
-    }
-
-    fun deleteComment(commentId: Int) {
-        val updatedComments = _postDetail.value.comments.mapNotNull { comment ->
-            when {
-                // 원댓글이 삭제 대상인 경우
-                comment.commentId == commentId -> {
-                    if (comment.replies.isNotEmpty()) {
-                        // 대댓글이 있으면 isDeleted만 true로 바꿈
-                        comment.copy(isDeleted = true)
-                    } else {
-                        null
-                    }
-                }
-
-                // 대댓글 중 삭제 대상이 있는 경우
-                comment.replies.any { it.commentId == commentId } -> {
-                    val updatedReplies = comment.replies.mapNotNull { reply ->
-                        if (reply.commentId == commentId) {
-                            // 대댓글은 무조건 제거
-                            null
-                        } else reply
-                    }
-                    comment.copy(replies = updatedReplies)
-                }
-
-                // 나머지 댓글은 그대로
-                else -> comment
-            }
-        }
-
-        _postDetail.value = _postDetail.value.copy(comments = updatedComments)
     }
 
     fun reportComment(commentId: Int) {}
@@ -202,21 +194,21 @@ val fakeChildComments = listOf(
         nickName = "이수지",
         profileImageUrl = "https://randomuser.me/api/portraits/women/3.jpg",
         content = "정말 좋은 내용이에요!",
-        createdAt = LocalDateTime.now().minusMinutes(30), userId = 1, postId = 1,
+        createdAt = LocalDateTime.now().minusMinutes(30), providerId = "1234", postId = 1,
         commentId = 11, parentId = 1, isOwner = true,
     ),
     Comment(
         nickName = "박영희",
         profileImageUrl = null,
         content = "완전 공감해요!",
-        createdAt = LocalDateTime.now().minusDays(2), userId = 1, postId = 1,
+        createdAt = LocalDateTime.now().minusDays(2), providerId = "1234", postId = 1,
         commentId = 12, parentId = 1, isOwner = true,
     ),
     Comment(
         nickName = "최민준",
         profileImageUrl = null,
         content = "읽기만 했는데 좋네요!",
-        createdAt = LocalDateTime.now().minusHours(10), userId = 1, postId = 1,
+        createdAt = LocalDateTime.now().minusHours(10), providerId = "1234", postId = 1,
         commentId = 13, parentId = 1, isOwner = true,
     )
 )
@@ -227,35 +219,35 @@ val fakeComments = listOf(
         profileImageUrl = "https://randomuser.me/api/portraits/men/1.jpg",
         content = "이 글 정말 감동적이에요!",
         createdAt = LocalDateTime.now().minusDays(1),
-        userId = 1, postId = 1,
+        providerId = "1234", postId = 1,
         commentId = 14, parentId = null, isOwner = true, replies = fakeChildComments
     ),
     Comment(
         nickName = "김민수",
         profileImageUrl = "https://randomuser.me/api/portraits/men/2.jpg",
         content = "좋은 글 감사합니다!",
-        createdAt = LocalDateTime.now().minusHours(5), userId = 1, postId = 1,
+        createdAt = LocalDateTime.now().minusHours(5), providerId = "1234", postId = 1,
         commentId = 24, parentId = null, isOwner = true,
     ),
     Comment(
         nickName = "이수지",
         profileImageUrl = "https://randomuser.me/api/portraits/women/3.jpg",
         content = "정말 좋은 내용이에요!",
-        createdAt = LocalDateTime.now().minusMinutes(30), userId = 1, postId = 1,
+        createdAt = LocalDateTime.now().minusMinutes(30), providerId = "1234", postId = 1,
         commentId = 34, parentId = null, isOwner = true,
     ),
     Comment(
         nickName = "박영희",
         profileImageUrl = null,
         content = "완전 공감해요!",
-        createdAt = LocalDateTime.now().minusDays(2), userId = 1, postId = 1,
+        createdAt = LocalDateTime.now().minusDays(2), providerId = "1234", postId = 1,
         commentId = 44, parentId = null, isOwner = true,
     ),
     Comment(
         nickName = "최민준",
         profileImageUrl = null,
         content = "읽기만 했는데 좋네요!",
-        createdAt = LocalDateTime.now().minusHours(10), userId = 1, postId = 1,
+        createdAt = LocalDateTime.now().minusHours(10), providerId = "1234", postId = 1,
         commentId = 54, parentId = null, isOwner = true,
     )
 )
