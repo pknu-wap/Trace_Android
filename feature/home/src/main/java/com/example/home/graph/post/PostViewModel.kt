@@ -105,9 +105,7 @@ class PostViewModel @Inject constructor(
 
     }
 
-    fun replyComment(): Int {
-        var commentId = -1
-
+    fun replyComment(onSuccess : (Int) -> Unit) =
         viewModelScope.launch {
             val parentId = _replyTargetId.value ?: return@launch
 
@@ -135,16 +133,14 @@ class PostViewModel @Inject constructor(
                 _isCommentLoading.value = false
                 _commentInput.value = ""
 
-               commentId = replyComment.commentId
+                onSuccess(parentId)
             }.onFailure {
                 eventHelper.sendEvent(TraceEvent.ShowSnackBar("답글 작성에 실패했습니다."))
                 _isCommentLoading.value = false
             }
-        }
 
-        Log.d("commentId", commentId.toString())
-        return commentId
-    }
+
+        }
 
 
     fun deleteComment(commentId: Int) = viewModelScope.launch {

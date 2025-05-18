@@ -88,9 +88,9 @@ internal fun PostRoute(
                     viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글이 삭제되었습니다."))
                 }
 
-               is PostEvent.DeletePostFailure -> {
-                   viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글 삭제에 실패했습니다."))
-               }
+                is PostEvent.DeletePostFailure -> {
+                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글 삭제에 실패했습니다."))
+                }
             }
         }
     }
@@ -127,7 +127,7 @@ private fun PostScreen(
     onAddComment: () -> Unit,
     onCommentInputChange: (String) -> Unit,
     onDeleteComment: (Int) -> Unit,
-    onReplyComment: () -> Int,
+    onReplyComment: ((Int) -> Unit) -> Unit,
     onReplyTargetIdChange: (Int) -> Unit,
     clearReplayTargetId: () -> Unit,
     onReportComment: (Int) -> Unit,
@@ -160,286 +160,290 @@ private fun PostScreen(
             )
         }
 
-    LazyColumn(
-        state = listState,
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 45.dp, start = 20.dp, end = 20.dp, bottom = 50.dp)
-    ) {
+        LazyColumn(
+            state = listState,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 45.dp, start = 20.dp, end = 20.dp, bottom = 50.dp)
+        ) {
 
-        item {
-            Spacer(Modifier.height(25.dp))
+            item {
+                Spacer(Modifier.height(25.dp))
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(postDetail.title, style = TraceTheme.typography.bodyLSB)
-
-                if (postDetail.postType == PostType.GOOD_DEED && postDetail.isVerified) {
-                    Spacer(Modifier.width(8.dp))
-
-                    Image(
-                        painter = painterResource(R.drawable.verification_mark),
-                        contentDescription = "선행 인증 마크",
-                        modifier = Modifier.size(22.dp)
-                    )
-                }
-            }
-
-
-            Spacer(Modifier.height(10.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Box() {
-                    Canvas(modifier = Modifier.size(40.dp)) {
-                        val canvasWidth = size.width
-                        val center = center
-                        val radius = canvasWidth / 2f
-
-                        drawCircle(
-                            color = PrimaryDefault,
-                            radius = radius,
-                            center = center,
-                            style = Stroke(4f)
-                        )
-                    }
-
-                    ProfileImage(postDetail.profileImageUrl)
-                }
-
-                Spacer(Modifier.width(10.dp))
-
-                Column(
-                    modifier = Modifier.fillMaxHeight()
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(postDetail.nickname, style = TraceTheme.typography.bodySSB)
+                    Text(postDetail.title, style = TraceTheme.typography.bodyLSB)
 
-                    Spacer(Modifier.height(3.dp))
+                    if (postDetail.postType == PostType.GOOD_DEED && postDetail.isVerified) {
+                        Spacer(Modifier.width(8.dp))
 
-                    Row() {
-                        Text(
-                            postDetail.getFormattedDate(),
-                            style = TraceTheme.typography.bodyXSM,
-                            color = DarkGray
-                        )
-
-                        Spacer(Modifier.width(10.dp))
-
-                        Text(
-                            "${postDetail.viewCount} 읽음",
-                            style = TraceTheme.typography.bodyXSM,
-                            color = DarkGray
+                        Image(
+                            painter = painterResource(R.drawable.verification_mark),
+                            contentDescription = "선행 인증 마크",
+                            modifier = Modifier.size(22.dp)
                         )
                     }
-
                 }
-            }
 
-            Spacer(Modifier.height(10.dp))
 
-            Spacer(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(1.dp)
-                    .background(GrayLine)
-            )
+                Spacer(Modifier.height(10.dp))
 
-            if (postDetail.images.isNotEmpty()) {
-                Spacer(Modifier.height(12.dp))
-
-                PostImageContent(images = postDetail.images)
-            }
-
-            Spacer(Modifier.height(15.dp))
-
-            Text(
-                postDetail.content,
-                style = TraceTheme.typography.bodyMR.copy(fontSize = 15.sp, lineHeight = 19.sp)
-            )
-
-            Spacer(Modifier.height(50.dp))
-
-            Spacer(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(1.dp)
-                    .background(GrayLine)
-            )
-
-            if (postDetail.comments.isEmpty()) {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Spacer(Modifier.height(55.dp))
+                    Box() {
+                        Canvas(modifier = Modifier.size(40.dp)) {
+                            val canvasWidth = size.width
+                            val center = center
+                            val radius = canvasWidth / 2f
 
-                    Text(
-                        "아직 댓글이 없습니다.",
-                        style = TraceTheme.typography.bodyMM,
-                        color = Black,
-                    )
+                            drawCircle(
+                                color = PrimaryDefault,
+                                radius = radius,
+                                center = center,
+                                style = Stroke(4f)
+                            )
+                        }
 
-                    Spacer(Modifier.height(6.dp))
+                        ProfileImage(postDetail.profileImageUrl)
+                    }
 
-                    Text(
-                        "당신의 생각을 댓글로 남겨주세요.",
-                        style = TraceTheme.typography.bodySM,
-                        color = WarmGray
-                    )
-                }
+                    Spacer(Modifier.width(10.dp))
 
-            }
+                    Column(
+                        modifier = Modifier.fillMaxHeight()
+                    ) {
+                        Text(postDetail.nickname, style = TraceTheme.typography.bodySSB)
 
-        }
+                        Spacer(Modifier.height(3.dp))
 
+                        Row() {
+                            Text(
+                                postDetail.getFormattedDate(),
+                                style = TraceTheme.typography.bodyXSM,
+                                color = DarkGray
+                            )
 
-        itemsIndexed(
-            items = postDetail.comments,
-            key = { _, comment -> comment.commentId }
-        ) { index, comment ->
-            Spacer(Modifier.height(13.dp))
+                            Spacer(Modifier.width(10.dp))
 
-            CommentView(
-                comment = comment,
-                replyTargetId = replyTargetId,
-                onDelete = onDeleteComment,
-                onReport = onReportComment,
-                onReply = {
-                    onReplyTargetIdChange(comment.commentId)
+                            Text(
+                                "${postDetail.viewCount} 읽음",
+                                style = TraceTheme.typography.bodyXSM,
+                                color = DarkGray
+                            )
+                        }
 
-                    coroutineScope.launch {
-                        focusRequester.requestFocus()
-                        keyboardController?.show()
-
-                        listState.animateScrollToItem(
-                            index = index + 1,
-                            scrollOffset = scrollOffset
-                        )
                     }
                 }
-            )
 
-            if (index != postDetail.comments.size - 1) {
-                Spacer(Modifier.height(15.dp))
+                Spacer(Modifier.height(10.dp))
+
                 Spacer(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(1.dp)
                         .background(GrayLine)
                 )
+
+                if (postDetail.images.isNotEmpty()) {
+                    Spacer(Modifier.height(12.dp))
+
+                    PostImageContent(images = postDetail.images)
+                }
+
+                Spacer(Modifier.height(15.dp))
+
+                Text(
+                    postDetail.content,
+                    style = TraceTheme.typography.bodyMR.copy(fontSize = 15.sp, lineHeight = 19.sp)
+                )
+
+                Spacer(Modifier.height(50.dp))
+
+                Spacer(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(1.dp)
+                        .background(GrayLine)
+                )
+
+                if (postDetail.comments.isEmpty()) {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Spacer(Modifier.height(55.dp))
+
+                        Text(
+                            "아직 댓글이 없습니다.",
+                            style = TraceTheme.typography.bodyMM,
+                            color = Black,
+                        )
+
+                        Spacer(Modifier.height(6.dp))
+
+                        Text(
+                            "당신의 생각을 댓글로 남겨주세요.",
+                            style = TraceTheme.typography.bodySM,
+                            color = WarmGray
+                        )
+                    }
+
+                }
+
+            }
+
+
+            itemsIndexed(
+                items = postDetail.comments,
+                key = { _, comment -> comment.commentId }
+            ) { index, comment ->
+                Spacer(Modifier.height(13.dp))
+
+                CommentView(
+                    comment = comment,
+                    replyTargetId = replyTargetId,
+                    onDelete = onDeleteComment,
+                    onReport = onReportComment,
+                    onReply = {
+                        onReplyTargetIdChange(comment.commentId)
+
+                        coroutineScope.launch {
+                            focusRequester.requestFocus()
+                            keyboardController?.show()
+
+                            listState.animateScrollToItem(
+                                index = index + 1,
+                                scrollOffset = scrollOffset
+                            )
+                        }
+                    }
+                )
+
+                if (index != postDetail.comments.size - 1) {
+                    Spacer(Modifier.height(15.dp))
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(1.dp)
+                            .background(GrayLine)
+                    )
+                }
+            }
+
+            item {
+                Spacer(Modifier.height(300.dp))
+            }
+
+        }
+
+
+
+        Row(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .fillMaxWidth()
+                .background(
+                    PrimaryDefault
+                )
+                .padding(horizontal = 20.dp)
+                .height(45.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                painter = painterResource(R.drawable.arrow_back_white_ic),
+                contentDescription = "뒤로 가기",
+                modifier = Modifier.clickable {
+                    navigateBack()
+                })
+
+            Spacer(Modifier.width(20.dp))
+
+            Text("흔적들", style = TraceTheme.typography.headingMB, color = White)
+
+            Spacer(Modifier.weight(1f))
+
+            Box() {
+                Image(
+                    painter = painterResource(R.drawable.menu_ic),
+                    contentDescription = "메뉴",
+                    modifier = Modifier.clickable(isRipple = true) {
+                        if (postDetail.isOwner) {
+                            isOwnPostDropDownMenuExpanded = true
+                        } else {
+                            isOtherPostDropDownMenuExpanded = true
+                        }
+                    })
+
+                OwnPostDropdownMenu(
+                    expanded = isOwnPostDropDownMenuExpanded,
+                    onDismiss = { isOwnPostDropDownMenuExpanded = false },
+                    onUpdate = { navigateToUpdatePost(postDetail.postId) },
+                    onDelete = onDeletePost,
+                )
+
+                OtherPostDropdownMenu(
+                    expanded = isOtherPostDropDownMenuExpanded,
+                    onDismiss = { isOtherPostDropDownMenuExpanded = false },
+                    onReport = onReportPost
+                )
             }
         }
 
-        item {
-            Spacer(Modifier.height(300.dp))
-        }
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 8.dp, end = 8.dp)
+                .background(Background)
+                .align(Alignment.BottomCenter),
+        ) {
+            Spacer(modifier = Modifier.height(8.dp))
 
-    }
-
-
-
-    Row(
-        modifier = Modifier
-            .align(Alignment.TopCenter)
-            .fillMaxWidth()
-            .background(
-                PrimaryDefault
-            )
-            .padding(horizontal = 20.dp)
-            .height(45.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Image(
-            painter = painterResource(R.drawable.arrow_back_white_ic),
-            contentDescription = "뒤로 가기",
-            modifier = Modifier.clickable {
-                navigateBack()
-            })
-
-        Spacer(Modifier.width(20.dp))
-
-        Text("흔적들", style = TraceTheme.typography.headingMB, color = White)
-
-        Spacer(Modifier.weight(1f))
-
-        Box() {
-            Image(
-                painter = painterResource(R.drawable.menu_ic),
-                contentDescription = "메뉴",
-                modifier = Modifier.clickable(isRipple = true) {
-                    if (postDetail.isOwner) {
-                        isOwnPostDropDownMenuExpanded = true
-                    } else {
-                        isOtherPostDropDownMenuExpanded = true
-                    }
-                })
-
-            OwnPostDropdownMenu(
-                expanded = isOwnPostDropDownMenuExpanded,
-                onDismiss = { isOwnPostDropDownMenuExpanded = false },
-                onUpdate = { navigateToUpdatePost(postDetail.postId) },
-                onDelete = onDeletePost,
-            )
-
-            OtherPostDropdownMenu(
-                expanded = isOtherPostDropDownMenuExpanded,
-                onDismiss = { isOtherPostDropDownMenuExpanded = false },
-                onReport = onReportPost
-            )
-        }
-    }
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 8.dp, end = 8.dp)
-            .background(Background)
-            .align(Alignment.BottomCenter),
-    ) {
-        Spacer(modifier = Modifier.height(8.dp))
-
-        TraceCommentField(
-            value = commentInput,
-            focusRequester = focusRequester,
-            isReplying = isReplying,
-            onValueChange = onCommentInputChange,
-            onAddComment = {
-                keyboardController?.hide()
-
-                onAddComment()
-
-                coroutineScope.launch {
-                    val visibleItems = listState.layoutInfo.visibleItemsInfo
-                    val lastVisibleIndex = visibleItems.lastOrNull()?.index ?: 0
-                    val lastItemIndex = postDetail.comments.size
-
-                    if (lastVisibleIndex < lastItemIndex) {
-                        listState.animateScrollToItem(index = lastItemIndex)
-                    }
-                }
-            },
-            onReplyComment = {
-                coroutineScope.launch {
-                    val commentId = onReplyComment()
+            TraceCommentField(
+                value = commentInput,
+                focusRequester = focusRequester,
+                isReplying = isReplying,
+                onValueChange = onCommentInputChange,
+                onAddComment = {
                     keyboardController?.hide()
 
-                    val targetIndex =
-                        postDetail.comments.indexOfFirst { it.commentId == commentId }
-                    if (targetIndex != -1) {
-                        listState.animateScrollToItem(index = targetIndex)
-                    }
-                }
-            },
-            clearReplyTargetId = clearReplayTargetId
-        )
+                    onAddComment()
 
-        Spacer(modifier = Modifier.height(8.dp))
+                    coroutineScope.launch {
+                        val visibleItems = listState.layoutInfo.visibleItemsInfo
+                        val lastVisibleIndex = visibleItems.lastOrNull()?.index ?: 0
+                        val lastItemIndex = postDetail.comments.size
+
+                        if (lastVisibleIndex < lastItemIndex) {
+                            listState.animateScrollToItem(index = lastItemIndex)
+                        }
+                    }
+                },
+                onReplyComment = {
+                    onReplyComment({ commentId ->
+                        coroutineScope.launch {
+                            val targetIndex =
+                                postDetail.comments.indexOfFirst { it.commentId == commentId }
+
+
+                            if (targetIndex != -1) {
+                                listState.animateScrollToItem(index = targetIndex)
+                            }
+                        }
+                    }
+                    )
+
+                    keyboardController?.hide()
+                },
+                clearReplyTargetId = clearReplayTargetId
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+        }
     }
-}
 }
 
 @Composable
