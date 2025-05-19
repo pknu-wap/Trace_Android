@@ -23,5 +23,5 @@ interface PostRepository {
 
     suspend fun deletePost(postId: Int): Result<Unit>
 
-    suspend fun toggleEmotion(postId : Int, emotionType : Emotion) : Result<Unit>
+    suspend fun toggleEmotion(postId : Int, emotionType : Emotion) : Result<Boolean>
 }

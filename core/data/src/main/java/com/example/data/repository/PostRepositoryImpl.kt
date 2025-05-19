@@ -73,8 +73,11 @@ class PostRepositoryImpl @Inject constructor(
         postDataSource.deletePost(postId)
     }
 
-    override suspend fun toggleEmotion(postId: Int, emotionType: Emotion): Result<Unit> = suspendRunCatching {
-            postDataSource.toggleEmotion(postId, emotionType)
-    }
+    override suspend fun toggleEmotion(postId: Int, emotionType: Emotion): Result<Boolean> =
+        suspendRunCatching {
+            val response = postDataSource.toggleEmotion(postId, emotionType).getOrThrow()
+
+            response.isAdded
+        }
 
 }
