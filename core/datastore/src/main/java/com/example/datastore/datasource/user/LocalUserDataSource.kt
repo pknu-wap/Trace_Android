@@ -6,5 +6,5 @@ import kotlinx.coroutines.flow.Flow
 interface LocalUserDataSource {
     val userInfo : Flow<UserInfo?>
     suspend fun setUserInfo(userInfo: UserInfo)
-    suspend fun clearUserInfo(userInfo: UserInfo)
+    suspend fun clearUserInfo()
 }

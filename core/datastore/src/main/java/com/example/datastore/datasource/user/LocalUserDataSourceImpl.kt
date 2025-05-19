@@ -37,7 +37,7 @@ class LocalUserDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun clearUserInfo(userInfo: UserInfo) {
+    override suspend fun clearUserInfo() {
         datastore.edit { preferences ->
             preferences.remove(USER_INFO)
         }
