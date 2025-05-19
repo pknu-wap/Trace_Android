@@ -51,7 +51,7 @@ class MyPageViewModel @Inject constructor(
     val reactedPosts = _reactedPosts.asStateFlow()
 
     private fun loadUserInfo() = viewModelScope.launch {
-        val userInfo = userRepository.loadUserInfo().onSuccess { userInfo ->
+       userRepository.loadUserInfo().onSuccess { userInfo ->
             _userInfo.value = userInfo
         }
     }
