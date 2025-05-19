@@ -28,7 +28,7 @@ class MyPageViewModel @Inject constructor(
     }
 
     init {
-        loadUserInfo()
+        getUserInfo()
     }
 
     private val _userInfo = MutableStateFlow(
@@ -50,8 +50,8 @@ class MyPageViewModel @Inject constructor(
     private val _reactedPosts: MutableStateFlow<List<PostFeed>> = MutableStateFlow(fakePostFeeds)
     val reactedPosts = _reactedPosts.asStateFlow()
 
-    private fun loadUserInfo() = viewModelScope.launch {
-       userRepository.loadUserInfo().onSuccess { userInfo ->
+    private fun getUserInfo() = viewModelScope.launch {
+       userRepository.getUserInfo().onSuccess { userInfo ->
             _userInfo.value = userInfo
         }
     }

@@ -28,11 +28,11 @@ class UpdateProfileViewModel @Inject constructor(
     val profileImage = _profileImageUrl.asStateFlow()
 
     init {
-        loadUserInfo()
+        getUserInfo()
     }
 
-    private fun loadUserInfo() = viewModelScope.launch {
-        userRepository.loadUserInfo().onSuccess { userInfo ->
+    private fun getUserInfo() = viewModelScope.launch {
+        userRepository.getUserInfo().onSuccess { userInfo ->
             setName(userInfo.name)
             setProfileImageUrl(userInfo.profileImageUrl)
         }
