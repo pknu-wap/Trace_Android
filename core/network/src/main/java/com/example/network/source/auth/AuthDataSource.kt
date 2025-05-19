@@ -15,4 +15,8 @@ interface AuthDataSource {
     ): Result<TokenResponse>
 
     suspend fun checkTokenHealth(token : String) : Boolean
+
+    suspend fun logout() : Result<Unit>
+
+    suspend fun unregisterUser() : Result<Unit>
 }

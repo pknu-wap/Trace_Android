@@ -1,30 +1,45 @@
 package com.example.mypage.graph.setting
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.common.event.EventHelper
 import com.example.domain.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
 @HiltViewModel
 class SettingViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    val eventHelper: EventHelper,
 ) : ViewModel() {
     private val _eventChannel = Channel<SettingEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
 
-    fun signOut() {
-
+    fun logout() = viewModelScope.launch {
+        authRepository.logOut().onSuccess {
+            _eventChannel.send(SettingEvent.LogoutSuccess)
+        }.onFailure {
+            _eventChannel.send(SettingEvent.LogoutFailure)
+        }
     }
 
-     fun UnRegisterUser() {
-
+    fun unregisterUser() = viewModelScope.launch {
+        authRepository.unregisterUser().onSuccess {
+            _eventChannel.send(SettingEvent.UnregisterUserSuccess)
+        }.onFailure {
+            _eventChannel.send(SettingEvent.UnregisterUserFailure)
+        }
     }
 
     sealed class SettingEvent {
         data object NavigateBack : SettingEvent()
-        data object NavigateToLogin : SettingEvent()
+        data object LogoutSuccess : SettingEvent()
+        data object LogoutFailure : SettingEvent()
+        data object UnregisterUserSuccess : SettingEvent()
+        data object UnregisterUserFailure : SettingEvent()
     }
 }
