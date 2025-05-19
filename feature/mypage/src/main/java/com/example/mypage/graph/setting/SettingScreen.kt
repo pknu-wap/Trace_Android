@@ -14,14 +14,20 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.common.util.clickable
 import com.example.designsystem.R
+import com.example.designsystem.component.CheckCancelDialog
 import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.Red
 import com.example.designsystem.theme.TraceTheme
@@ -45,17 +51,43 @@ internal fun SettingRoute(
 
     SettingScreen(
         navigateBack = navigateBack,
-        signOut = viewModel::signOut,
-        unRegisterUser = viewModel::UnRegisterUser
+        logOut = viewModel::logOut,
+        unRegisterUser = viewModel::unRegisterUser
     )
 }
 
 @Composable
 private fun SettingScreen(
     navigateBack: () -> Unit,
-    signOut: () -> Unit,
+    logOut: () -> Unit,
     unRegisterUser: () -> Unit
 ) {
+    var showLogOutDialog by remember { mutableStateOf(false) }
+    var showUnRegisterUserDialog by remember { mutableStateOf(false) }
+
+    if (showLogOutDialog) {
+        CheckCancelDialog(
+            onCheck = {
+                logOut()
+                showLogOutDialog = false
+            },
+            onDismiss = { showLogOutDialog = false },
+            dialogText = "정말 로그아웃 하시겠습니까?"
+        )
+    }
+
+    if (showUnRegisterUserDialog) {
+        CheckCancelDialog(
+            onCheck = {
+                unRegisterUser()
+                showUnRegisterUserDialog = false
+            },
+            onDismiss = { showUnRegisterUserDialog = false },
+            dialogText = "정말 회원탈퇴 하시겠습니까?"
+        )
+    }
+
+
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -64,18 +96,18 @@ private fun SettingScreen(
                 .fillMaxSize()
                 .padding(top = 80.dp, start = 30.dp, end = 20.dp)
         ) {
-            Text("로그아웃", style = TraceTheme.typography.bodyMSB, modifier = Modifier.clickable {
-
+            Text("로그아웃", style = TraceTheme.typography.bodyMR.copy(fontSize = 20.sp, lineHeight = 24.sp), modifier = Modifier.clickable {
+                showLogOutDialog = true
             })
 
             Spacer(Modifier.height(17.dp))
 
             Text(
                 "회원 탈퇴",
-                style = TraceTheme.typography.bodyMSB,
+                style = TraceTheme.typography.bodyMR.copy(fontSize = 20.sp, lineHeight = 24.sp),
                 color = Red,
                 modifier = Modifier.clickable {
-
+                    showUnRegisterUserDialog = true
                 })
         }
 
@@ -113,7 +145,7 @@ private fun SettingScreen(
 fun SettingScreenPreview() {
     SettingScreen(
         navigateBack = {},
-        signOut = {},
+        logOut = {},
         unRegisterUser = {}
     )
 }

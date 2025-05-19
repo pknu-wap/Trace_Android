@@ -15,11 +15,11 @@ class SettingViewModel @Inject constructor(
     private val _eventChannel = Channel<SettingEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
 
-    fun signOut() {
+    fun logOut() {
 
     }
 
-     fun UnRegisterUser() {
+     fun unRegisterUser() {
 
     }
 
