@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.example.datastore.util.fromJsonOrNull
 import com.example.domain.user.UserInfo
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
@@ -26,8 +27,7 @@ class LocalUserDataSourceImpl @Inject constructor(
                 throw exception
         }.map { preferences ->
             val userInfo = preferences[USER_INFO] ?: ""
-           if(userInfo.isNotEmpty()) gson.fromJson(userInfo, UserInfo::class.java)
-            else null
+            gson.fromJsonOrNull(userInfo)
         }
 
     override suspend fun setUserInfo(userInfo: UserInfo) {

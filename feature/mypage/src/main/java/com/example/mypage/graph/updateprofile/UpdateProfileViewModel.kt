@@ -32,7 +32,7 @@ class UpdateProfileViewModel @Inject constructor(
     }
 
     private fun getUserInfo() = viewModelScope.launch {
-        userRepository.getUserInfo().onSuccess { userInfo ->
+        userRepository.loadUserInfo().onSuccess { userInfo ->
             setName(userInfo.name)
             setProfileImageUrl(userInfo.profileImageUrl)
         }
