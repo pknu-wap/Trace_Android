@@ -23,6 +23,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -131,7 +132,7 @@ private fun PostScreen(
     isCommentLoading: Boolean,
     onDeletePost: () -> Unit,
     onReportPost: () -> Unit,
-    toggleEmotion : (Emotion) -> Unit,
+    toggleEmotion: (Emotion) -> Unit,
     onAddComment: () -> Unit,
     onCommentInputChange: (String) -> Unit,
     onDeleteComment: (Int) -> Unit,
@@ -276,7 +277,7 @@ private fun PostScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Emotion.entries.forEach { emotion ->
-                        val emotionCount = when(emotion) {
+                        val emotionCount = when (emotion) {
                             Emotion.HeartWarming -> postDetail.emotionCount.heartWarmingCount
                             Emotion.Likeable -> postDetail.emotionCount.likeableCount
                             Emotion.Touching -> postDetail.emotionCount.touchingCount
@@ -285,9 +286,6 @@ private fun PostScreen(
                         }
 
                         Column(
-                            modifier = Modifier.clickable(isRipple = true) {
-                                toggleEmotion(emotion)
-                            },
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(
@@ -298,17 +296,26 @@ private fun PostScreen(
 
                             Spacer(Modifier.height(3.dp))
 
-                            Image(
-                                imageVector = Icons.Default.Favorite,
-                                contentDescription = emotion.label,
-                                modifier = Modifier.size(20.dp)
-                            )
+                            IconButton(onClick = {
+                                toggleEmotion(emotion)
+                            }, modifier = Modifier.then(Modifier.size(20.dp))) {
+                                Image(
+                                    imageVector = Icons.Default.Favorite,
+                                    contentDescription = emotion.label,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
 
                             Spacer(Modifier.height(5.dp))
 
-                            Text(emotionCount.formatCount(), style = TraceTheme.typography.bodySSB)
+                            Text(
+                                emotionCount.formatCount(),
+                                style = TraceTheme.typography.bodySSB
+                            )
                         }
                     }
+
+
                 }
 
                 Spacer(Modifier.height(8.dp))
