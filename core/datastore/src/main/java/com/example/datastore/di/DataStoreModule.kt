@@ -30,7 +30,7 @@ object DataStoreProvidesModule {
     private const val KEYWORD_DATASTORE_NAME = "KEYWORD_PREFERENCES"
     private val Context.keywordDataStore by preferencesDataStore(name = KEYWORD_DATASTORE_NAME)
 
-    private const val USER_DATASTORE_NAME = "KEYWORD_PREFERENCES"
+    private const val USER_DATASTORE_NAME = "USER_PREFERENCES"
     private val Context.userDataStore by preferencesDataStore(name = USER_DATASTORE_NAME)
 
     @Provides
