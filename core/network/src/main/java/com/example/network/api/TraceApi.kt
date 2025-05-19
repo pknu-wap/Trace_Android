@@ -8,6 +8,8 @@ import com.example.network.model.comment.AddReplyToCommentRequest
 import com.example.network.model.comment.CommentResponse
 import com.example.network.model.post.AddPostResponse
 import com.example.network.model.post.GetPostResponse
+import com.example.network.model.post.ToggleEmotionRequest
+import com.example.network.model.post.ToggleEmotionResponse
 import com.example.network.model.post.UpdatePostRequest
 import com.example.network.model.post.UpdatePostResponse
 import com.example.network.model.token.CheckTokenHealthResponse
@@ -61,6 +63,11 @@ interface TraceApi {
     suspend fun deletePost(
         @Path("id") postId: Int,
     ): Result<Unit>
+
+    @POST("/api/v1/emotion")
+    suspend fun toggleEmotion(
+        @Body toggleEmotionRequest : ToggleEmotionRequest,
+    ) : Result<ToggleEmotionResponse>
 
     @POST("/api/v1/comments/{postId}")
     suspend fun addComment(

@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.common.event.EventHelper
 import com.example.common.event.TraceEvent
 import com.example.domain.model.post.Comment
+import com.example.domain.model.post.Emotion
 import com.example.domain.model.post.EmotionCount
 import com.example.domain.model.post.PostDetail
 import com.example.domain.model.post.PostType
@@ -82,6 +83,12 @@ class PostViewModel @Inject constructor(
         }
     }
 
+    fun toggleEmotion(emotion: Emotion) = viewModelScope.launch {
+        postRepository.toggleEmotion(postId = postId, emotionType = emotion).onSuccess {
+
+        }
+    }
+
     fun addComment() = viewModelScope.launch {
         if (_commentInput.value.isEmpty()) {
             eventHelper.sendEvent(TraceEvent.ShowSnackBar("내용을 입력해주세요."))
@@ -105,7 +112,7 @@ class PostViewModel @Inject constructor(
 
     }
 
-    fun replyComment(onSuccess : (Int) -> Unit) =
+    fun replyComment(onSuccess: (Int) -> Unit) =
         viewModelScope.launch {
             val parentId = _replyTargetId.value ?: return@launch
 

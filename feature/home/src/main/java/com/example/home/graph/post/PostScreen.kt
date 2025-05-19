@@ -51,6 +51,7 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.example.common.event.TraceEvent
 import com.example.common.util.clickable
+import com.example.common.util.formatCount
 import com.example.designsystem.R
 import com.example.designsystem.theme.Background
 import com.example.designsystem.theme.Black
@@ -110,6 +111,7 @@ internal fun PostRoute(
         onAddComment = viewModel::addComment,
         onDeletePost = viewModel::deletePost,
         onReportPost = viewModel::reportPost,
+        toggleEmotion = viewModel::toggleEmotion,
         onDeleteComment = viewModel::deleteComment,
         onReplyComment = viewModel::replyComment,
         onReplyTargetIdChange = viewModel::setReplyTargetId,
@@ -129,6 +131,7 @@ private fun PostScreen(
     isCommentLoading: Boolean,
     onDeletePost: () -> Unit,
     onReportPost: () -> Unit,
+    toggleEmotion : (Emotion) -> Unit,
     onAddComment: () -> Unit,
     onCommentInputChange: (String) -> Unit,
     onDeleteComment: (Int) -> Unit,
@@ -283,7 +286,7 @@ private fun PostScreen(
 
                         Column(
                             modifier = Modifier.clickable(isRipple = true) {
-
+                                toggleEmotion(emotion)
                             },
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
@@ -303,7 +306,7 @@ private fun PostScreen(
 
                             Spacer(Modifier.height(5.dp))
 
-                            Text(emotionCount.toString(), style = TraceTheme.typography.bodySSB)
+                            Text(emotionCount.formatCount(), style = TraceTheme.typography.bodySSB)
                         }
                     }
                 }
@@ -534,6 +537,7 @@ fun PostScreenPreview() {
         onReportPost = {},
         onReplyTargetIdChange = {},
         clearReplayTargetId = {},
+        toggleEmotion = {},
         replyTargetId = null
     )
 }

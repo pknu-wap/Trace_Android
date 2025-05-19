@@ -1,5 +1,6 @@
 package com.example.domain.repository
 
+import com.example.domain.model.post.Emotion
 import com.example.domain.model.post.PostDetail
 import com.example.domain.model.post.WritePostType
 
@@ -21,4 +22,6 @@ interface PostRepository {
     ): Result<Int>
 
     suspend fun deletePost(postId: Int): Result<Unit>
+
+    suspend fun toggleEmotion(postId : Int, emotionType : Emotion) : Result<Unit>
 }

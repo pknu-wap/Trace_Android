@@ -2,11 +2,14 @@ package com.example.network.source.post
 
 import android.os.Build
 import android.util.Log
+import com.example.domain.model.post.Emotion
 import com.example.domain.model.post.WritePostType
 import com.example.network.api.TraceApi
 import com.example.network.model.post.AddPostRequest
 import com.example.network.model.post.AddPostResponse
 import com.example.network.model.post.GetPostResponse
+import com.example.network.model.post.ToggleEmotionRequest
+import com.example.network.model.post.ToggleEmotionResponse
 import com.example.network.model.post.UpdatePostRequest
 import com.example.network.model.post.UpdatePostResponse
 import kotlinx.serialization.json.Json
@@ -84,6 +87,16 @@ class PostDataSourceImpl @Inject constructor(
 
     override suspend fun deletePost(postId: Int): Result<Unit> = traceApi.deletePost(postId)
 
+    override suspend fun toggleEmotion(
+        postId: Int,
+        emotionType: Emotion
+    ): Result<ToggleEmotionResponse> =
+        traceApi.toggleEmotion(
+            toggleEmotionRequest = ToggleEmotionRequest(
+                postId = postId,
+                emotionType = emotionType.name
+            )
+        )
 
     companion object {
         private const val WEBP_MEDIA_TYPE = "image/webp"

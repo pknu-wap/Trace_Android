@@ -2,6 +2,7 @@ package com.example.data.repository
 
 import com.example.common.util.suspendRunCatching
 import com.example.data.image.ImageResizer
+import com.example.domain.model.post.Emotion
 import com.example.domain.model.post.EmotionCount
 import com.example.domain.model.post.PostDetail
 import com.example.domain.model.post.PostType
@@ -70,6 +71,10 @@ class PostRepositoryImpl @Inject constructor(
 
     override suspend fun deletePost(postId: Int): Result<Unit> = suspendRunCatching {
         postDataSource.deletePost(postId)
+    }
+
+    override suspend fun toggleEmotion(postId: Int, emotionType: Emotion): Result<Unit> = suspendRunCatching {
+            postDataSource.toggleEmotion(postId, emotionType)
     }
 
 }
