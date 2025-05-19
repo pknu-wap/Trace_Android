@@ -94,6 +94,6 @@ interface TraceApi {
     @POST("/api/v1/user/delete")
     suspend fun unregisterUser() : Result<Unit>
 
-    @POST("/api/v1/user")
+    @GET("/api/v1/user")
     suspend fun loadUserInfo() : Result<LoadUserInfoResponse>
 }
