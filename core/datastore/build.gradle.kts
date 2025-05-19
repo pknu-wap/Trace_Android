@@ -11,4 +11,5 @@ dependencies {
     implementation(projects.core.domain)
 
     implementation(libs.androidx.datastore)
+    implementation(libs.gson)
 }

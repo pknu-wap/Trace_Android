@@ -3,6 +3,7 @@ package com.example.data.repository
 import com.example.common.util.suspendRunCatching
 import com.example.data.image.ImageResizer
 import com.example.datastore.datasource.token.LocalTokenDataSource
+import com.example.datastore.datasource.user.LocalUserDataSource
 import com.example.domain.model.auth.User
 import com.example.domain.model.auth.UserRole
 import com.example.domain.repository.AuthRepository
@@ -14,7 +15,8 @@ import javax.inject.Inject
 class AuthRepositoryImpl @Inject constructor(
     private val authDataSource: AuthDataSource,
     private val localTokenDataSource: LocalTokenDataSource,
-    private val imageResizer: ImageResizer
+    private val localUserDataSource: LocalUserDataSource,
+    private val imageResizer: ImageResizer,
 ) : AuthRepository {
     override suspend fun loginKakao(idToken: String): Result<User> = suspendRunCatching {
         val response = authDataSource.loginKakao(idToken).getOrThrow()
@@ -79,7 +81,12 @@ class AuthRepositoryImpl @Inject constructor(
                 localTokenDataSource.clearToken()
             }
 
+            val userInfoJob = launch {
+                localUserDataSource.clearUserInfo()
+            }
+
             clearTokenJob.join()
+            userInfoJob.join()
         }
 
     }
@@ -92,7 +99,12 @@ class AuthRepositoryImpl @Inject constructor(
                 localTokenDataSource.clearToken()
             }
 
+            val userInfoJob = launch {
+                localUserDataSource.clearUserInfo()
+            }
+
             clearTokenJob.join()
+            userInfoJob.join()
         }
     }
 }

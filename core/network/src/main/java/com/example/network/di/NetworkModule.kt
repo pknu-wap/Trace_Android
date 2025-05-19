@@ -6,6 +6,8 @@ import com.example.network.source.comment.CommentDataSource
 import com.example.network.source.comment.CommentDataSourceImpl
 import com.example.network.source.post.PostDataSource
 import com.example.network.source.post.PostDataSourceImpl
+import com.example.network.source.user.UserDataSource
+import com.example.network.source.user.UserDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -19,6 +21,10 @@ abstract class NetworkModule {
     @Binds
     @Singleton
     abstract fun bindsAuthDataSource(authDataSourceImpl: AuthDataSourceImpl): AuthDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindsUserDataSource(userDataSourceImpl: UserDataSourceImpl): UserDataSource
 
     @Binds
     @Singleton

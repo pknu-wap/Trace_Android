@@ -8,6 +8,10 @@ import com.example.datastore.datasource.keyword.LocalKeywordDataSource
 import com.example.datastore.datasource.keyword.LocalKeywordDataSourceImpl
 import com.example.datastore.datasource.token.LocalTokenDataSource
 import com.example.datastore.datasource.token.LocalTokenDataSourceImpl
+import com.example.datastore.datasource.user.LocalUserDataSource
+import com.example.datastore.datasource.user.LocalUserDataSourceImpl
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -26,6 +30,13 @@ object DataStoreProvidesModule {
     private const val KEYWORD_DATASTORE_NAME = "KEYWORD_PREFERENCES"
     private val Context.keywordDataStore by preferencesDataStore(name = KEYWORD_DATASTORE_NAME)
 
+    private const val USER_DATASTORE_NAME = "USER_PREFERENCES"
+    private val Context.userDataStore by preferencesDataStore(name = USER_DATASTORE_NAME)
+
+    @Provides
+    @Singleton
+    fun provideGson(): Gson = GsonBuilder().create()
+
     @Provides
     @Singleton
     @Named("token")
@@ -40,6 +51,12 @@ object DataStoreProvidesModule {
         @ApplicationContext context: Context
     ): DataStore<Preferences> = context.keywordDataStore
 
+    @Provides
+    @Singleton
+    @Named("user")
+    fun provideUserDataStore(
+        @ApplicationContext context: Context
+    ): DataStore<Preferences> = context.userDataStore
 }
 
 @Module
@@ -57,4 +74,10 @@ abstract class DatastoreBindsModule {
     abstract fun bindsLocalKeywordDataSource(
         localKeywordDataSourceImpl: LocalKeywordDataSourceImpl,
     ): LocalKeywordDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindsUserDataSource(
+        localUserDataSourceImpl: LocalUserDataSourceImpl,
+    ): LocalUserDataSource
 }
