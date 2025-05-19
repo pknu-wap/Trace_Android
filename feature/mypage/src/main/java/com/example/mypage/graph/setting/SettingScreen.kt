@@ -25,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.common.event.TraceEvent
 import com.example.common.util.clickable
 import com.example.designsystem.R
 import com.example.designsystem.component.CheckCancelDialog
@@ -44,14 +45,21 @@ internal fun SettingRoute(
         viewModel.eventChannel.collect { event ->
             when (event) {
                 is SettingEvent.NavigateBack -> navigateBack()
-                is SettingEvent.NavigateToLogin -> navigateToLogin()
+                is SettingEvent.LogoutSuccess -> navigateToLogin()
+                is SettingEvent.LogoutFailure -> {
+                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("로그아웃에 실패했습니다."))
+                }
+                is SettingEvent.UnRegisterUserSuccess -> navigateToLogin()
+                is SettingEvent.UnRegisterUserFailure -> {
+                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("회원 탈퇴에 실패했습니다."))
+                }
             }
         }
     }
 
     SettingScreen(
         navigateBack = navigateBack,
-        logOut = viewModel::logOut,
+        logout = viewModel::logout,
         unRegisterUser = viewModel::unRegisterUser
     )
 }
@@ -59,19 +67,19 @@ internal fun SettingRoute(
 @Composable
 private fun SettingScreen(
     navigateBack: () -> Unit,
-    logOut: () -> Unit,
+    logout: () -> Unit,
     unRegisterUser: () -> Unit
 ) {
-    var showLogOutDialog by remember { mutableStateOf(false) }
+    var showLogoutDialog by remember { mutableStateOf(false) }
     var showUnRegisterUserDialog by remember { mutableStateOf(false) }
 
-    if (showLogOutDialog) {
+    if (showLogoutDialog) {
         CheckCancelDialog(
             onCheck = {
-                logOut()
-                showLogOutDialog = false
+                logout()
+                showLogoutDialog = false
             },
-            onDismiss = { showLogOutDialog = false },
+            onDismiss = { showLogoutDialog = false },
             dialogText = "정말 로그아웃 하시겠습니까?"
         )
     }
@@ -97,13 +105,13 @@ private fun SettingScreen(
                 .padding(top = 80.dp, start = 30.dp, end = 20.dp)
         ) {
             Text("로그아웃", style = TraceTheme.typography.bodyMR.copy(fontSize = 20.sp, lineHeight = 24.sp), modifier = Modifier.clickable {
-                showLogOutDialog = true
+                showLogoutDialog = true
             })
 
             Spacer(Modifier.height(17.dp))
 
             Text(
-                "회원 탈퇴",
+                "회원탈퇴",
                 style = TraceTheme.typography.bodyMR.copy(fontSize = 20.sp, lineHeight = 24.sp),
                 color = Red,
                 modifier = Modifier.clickable {
@@ -145,7 +153,7 @@ private fun SettingScreen(
 fun SettingScreenPreview() {
     SettingScreen(
         navigateBack = {},
-        logOut = {},
+        logout = {},
         unRegisterUser = {}
     )
 }

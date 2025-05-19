@@ -80,4 +80,9 @@ interface TraceApi {
         @Path("commentId") commentId: Int,
     ): Result<Unit>
 
+    @POST("/api/v1/user/logout")
+    suspend fun logout() : Result<Unit>
+
+    @POST("/api/v1/user/delete")
+    suspend fun unRegisterUser() : Result<Unit>
 }
