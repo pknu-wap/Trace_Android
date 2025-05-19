@@ -49,8 +49,8 @@ internal fun SettingRoute(
                 is SettingEvent.LogoutFailure -> {
                     viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("로그아웃에 실패했습니다."))
                 }
-                is SettingEvent.UnRegisterUserSuccess -> navigateToLogin()
-                is SettingEvent.UnRegisterUserFailure -> {
+                is SettingEvent.UnregisterUserSuccess -> navigateToLogin()
+                is SettingEvent.UnregisterUserFailure -> {
                     viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("회원 탈퇴에 실패했습니다."))
                 }
             }
@@ -60,7 +60,7 @@ internal fun SettingRoute(
     SettingScreen(
         navigateBack = navigateBack,
         logout = viewModel::logout,
-        unRegisterUser = viewModel::unRegisterUser
+        unregisterUser = viewModel::unregisterUser
     )
 }
 
@@ -68,7 +68,7 @@ internal fun SettingRoute(
 private fun SettingScreen(
     navigateBack: () -> Unit,
     logout: () -> Unit,
-    unRegisterUser: () -> Unit
+    unregisterUser: () -> Unit
 ) {
     var showLogoutDialog by remember { mutableStateOf(false) }
     var showUnRegisterUserDialog by remember { mutableStateOf(false) }
@@ -87,7 +87,7 @@ private fun SettingScreen(
     if (showUnRegisterUserDialog) {
         CheckCancelDialog(
             onCheck = {
-                unRegisterUser()
+                unregisterUser()
                 showUnRegisterUserDialog = false
             },
             onDismiss = { showUnRegisterUserDialog = false },
@@ -154,6 +154,6 @@ fun SettingScreenPreview() {
     SettingScreen(
         navigateBack = {},
         logout = {},
-        unRegisterUser = {}
+        unregisterUser = {}
     )
 }

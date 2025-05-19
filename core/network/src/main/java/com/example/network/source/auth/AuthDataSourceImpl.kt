@@ -71,7 +71,7 @@ class AuthDataSourceImpl @Inject constructor(
 
     override suspend fun logout(): Result<Unit> = traceApi.logout()
 
-    override suspend fun unRegisterUser(): Result<Unit> = traceApi.unRegisterUser()
+    override suspend fun unregisterUser(): Result<Unit> = traceApi.unregisterUser()
 
     companion object {
         private const val WEBP_MEDIA_TYPE = "image/webp"

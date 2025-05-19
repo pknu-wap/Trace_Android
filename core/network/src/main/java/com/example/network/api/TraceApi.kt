@@ -84,5 +84,5 @@ interface TraceApi {
     suspend fun logout() : Result<Unit>
 
     @POST("/api/v1/user/delete")
-    suspend fun unRegisterUser() : Result<Unit>
+    suspend fun unregisterUser() : Result<Unit>
 }

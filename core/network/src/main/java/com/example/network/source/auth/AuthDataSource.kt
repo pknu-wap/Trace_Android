@@ -18,5 +18,5 @@ interface AuthDataSource {
 
     suspend fun logout() : Result<Unit>
 
-    suspend fun unRegisterUser() : Result<Unit>
+    suspend fun unregisterUser() : Result<Unit>
 }

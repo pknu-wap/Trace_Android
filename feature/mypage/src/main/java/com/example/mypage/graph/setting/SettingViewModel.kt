@@ -27,11 +27,11 @@ class SettingViewModel @Inject constructor(
         }
     }
 
-    fun unRegisterUser() = viewModelScope.launch {
-        authRepository.unRegisterUser().onSuccess {
-            _eventChannel.send(SettingEvent.UnRegisterUserSuccess)
+    fun unregisterUser() = viewModelScope.launch {
+        authRepository.unregisterUser().onSuccess {
+            _eventChannel.send(SettingEvent.UnregisterUserSuccess)
         }.onFailure {
-            _eventChannel.send(SettingEvent.UnRegisterUserFailure)
+            _eventChannel.send(SettingEvent.UnregisterUserFailure)
         }
     }
 
@@ -39,7 +39,7 @@ class SettingViewModel @Inject constructor(
         data object NavigateBack : SettingEvent()
         data object LogoutSuccess : SettingEvent()
         data object LogoutFailure : SettingEvent()
-        data object UnRegisterUserSuccess : SettingEvent()
-        data object UnRegisterUserFailure : SettingEvent()
+        data object UnregisterUserSuccess : SettingEvent()
+        data object UnregisterUserFailure : SettingEvent()
     }
 }

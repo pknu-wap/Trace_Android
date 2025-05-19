@@ -73,7 +73,7 @@ class AuthRepositoryImpl @Inject constructor(
         authDataSource.logout()
     }
 
-    override suspend fun unRegisterUser(): Result<Unit> = suspendRunCatching {
-       authDataSource.unRegisterUser()
+    override suspend fun unregisterUser(): Result<Unit> = suspendRunCatching {
+       authDataSource.unregisterUser()
     }
 }

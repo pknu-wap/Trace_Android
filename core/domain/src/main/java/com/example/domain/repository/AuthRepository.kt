@@ -16,5 +16,5 @@ interface AuthRepository {
 
     suspend fun logOut(): Result<Unit>
 
-    suspend fun unRegisterUser(): Result<Unit>
+    suspend fun unregisterUser(): Result<Unit>
 }
