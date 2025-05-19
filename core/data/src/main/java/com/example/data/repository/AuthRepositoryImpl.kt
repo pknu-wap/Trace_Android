@@ -14,7 +14,7 @@ import javax.inject.Inject
 class AuthRepositoryImpl @Inject constructor(
     private val authDataSource: AuthDataSource,
     private val localTokenDataSource: LocalTokenDataSource,
-    private val imageResizer : ImageResizer
+    private val imageResizer: ImageResizer
 ) : AuthRepository {
     override suspend fun loginKakao(idToken: String): Result<User> = suspendRunCatching {
         val response = authDataSource.loginKakao(idToken).getOrThrow()
@@ -41,13 +41,15 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun registerUser(
-       signUpToken: String, 
-      providerId: String,
+        signUpToken: String,
+        providerId: String,
         nickName: String,
         profileImageUrl: String?
     ): Result<Unit> = suspendRunCatching {
         val uploadImageUrl = profileImageUrl?.let { imageResizer.resizeImage(profileImageUrl) }
-        val response = authDataSource.registerUser(signUpToken, providerId, nickName, uploadImageUrl).getOrThrow()
+        val response =
+            authDataSource.registerUser(signUpToken, providerId, nickName, uploadImageUrl)
+                .getOrThrow()
 
         coroutineScope {
             val accessTokenJob = launch {
@@ -70,10 +72,27 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun logOut(): Result<Unit> = suspendRunCatching {
-        authDataSource.logout()
+        authDataSource.logout().getOrThrow()
+
+        coroutineScope {
+            val clearTokenJob = launch {
+                localTokenDataSource.clearToken()
+            }
+
+            clearTokenJob.join()
+        }
+
     }
 
     override suspend fun unregisterUser(): Result<Unit> = suspendRunCatching {
-       authDataSource.unregisterUser()
+        authDataSource.unregisterUser().getOrThrow()
+
+        coroutineScope {
+            val clearTokenJob = launch {
+                localTokenDataSource.clearToken()
+            }
+
+            clearTokenJob.join()
+        }
     }
 }
