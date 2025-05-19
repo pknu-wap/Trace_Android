@@ -31,6 +31,7 @@ val TextHint = Color(0xFF88887F)
 val DarkGray = Color(0xFF747070)
 val WarmGray = Color(0xFF838080)
 val LightGray = Color(0xFF81817A)
+val EmotionLabel = Color(0xFF636060)
 val GrayLine = Color(0xFFE0E0E0)
 
 val ImagePlaceHolder = Color(0xFFE7E7E7)

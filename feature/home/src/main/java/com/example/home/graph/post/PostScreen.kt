@@ -3,6 +3,7 @@ package com.example.home.graph.post
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,6 +20,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -52,12 +55,14 @@ import com.example.designsystem.R
 import com.example.designsystem.theme.Background
 import com.example.designsystem.theme.Black
 import com.example.designsystem.theme.DarkGray
+import com.example.designsystem.theme.EmotionLabel
 import com.example.designsystem.theme.GrayLine
 import com.example.designsystem.theme.PrimaryActive
 import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.WarmGray
 import com.example.designsystem.theme.White
+import com.example.domain.model.post.Emotion
 import com.example.domain.model.post.PostDetail
 import com.example.domain.model.post.PostType
 import com.example.home.graph.post.PostViewModel.PostEvent
@@ -262,6 +267,48 @@ private fun PostScreen(
                 )
 
                 Spacer(Modifier.height(50.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Emotion.entries.forEach { emotion ->
+                        val emotionCount = when(emotion) {
+                            Emotion.HeartWarming -> postDetail.emotionCount.heartWarmingCount
+                            Emotion.Likeable -> postDetail.emotionCount.likeableCount
+                            Emotion.Touching -> postDetail.emotionCount.touchingCount
+                            Emotion.Impressive -> postDetail.emotionCount.impressiveCount
+                            Emotion.Grateful -> postDetail.emotionCount.gratefulCount
+                        }
+
+                        Column(
+                            modifier = Modifier.clickable(isRipple = true) {
+
+                            },
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                emotion.label,
+                                style = TraceTheme.typography.bodySR,
+                                color = EmotionLabel
+                            )
+
+                            Spacer(Modifier.height(3.dp))
+
+                            Image(
+                                imageVector = Icons.Default.Favorite,
+                                contentDescription = emotion.label,
+                                modifier = Modifier.size(20.dp)
+                            )
+
+                            Spacer(Modifier.height(5.dp))
+
+                            Text(emotionCount.toString(), style = TraceTheme.typography.bodySSB)
+                        }
+                    }
+                }
+
+                Spacer(Modifier.height(8.dp))
 
                 Spacer(
                     modifier = Modifier
