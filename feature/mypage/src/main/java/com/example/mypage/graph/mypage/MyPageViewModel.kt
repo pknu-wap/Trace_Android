@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.domain.model.mypage.MyPageTab
 import com.example.domain.model.post.PostFeed
 import com.example.domain.model.post.PostType
+import com.example.domain.repository.UserRepository
 import com.example.domain.user.UserInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -17,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MyPageViewModel @Inject constructor(
-
+    private val userRepository: UserRepository,
 ) : ViewModel() {
     private val _eventChannel = Channel<MyPageEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
@@ -27,7 +28,7 @@ class MyPageViewModel @Inject constructor(
     }
 
     init {
-
+        loadUserInfo()
     }
 
     private val _userInfo = MutableStateFlow(
@@ -49,8 +50,10 @@ class MyPageViewModel @Inject constructor(
     private val _reactedPosts: MutableStateFlow<List<PostFeed>> = MutableStateFlow(fakePostFeeds)
     val reactedPosts = _reactedPosts.asStateFlow()
 
-    private fun setUserInfo(newInfo: UserInfo) {
-        _userInfo.value = newInfo
+    private fun loadUserInfo() = viewModelScope.launch {
+        val userInfo = userRepository.loadUserInfo().onSuccess { userInfo ->
+            _userInfo.value = userInfo
+        }
     }
 
     fun setTabType(tab: MyPageTab) {
@@ -71,7 +74,7 @@ class MyPageViewModel @Inject constructor(
 
     sealed class MyPageEvent {
         data object NavigateToEditProfile : MyPageEvent()
-        data class NavigateToPost(val postId : Int) : MyPageEvent()
+        data class NavigateToPost(val postId: Int) : MyPageEvent()
         data object NavigateToSetting : MyPageEvent()
     }
 }

@@ -13,6 +13,7 @@ import com.example.network.model.post.ToggleEmotionResponse
 import com.example.network.model.post.UpdatePostRequest
 import com.example.network.model.post.UpdatePostResponse
 import com.example.network.model.token.CheckTokenHealthResponse
+import com.example.network.model.user.LoadUserInfoResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.Body
@@ -92,4 +93,7 @@ interface TraceApi {
 
     @POST("/api/v1/user/delete")
     suspend fun unregisterUser() : Result<Unit>
+
+    @POST("/api/v1/user")
+    suspend fun loadUserInfo() : Result<LoadUserInfoResponse>
 }
