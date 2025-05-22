@@ -46,10 +46,6 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    internal fun saveFake() = viewModelScope.launch {
-        authRepository.saveFake()
-    }
-
     sealed class LoginEvent {
         data class NavigateEditProfile(val signUpToken: String, val providerId: String) :
             LoginEvent()

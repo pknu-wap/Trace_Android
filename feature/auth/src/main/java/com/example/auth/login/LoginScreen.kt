@@ -55,7 +55,6 @@ internal fun LoginRoute(
         viewModel::loginKakao,
         onLoginFailure = { viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("로그인에 실패했습니다")) },
         navigateToHome = { viewModel.onEvent(LoginEvent.NavigateToHome) },
-        sf = viewModel::saveFake
     )
 }
 
@@ -64,7 +63,6 @@ private fun LoginScreen(
     loginKakao: (String) -> Unit,
     onLoginFailure: () -> Unit,
     navigateToHome: () -> Unit,
-    sf: () -> Unit
 ) {
     val context = LocalContext.current
 
@@ -112,7 +110,6 @@ private fun LoginScreen(
         Text(
             "둘러보기", style = TraceTheme.typography.bodyMM.copy(fontSize = 20.sp),
             modifier = Modifier.clickable {
-                sf()
                 navigateToHome()
             })
 
@@ -164,6 +161,5 @@ fun LoginScreenPreview() {
         loginKakao = {},
         onLoginFailure = {},
         navigateToHome = {},
-        sf = {}
     )
 }

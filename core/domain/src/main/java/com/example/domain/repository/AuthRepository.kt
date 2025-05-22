@@ -12,8 +12,6 @@ interface AuthRepository {
         profileImageUrl: String?
     ): Result<Unit>
 
-    suspend fun saveFake(): Result<Unit>
-
     suspend fun logOut(): Result<Unit>
 
     suspend fun unregisterUser(): Result<Unit>

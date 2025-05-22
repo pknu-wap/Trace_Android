@@ -1,6 +1,7 @@
 package com.example.network.authenticator
 
 import com.example.network.api.TraceApi
+import com.example.network.model.token.RefreshTokenRequest
 import com.example.network.token.TokenManager
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
@@ -23,7 +24,9 @@ class TraceAuthenticator @Inject constructor(
     override fun authenticate(route: Route?, response: Response): Request? {
         val originRequest = response.request
 
-        if (originRequest.header("Authorization").isNullOrEmpty() && !originRequest.url.encodedPath.contains("/api/v1/token/expiration")) {
+        if (originRequest.header("Authorization")
+                .isNullOrEmpty() && !originRequest.url.encodedPath.contains("/api/v1/token/expiration")
+        ) {
             return null
         }
 
@@ -48,9 +51,9 @@ class TraceAuthenticator @Inject constructor(
 
         val token = runBlocking {
             refreshMutex.withLock {
-                traceApi.get().refreshToken(tokenManager.getRefreshToken())
+                traceApi.get().refreshToken(RefreshTokenRequest(tokenManager.getRefreshToken()))
             }
-        }.getOrNull() ?: return  null
+        }.getOrNull() ?: return null
 
         runBlocking {
             val accessTokenJob = launch { tokenManager.setAccessToken(token.accessToken) }
