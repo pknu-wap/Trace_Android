@@ -85,7 +85,11 @@ fun AppNavHost(
             navigateBack = { navigateBack(navController) },
         )
 
-        missionNavGraph()
+        missionNavGraph(
+            navigateToPost = { postId ->
+                navController.navigateToPost(postId)
+            },
+        )
 
         myPageNavGraph(
             navigateToPost = { postId -> navController.navigateToPost(postId) },

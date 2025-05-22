@@ -19,13 +19,11 @@ fun NavController.navigateToWriteMission(navOptions: NavOptions?= null) {
 
 
 fun NavGraphBuilder.missionNavGraph(
-
+    navigateToPost : (Int) -> Unit,
 ) {
     navigation<MissionBaseRoute>(startDestination = MissionGraph.MissionRoute) {
         composable<MissionGraph.MissionRoute> {
-            MissionRoute()
+            MissionRoute(navigateToPost = navigateToPost)
         }
-
-
     }
 }
