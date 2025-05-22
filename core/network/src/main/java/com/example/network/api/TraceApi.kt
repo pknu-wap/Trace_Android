@@ -13,6 +13,7 @@ import com.example.network.model.post.ToggleEmotionResponse
 import com.example.network.model.post.UpdatePostRequest
 import com.example.network.model.post.UpdatePostResponse
 import com.example.network.model.token.CheckTokenHealthResponse
+import com.example.network.model.token.RefreshTokenRequest
 import com.example.network.model.user.LoadUserInfoResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -38,8 +39,8 @@ interface TraceApi {
         @Part profileImage: MultipartBody.Part? = null
     ): Result<TokenResponse>
 
-    @HTTP(method = "GET", path = "/api/v1/token/refresh")
-    suspend fun refreshToken(@Query("refreshToken") refreshToken: String): Result<TokenResponse>
+    @HTTP(method = "POST", path = "/api/v1/token/refresh", hasBody = true)
+    suspend fun refreshToken(@Body refreshTokenRequest: RefreshTokenRequest): Result<TokenResponse>
 
     @GET("/api/v1/token/expiration")
     suspend fun checkTokenHealth(@Query("token") token: String): Result<CheckTokenHealthResponse>
