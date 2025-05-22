@@ -29,12 +29,10 @@ internal fun MissionRoute(
 ) {
     val dailyMission by viewModel.dailyMission.collectAsStateWithLifecycle()
     val verifiedMissions by viewModel.verifiedMissions.collectAsStateWithLifecycle()
-    val unVerifiedMissions by viewModel.unVerifiedMissions.collectAsStateWithLifecycle()
 
     MissionScreen(
         dailyMission = dailyMission,
         verifiedMissions = verifiedMissions,
-        unVerifiedMissions = unVerifiedMissions,
         changeMission = viewModel::changeMission,
         verifyMission = {},
         navigateToPost = navigateToPost
@@ -45,7 +43,6 @@ internal fun MissionRoute(
 private fun MissionScreen(
     dailyMission: DailyMission,
     verifiedMissions: List<MissionFeed>,
-    unVerifiedMissions: List<MissionFeed>,
     changeMission: () -> Unit,
     verifyMission: () -> Unit,
     navigateToPost: (Int) -> Unit,
@@ -76,7 +73,7 @@ private fun MissionScreen(
 
         item {
             Text(
-                "미션 완료",
+                "미션 기록",
                 style = TraceTheme.typography.bodySSB.copy(fontSize = 16.sp, lineHeight = 20.sp)
             )
 
@@ -90,23 +87,6 @@ private fun MissionScreen(
 
             Spacer(Modifier.height(10.dp))
         }
-
-        item {
-            Spacer(Modifier.height(15.dp))
-
-            Text(
-                "미션 미완료",
-                style = TraceTheme.typography.bodySSB,
-            )
-        }
-
-        items(count = unVerifiedMissions.size, key = { index ->
-            unVerifiedMissions[index].missionId
-        }) { index ->
-
-        }
-
-
     }
 }
 
@@ -124,7 +104,6 @@ fun MissionScreenPreview() {
             changeCount = 0
         ),
         verifiedMissions = fakeMissionFeeds1,
-        unVerifiedMissions = fakeMissionFeeds2,
         changeMission = {},
         verifyMission = {},
         navigateToPost = {}

@@ -25,9 +25,6 @@ class MissionViewModel @Inject constructor(
     private val _verifiedMissions = MutableStateFlow(fakeMissionFeeds1)
     val verifiedMissions = _verifiedMissions.asStateFlow()
 
-    private val _unVerifiedMissions = MutableStateFlow(fakeMissionFeeds2)
-    val unVerifiedMissions = _unVerifiedMissions.asStateFlow()
-
     fun changeMission() {
         _dailyMission.value = _dailyMission.value.incrementChange()
     }
@@ -79,43 +76,4 @@ val fakeMissionFeeds1 = listOf(
         createdAt = LocalDateTime.of(2025, 5, 18, 17, 5)
     )
 )
-
-val fakeMissionFeeds2 = listOf(
-    MissionFeed(
-        missionId = 6,
-        description = "지하철에서 어르신에게 자리 양보하기",
-        isVerified = true,
-        imageUrl = "https://picsum.photos/200/300?random=1",
-        createdAt = LocalDateTime.of(2025, 5, 22, 9, 0)
-    ),
-    MissionFeed(
-        missionId = 7,
-        description = "길거리 쓰레기 줍기",
-        isVerified = false,
-        imageUrl = null,
-        createdAt = LocalDateTime.of(2025, 5, 21, 16, 30)
-    ),
-    MissionFeed(
-        missionId = 8,
-        description = "카페에서 다 쓴 컵 정리하기",
-        isVerified = true,
-        imageUrl = "https://picsum.photos/200/300?random=6",
-        createdAt = LocalDateTime.of(2025, 5, 20, 13, 15)
-    ),
-    MissionFeed(
-        missionId = 9,
-        description = "지인에게 따뜻한 말 한마디 전하기",
-        isVerified = false,
-        imageUrl = null,
-        createdAt = LocalDateTime.of(2025, 5, 19, 10, 45)
-    ),
-    MissionFeed(
-        missionId = 10,
-        description = "엘리베이터 버튼 대신 눌러주기",
-        isVerified = true,
-        imageUrl = "https://picsum.photos/200/300?random=2",
-        createdAt = LocalDateTime.of(2025, 5, 18, 17, 5)
-    )
-)
-
 
