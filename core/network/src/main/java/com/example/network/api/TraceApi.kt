@@ -12,6 +12,7 @@ import com.example.network.model.post.ToggleEmotionRequest
 import com.example.network.model.post.ToggleEmotionResponse
 import com.example.network.model.post.UpdatePostRequest
 import com.example.network.model.post.UpdatePostResponse
+import com.example.network.model.token.CheckTokenHealthRequest
 import com.example.network.model.token.CheckTokenHealthResponse
 import com.example.network.model.token.RefreshTokenRequest
 import com.example.network.model.user.LoadUserInfoResponse
@@ -26,7 +27,6 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
-import retrofit2.http.Query
 
 interface TraceApi {
     @POST("/api/v1/auth/oauth/login")
@@ -42,8 +42,8 @@ interface TraceApi {
     @HTTP(method = "POST", path = "/api/v1/token/refresh", hasBody = true)
     suspend fun refreshToken(@Body refreshTokenRequest: RefreshTokenRequest): Result<TokenResponse>
 
-    @GET("/api/v1/token/expiration")
-    suspend fun checkTokenHealth(@Query("token") token: String): Result<CheckTokenHealthResponse>
+    @POST("/api/v1/token/expiration")
+    suspend fun checkTokenHealth(@Body checkTokenHealthRequest: CheckTokenHealthRequest): Result<CheckTokenHealthResponse>
 
     @GET("/api/v1/posts/{id}")
     suspend fun getPost(@Path("id") postId: Int): Result<GetPostResponse>
