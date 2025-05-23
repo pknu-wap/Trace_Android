@@ -1,6 +1,6 @@
+
 import com.example.app.configureHiltAndroid
 import com.example.app.libs
-import org.gradle.kotlin.dsl.dependencies
 
 plugins {
     id("trace.android.library")
@@ -26,6 +26,9 @@ dependencies {
     val libs = project.extensions.libs
     implementation(libs.findLibrary("hilt-navigation-compose").get())
     implementation(libs.findLibrary("androidx.compose.navigation").get())
+
+    implementation(libs.findLibrary("androidx.paging.runtime").get())
+    implementation(libs.findLibrary("androidx.paging.compose").get())
 
     implementation(libs.findLibrary("androidx.lifecycle.viewModelCompose").get())
     implementation(libs.findLibrary("androidx.lifecycle.runtimeCompose").get())

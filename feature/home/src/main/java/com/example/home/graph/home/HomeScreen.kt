@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +30,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.LoadState
+import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.common.util.clickable
 import com.example.designsystem.R
 import com.example.designsystem.theme.GrayLine
@@ -39,6 +45,7 @@ import com.example.domain.model.post.TabType
 import com.example.home.graph.home.HomeViewModel.HomeEvent
 import com.example.home.graph.home.component.PostFeed
 import com.example.home.graph.home.component.TabSelector
+import kotlinx.coroutines.flow.flowOf
 
 
 @Composable
@@ -49,7 +56,7 @@ internal fun HomeRoute(
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
 
-    val postFeeds by viewModel.postFeeds.collectAsStateWithLifecycle()
+    val postFeeds = viewModel.postPagingFlow.collectAsLazyPagingItems()
     val tabType by viewModel.tabType.collectAsStateWithLifecycle()
 
     LaunchedEffect(true) {
@@ -75,7 +82,7 @@ internal fun HomeRoute(
 
 @Composable
 private fun HomeScreen(
-    postFeeds: List<PostFeed>,
+    postFeeds: LazyPagingItems<PostFeed>,
     tabType: TabType,
     onTabTypeChange: (TabType) -> Unit,
     navigateToSearch: () -> Unit,
@@ -91,24 +98,50 @@ private fun HomeScreen(
                 .fillMaxSize()
                 .padding(top = 105.dp, start = 20.dp, end = 20.dp)
         ) {
-            items(postFeeds.size) { index ->
-                PostFeed(
-                    postFeed = postFeeds[index],
-                    onClick = navigateToPost
-                )
+            items(postFeeds.itemCount) { index ->
+                postFeeds[index]?.let {
+                    PostFeed(
+                        postFeed = it,
+                        onClick = navigateToPost
+                    )
 
-                Spacer(Modifier.height(8.dp))
+                    Spacer(Modifier.height(8.dp))
 
-                Spacer(
-                    Modifier
-                        .fillMaxWidth()
-                        .height(1.dp)
-                        .background(GrayLine)
-                )
+                    HorizontalDivider(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        thickness = 1.dp,
+                        color = GrayLine
+                    )
+                }
 
                 Spacer(Modifier.height(15.dp))
             }
+
+            item {
+                when (val state = postFeeds.loadState.append) {
+                    is LoadState.Loading -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .align(Alignment.BottomCenter)
+                        ) {
+                            CircularProgressIndicator(
+                                color = PrimaryDefault, modifier = Modifier.align(
+                                    Alignment.Center
+                                )
+                            )
+                        }
+                    }
+
+                    is LoadState.Error -> {}
+
+                    else -> {}
+                }
+            }
+
         }
+
 
         Column(
             modifier = Modifier.align(Alignment.TopCenter)
@@ -120,8 +153,7 @@ private fun HomeScreen(
                         PrimaryDefault
                     )
                     .padding(horizontal = 20.dp)
-                    .height(45.dp)
-                 ,
+                    .height(45.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text("흔적들", style = TraceTheme.typography.headingMB, color = White)
@@ -195,12 +227,22 @@ private fun HomeScreen(
 @Composable
 fun HomeScreenPreview() {
     HomeScreen(
-        postFeeds = fakePostFeeds,
         tabType = TabType.ALL,
         onTabTypeChange = {},
         navigateToPost = {},
         navigateToWritePost = {},
         navigateToSearch = {},
+        postFeeds = fakeLazyPagingItems()
     )
 }
+
+@Composable
+fun fakeLazyPagingItems(): LazyPagingItems<PostFeed> {
+    return flowOf(
+        PagingData.from(
+            fakePostFeeds
+        )
+    ).collectAsLazyPagingItems()
+}
+
 

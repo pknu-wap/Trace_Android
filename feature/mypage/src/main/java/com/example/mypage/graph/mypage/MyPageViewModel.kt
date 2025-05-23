@@ -51,7 +51,7 @@ class MyPageViewModel @Inject constructor(
     val reactedPosts = _reactedPosts.asStateFlow()
 
     private fun getUserInfo() = viewModelScope.launch {
-       userRepository.getUserInfo().onSuccess { userInfo ->
+        userRepository.getUserInfo().onSuccess { userInfo ->
             _userInfo.value = userInfo
         }
     }
@@ -90,7 +90,7 @@ val fakePostFeeds: List<PostFeed> = listOf(
         viewCount = 150,
         commentCount = 5,
         isVerified = true,
-        postId = 1
+        postId = 1, providerId = "1234", updatedAt = LocalDateTime.now()
     ),
     PostFeed(
         postType = PostType.GOOD_DEED,
@@ -101,8 +101,9 @@ val fakePostFeeds: List<PostFeed> = listOf(
         viewCount = 220,
         commentCount = 10,
         isVerified = false,
-        imageUri = "https://picsum.photos/200/300?random=2",
-        postId = 1
+        imageUrl = "https://picsum.photos/200/300?random=2",
+        postId = 2,
+        providerId = "1234", updatedAt = LocalDateTime.now()
     ),
     PostFeed(
         postType = PostType.GOOD_DEED,
@@ -113,7 +114,8 @@ val fakePostFeeds: List<PostFeed> = listOf(
         viewCount = 300,
         commentCount = 8,
         isVerified = true,
-        postId = 1
+        postId = 2,
+        providerId = "1234", updatedAt = LocalDateTime.now()
     ),
     PostFeed(
         postType = PostType.GOOD_DEED,
@@ -124,8 +126,9 @@ val fakePostFeeds: List<PostFeed> = listOf(
         viewCount = 175,
         commentCount = 12,
         isVerified = true,
-        imageUri = "https://picsum.photos/200/300?random=4",
-        postId = 1
+        imageUrl = "https://picsum.photos/200/300?random=4",
+        postId = 1,
+        providerId = "1234", updatedAt = LocalDateTime.now()
     ),
     PostFeed(
         postType = PostType.GOOD_DEED,
@@ -136,7 +139,8 @@ val fakePostFeeds: List<PostFeed> = listOf(
         viewCount = 500,
         commentCount = 35,
         isVerified = false,
-        postId = 1
+        postId = 1,
+        providerId = "1234", updatedAt = LocalDateTime.now()
     ),
     PostFeed(
         postType = PostType.GOOD_DEED,
@@ -147,8 +151,8 @@ val fakePostFeeds: List<PostFeed> = listOf(
         viewCount = 400,
         commentCount = 28,
         isVerified = true,
-        imageUri = "https://picsum.photos/200/300?random=6",
-        postId = 1
+        imageUrl = "https://picsum.photos/200/300?random=6",
+        postId = 1, providerId = "1234", updatedAt = LocalDateTime.now()
     ),
     PostFeed(
         postType = PostType.GOOD_DEED,
@@ -159,7 +163,7 @@ val fakePostFeeds: List<PostFeed> = listOf(
         viewCount = 320,
         commentCount = 15,
         isVerified = true,
-        postId = 1
+        postId = 1, providerId = "1234", updatedAt = LocalDateTime.now()
     ),
     PostFeed(
         postType = PostType.GOOD_DEED,
@@ -170,8 +174,8 @@ val fakePostFeeds: List<PostFeed> = listOf(
         viewCount = 220,
         commentCount = 18,
         isVerified = false,
-        imageUri = "https://picsum.photos/200/300?random=8",
-        postId = 1
+        imageUrl = "https://picsum.photos/200/300?random=8",
+        postId = 1, providerId = "1234", updatedAt = LocalDateTime.now()
     ),
     PostFeed(
         postType = PostType.GOOD_DEED,
@@ -182,8 +186,8 @@ val fakePostFeeds: List<PostFeed> = listOf(
         viewCount = 250,
         commentCount = 13,
         isVerified = false,
-        imageUri = "https://picsum.photos/200/300?random=9",
-        postId = 1
+        imageUrl = "https://picsum.photos/200/300?random=9",
+        postId = 1, providerId = "1234", updatedAt = LocalDateTime.now()
     ),
     PostFeed(
         postType = PostType.GOOD_DEED,
@@ -194,8 +198,8 @@ val fakePostFeeds: List<PostFeed> = listOf(
         viewCount = 100,
         commentCount = 5,
         isVerified = true,
-        imageUri = "https://picsum.photos/200/300?random=10",
-        postId = 1
+        imageUrl = "https://picsum.photos/200/300?random=10",
+        postId = 1, providerId = "1234", updatedAt = LocalDateTime.now()
     )
 )
 

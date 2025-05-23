@@ -1,6 +1,10 @@
 package com.example.network.model.post
 
+import com.example.domain.model.post.EmotionCount
+import com.example.domain.model.post.PostDetail
+import com.example.domain.model.post.PostType
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.toJavaLocalDateTime
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -19,4 +23,24 @@ data class GetPostResponse(
     val updatedAt : LocalDateTime,
     val isOwner: Boolean,
     val isVerified : Boolean,
-)
+) {
+    fun toDomain() : PostDetail {
+        return PostDetail(
+            postId = id,
+            postType = PostType.fromString(postType),
+            viewCount = viewCount,
+            emotionCount = EmotionCount.fromMap(emotionCount),
+            title = title,
+            content = content,
+            providerId = providerId,
+            nickname = nickname,
+            images = imageUrls,
+            profileImageUrl =  profileImageUrl,
+            createdAt = createdAt.toJavaLocalDateTime(),
+            updatedAt = updatedAt.toJavaLocalDateTime(),
+            isOwner = isOwner,
+            isVerified = isVerified,
+            comments = emptyList()
+        )
+    }
+}

@@ -31,6 +31,7 @@ import com.example.designsystem.theme.PrimaryDefault
 import com.example.domain.model.post.PostFeed
 import com.example.domain.model.post.SearchType
 import com.example.domain.model.post.TabType
+import com.example.home.graph.home.fakePostFeeds
 import com.example.home.graph.search.SearchViewModel.SearchEvent
 import com.example.home.graph.search.component.SearchInitialView
 import com.example.home.graph.search.component.SearchResultView

@@ -2,13 +2,17 @@ package com.example.home.graph.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import com.example.domain.model.post.PostFeed
 import com.example.domain.model.post.PostType
 import com.example.domain.model.post.TabType
+import com.example.domain.repository.PostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
@@ -16,7 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-
+    private val postRepository: PostRepository,
 ) : ViewModel() {
     private val _eventChannel = Channel<HomeEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
@@ -25,22 +29,22 @@ class HomeViewModel @Inject constructor(
         _eventChannel.send(event)
     }
 
-    private val _postFeeds: MutableStateFlow<List<PostFeed>> = MutableStateFlow(fakePostFeeds)
-    val postFeeds = _postFeeds.asStateFlow()
-
-    private val _tabType : MutableStateFlow<TabType> = MutableStateFlow(TabType.ALL)
+    private val _tabType: MutableStateFlow<TabType> = MutableStateFlow(TabType.ALL)
     val tabType = _tabType.asStateFlow()
 
-    private fun setPostFeeds(postFeeds: List<PostFeed>) {
-        _postFeeds.value = postFeeds
-    }
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val postPagingFlow = tabType
+        .flatMapLatest { tab ->
+            postRepository.getPostPagingFlow(tab)
+        }
+        .cachedIn(viewModelScope)
 
     fun setTabType(tabType: TabType) {
         _tabType.value = tabType
     }
 
     sealed class HomeEvent {
-        data class NavigateToPost(val postId : Int) : HomeEvent()
+        data class NavigateToPost(val postId: Int) : HomeEvent()
         data object NavigateToWritePost : HomeEvent()
         data object NavigateToSearch : HomeEvent()
     }
@@ -56,7 +60,7 @@ val fakePostFeeds: List<PostFeed> = listOf(
         viewCount = 150,
         commentCount = 5,
         isVerified = true,
-        postId = 1
+        postId = 1, providerId = "1234", updatedAt = LocalDateTime.now()
     ),
     PostFeed(
         postType = PostType.GOOD_DEED,
@@ -67,8 +71,9 @@ val fakePostFeeds: List<PostFeed> = listOf(
         viewCount = 220,
         commentCount = 10,
         isVerified = false,
-        imageUri = "https://picsum.photos/200/300?random=2",
-        postId = 1
+        imageUrl = "https://picsum.photos/200/300?random=2",
+        postId = 2,
+        providerId = "1234", updatedAt = LocalDateTime.now()
     ),
     PostFeed(
         postType = PostType.GOOD_DEED,
@@ -79,7 +84,8 @@ val fakePostFeeds: List<PostFeed> = listOf(
         viewCount = 300,
         commentCount = 8,
         isVerified = true,
-        postId = 1
+        postId = 2,
+        providerId = "1234", updatedAt = LocalDateTime.now()
     ),
     PostFeed(
         postType = PostType.GOOD_DEED,
@@ -90,8 +96,9 @@ val fakePostFeeds: List<PostFeed> = listOf(
         viewCount = 175,
         commentCount = 12,
         isVerified = true,
-        imageUri = "https://picsum.photos/200/300?random=4",
-        postId = 1
+        imageUrl = "https://picsum.photos/200/300?random=4",
+        postId = 1,
+        providerId = "1234", updatedAt = LocalDateTime.now()
     ),
     PostFeed(
         postType = PostType.GOOD_DEED,
@@ -102,7 +109,8 @@ val fakePostFeeds: List<PostFeed> = listOf(
         viewCount = 500,
         commentCount = 35,
         isVerified = false,
-        postId = 1
+        postId = 1,
+        providerId = "1234", updatedAt = LocalDateTime.now()
     ),
     PostFeed(
         postType = PostType.GOOD_DEED,
@@ -113,8 +121,8 @@ val fakePostFeeds: List<PostFeed> = listOf(
         viewCount = 400,
         commentCount = 28,
         isVerified = true,
-        imageUri = "https://picsum.photos/200/300?random=6",
-        postId = 1
+        imageUrl = "https://picsum.photos/200/300?random=6",
+        postId = 1, providerId = "1234", updatedAt = LocalDateTime.now()
     ),
     PostFeed(
         postType = PostType.GOOD_DEED,
@@ -125,7 +133,7 @@ val fakePostFeeds: List<PostFeed> = listOf(
         viewCount = 320,
         commentCount = 15,
         isVerified = true,
-        postId = 1
+        postId = 1, providerId = "1234", updatedAt = LocalDateTime.now()
     ),
     PostFeed(
         postType = PostType.GOOD_DEED,
@@ -136,8 +144,8 @@ val fakePostFeeds: List<PostFeed> = listOf(
         viewCount = 220,
         commentCount = 18,
         isVerified = false,
-        imageUri = "https://picsum.photos/200/300?random=8",
-        postId = 1
+        imageUrl = "https://picsum.photos/200/300?random=8",
+        postId = 1, providerId = "1234", updatedAt = LocalDateTime.now()
     ),
     PostFeed(
         postType = PostType.GOOD_DEED,
@@ -148,8 +156,8 @@ val fakePostFeeds: List<PostFeed> = listOf(
         viewCount = 250,
         commentCount = 13,
         isVerified = false,
-        imageUri = "https://picsum.photos/200/300?random=9",
-        postId = 1
+        imageUrl = "https://picsum.photos/200/300?random=9",
+        postId = 1, providerId = "1234", updatedAt = LocalDateTime.now()
     ),
     PostFeed(
         postType = PostType.GOOD_DEED,
@@ -160,8 +168,10 @@ val fakePostFeeds: List<PostFeed> = listOf(
         viewCount = 100,
         commentCount = 5,
         isVerified = true,
-        imageUri = "https://picsum.photos/200/300?random=10",
-        postId = 1
+        imageUrl = "https://picsum.photos/200/300?random=10",
+        postId = 1, providerId = "1234", updatedAt = LocalDateTime.now()
     )
 )
+
+
 

@@ -41,10 +41,10 @@ internal fun PostFeed(
     postFeed: PostFeed,
     onClick: () -> Unit
 ) {
-    if (postFeed.imageUri.isNotEmpty()) {
+    if (postFeed.imageUrl.isNotEmpty()) {
         val painter = rememberAsyncImagePainter(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(postFeed.imageUri)
+                .data(postFeed.imageUrl)
                 .crossfade(true)
                 .build()
         )
