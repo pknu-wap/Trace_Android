@@ -43,6 +43,7 @@ import com.example.designsystem.R
 import com.example.designsystem.component.ImageContent
 import com.example.designsystem.component.TraceContentField
 import com.example.designsystem.component.TraceTitleField
+import com.example.designsystem.component.VerifyingDialog
 import com.example.designsystem.theme.Background
 import com.example.designsystem.theme.GrayLine
 import com.example.designsystem.theme.PrimaryActive
@@ -92,6 +93,7 @@ internal fun VerifyMissionRoute(
         onContentChange = viewModel::setContent,
         addImages = viewModel::addImages,
         removeImage = viewModel::removeImage,
+        verifyMission = viewModel::verifyMission,
         navigateBack = navigateBack,
     )
 }
@@ -107,6 +109,7 @@ private fun VerifyMissionScreen(
     onContentChange: (String) -> Unit,
     addImages: (List<String>) -> Unit,
     removeImage: (String) -> Unit,
+    verifyMission : () -> Unit,
     navigateBack: () -> Unit,
 ) {
     val contentFieldFocusRequester = remember { FocusRequester() }
@@ -117,6 +120,7 @@ private fun VerifyMissionScreen(
     val requestAvailable by remember(title, content) {
         derivedStateOf { title.isNotEmpty() && content.isNotEmpty() }
     }
+
 
     Box(
         modifier = Modifier
@@ -199,6 +203,7 @@ private fun VerifyMissionScreen(
                 color = if (requestAvailable) PrimaryActive else TextHint,
                 modifier = Modifier.clickable(isRipple = true, enabled = requestAvailable) {
                     keyboardController?.hide()
+                    verifyMission()
                 }
             )
         }
@@ -214,7 +219,7 @@ private fun VerifyMissionScreen(
         }
 
         if (isVerifyingMission) {
-
+            VerifyingDialog()
         }
     }
 }
@@ -285,9 +290,10 @@ fun VerifyMissionScreenPreview() {
         isVerifyingMission = false,
         images = emptyList(), description = "길거리에서 쓰레기 줍기",
         onContentChange = {},
-        navigateBack = {},
         addImages = {},
         removeImage = {},
-        onTitleChange = {}
+        onTitleChange = {},
+        verifyMission = {},
+        navigateBack = {},
     )
 }

@@ -2,12 +2,15 @@ package com.example.mission.graph.verifymission
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.common.event.EventHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -46,6 +49,14 @@ class VerifyMissionViewModel @Inject constructor(
 
     fun removeImage(image: String) {
         _images.value = _images.value.filter { it != image }
+    }
+
+    fun verifyMission() = viewModelScope.launch {
+        _isVerifyingMission.value = true
+
+        delay(4000)
+
+        _isVerifyingMission.value = false
     }
 
     sealed class VerifyMissionEvent {
