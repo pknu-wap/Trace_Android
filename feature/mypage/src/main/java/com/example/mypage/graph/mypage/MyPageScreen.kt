@@ -1,6 +1,5 @@
 package com.example.mypage.graph.mypage
 
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -11,10 +10,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
@@ -25,29 +22,26 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil3.compose.rememberAsyncImagePainter
 import com.example.common.util.clickable
 import com.example.designsystem.R
+import com.example.designsystem.component.PostFeed
+import com.example.designsystem.component.ProfileImage
 import com.example.designsystem.theme.Background
 import com.example.designsystem.theme.Black
 import com.example.designsystem.theme.GrayLine
-import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.TabIndicator
 import com.example.designsystem.theme.TraceTheme
 import com.example.domain.model.mypage.MyPageTab
 import com.example.domain.model.post.PostFeed
 import com.example.domain.user.UserInfo
 import com.example.mypage.graph.mypage.MyPageViewModel.MyPageEvent
-import com.example.mypage.graph.mypage.component.PostFeed
+
 
 @Composable
 internal fun MyPageRoute(
@@ -128,22 +122,12 @@ private fun MyPageScreen(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Box() {
-                    Canvas(modifier = Modifier.size(100.dp)) {
-                        val canvasWidth = size.width
-                        val center = center
-                        val radius = canvasWidth / 2f
-
-                        drawCircle(
-                            color = PrimaryDefault,
-                            radius = radius,
-                            center = center,
-                            style = Stroke(10f)
-                        )
-                    }
-
-                    ProfileImage(userInfo.profileImageUrl)
-                }
+                ProfileImage(
+                    profileImageUrl = userInfo.profileImageUrl,
+                    imageSize = if (userInfo.profileImageUrl != null) 96.dp else 86.dp,
+                    paddingValue = if (userInfo.profileImageUrl != null) 2.dp else 7.dp,
+                    strokeWidth = 10f,
+                )
 
                 Spacer(Modifier.width(20.dp))
 
@@ -211,7 +195,7 @@ private fun MyPageScreen(
         }
 
         items(displayedPosts.size) { index ->
-            PostFeed(displayedPosts[index], onClick = { navigateToPost(1) })
+            PostFeed(displayedPosts[index], navigateToPost = { navigateToPost(1) })
 
             Spacer(Modifier.height(8.dp))
 
@@ -226,27 +210,6 @@ private fun MyPageScreen(
         }
     }
 }
-
-
-@Composable
-private fun ProfileImage(imageUrl: String?) {
-    val profileImage = rememberAsyncImagePainter(imageUrl ?: R.drawable.default_profile)
-    val imageSize = if (imageUrl != null) 96.dp else 86.dp
-    val paddingValue = if (imageUrl != null) 2.dp else 7.dp
-
-    Box(Modifier.padding(paddingValue)) {
-        Image(
-            painter = profileImage,
-            contentDescription = "프로필 이미지",
-            modifier = Modifier
-                .size(imageSize)
-                .fillMaxSize()
-                .clip(CircleShape),
-            contentScale = ContentScale.Crop
-        )
-    }
-}
-
 
 @Preview
 @Composable

@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.CircularProgressIndicator
@@ -34,11 +33,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -47,13 +43,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil3.compose.rememberAsyncImagePainter
-import coil3.request.ImageRequest
-import coil3.request.crossfade
 import com.example.common.event.TraceEvent
 import com.example.common.util.clickable
 import com.example.common.util.formatCount
 import com.example.designsystem.R
+import com.example.designsystem.component.ProfileImage
 import com.example.designsystem.theme.Background
 import com.example.designsystem.theme.Black
 import com.example.designsystem.theme.DarkGray
@@ -217,7 +211,11 @@ private fun PostScreen(
                             )
                         }
 
-                        ProfileImage(postDetail.profileImageUrl)
+                        ProfileImage(
+                            profileImageUrl = postDetail.profileImageUrl,
+                            imageSize = if (postDetail.profileImageUrl != null) 38.dp else 34.dp,
+                            paddingValue = if (postDetail.profileImageUrl != null) 1.dp else 3.dp
+                        )
                     }
 
                     Spacer(Modifier.width(10.dp))
@@ -502,28 +500,6 @@ private fun PostScreen(
         }
     }
 }
-
-@Composable
-private fun ProfileImage(profileImageUrl: String?) {
-    val profileImage = rememberAsyncImagePainter(
-        model = ImageRequest.Builder(LocalContext.current)
-            .data(profileImageUrl ?: R.drawable.default_profile).crossfade(true).build()
-    )
-    val imageSize = if (profileImageUrl != null) 38.dp else 34.dp
-    val paddingValue = if (profileImageUrl != null) 1.dp else 3.dp
-
-    Box(Modifier.padding(paddingValue)) {
-        Image(
-            painter = profileImage,
-            contentDescription = "프로필 이미지",
-            modifier = Modifier
-                .size(imageSize)
-                .clip(CircleShape),
-            contentScale = ContentScale.Crop
-        )
-    }
-}
-
 
 @Preview
 @Composable

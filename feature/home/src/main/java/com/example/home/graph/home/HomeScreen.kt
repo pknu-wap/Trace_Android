@@ -36,6 +36,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.common.util.clickable
 import com.example.designsystem.R
+import com.example.designsystem.component.PostFeed
 import com.example.designsystem.theme.GrayLine
 import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.TraceTheme
@@ -43,7 +44,6 @@ import com.example.designsystem.theme.White
 import com.example.domain.model.post.PostFeed
 import com.example.domain.model.post.TabType
 import com.example.home.graph.home.HomeViewModel.HomeEvent
-import com.example.home.graph.home.component.PostFeed
 import com.example.home.graph.home.component.TabSelector
 import kotlinx.coroutines.flow.flowOf
 
