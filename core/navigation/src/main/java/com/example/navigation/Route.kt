@@ -47,7 +47,7 @@ sealed class MissionGraph : Route {
     data object MissionRoute : MissionGraph()
 
     @Serializable
-    data object SubmitMissionRoute : MissionGraph()
+    data class VerifyMissionRoute(val description : String) : MissionGraph()
 }
 
 @Serializable

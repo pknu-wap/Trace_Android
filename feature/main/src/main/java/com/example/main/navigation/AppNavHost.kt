@@ -15,6 +15,7 @@ import com.example.home.navigation.navigateToSearch
 import com.example.home.navigation.navigateToUpdatePost
 import com.example.home.navigation.navigateToWritePost
 import com.example.mission.navigation.missionNavGraph
+import com.example.mission.navigation.navigateToVerifyMission
 import com.example.mypage.navigation.myPageNavGraph
 import com.example.mypage.navigation.navigateToSetting
 import com.example.mypage.navigation.navigateToUpdateProfile
@@ -85,7 +86,15 @@ fun AppNavHost(
             navigateBack = { navigateBack(navController) },
         )
 
-        missionNavGraph()
+        missionNavGraph(
+            navigateToPost = { postId ->
+                navController.navigateToPost(postId)
+            },
+            navigateToVerifyMission = {description ->
+                navController.navigateToVerifyMission(description)
+            },
+            navigateBack = { navigateBack(navController) }
+        )
 
         myPageNavGraph(
             navigateToPost = { postId -> navController.navigateToPost(postId) },

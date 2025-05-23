@@ -49,9 +49,9 @@ import com.example.designsystem.theme.TextHint
 import com.example.designsystem.theme.TraceTheme
 import com.example.domain.model.post.WritePostType
 import com.example.home.graph.writepost.WritePostViewModel.WritePostEvent
-import com.example.home.graph.writepost.component.ImageContent
-import com.example.home.graph.writepost.component.TraceContentField
-import com.example.home.graph.writepost.component.TraceTitleField
+import com.example.designsystem.component.ImageContent
+import com.example.designsystem.component.TraceContentField
+import com.example.designsystem.component.TraceTitleField
 
 
 @Composable

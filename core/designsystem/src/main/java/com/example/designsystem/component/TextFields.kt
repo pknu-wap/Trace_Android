@@ -1,4 +1,4 @@
-package com.example.home.graph.writepost.component
+package com.example.designsystem.component
 
 
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -35,8 +35,7 @@ private val customTextSelectionColors = TextSelectionColors(
 )
 
 @Composable
-internal fun TraceTitleField(
-    modifier: Modifier = Modifier,
+fun TraceTitleField(modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
     onNext: () -> Unit,
@@ -79,7 +78,7 @@ internal fun TraceTitleField(
 }
 
 @Composable
-internal fun TraceContentField(
+fun TraceContentField(
     modifier: Modifier = Modifier,
     lazyListState: LazyListState,
     value: String,

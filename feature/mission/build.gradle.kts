@@ -6,5 +6,8 @@ android {
     namespace = "com.example.mission"
 }
 
-dependencies {}
+dependencies {
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network)
+}
 
