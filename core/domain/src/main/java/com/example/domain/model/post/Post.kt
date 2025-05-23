@@ -12,10 +12,11 @@ data class PostFeed(
     val title: String,
     val content: String,
     val nickname: String,
+    val profileImageUrl: String? = null,
     val viewCount: Int = 0,
     val commentCount: Int = 0,
     val isVerified: Boolean = false,
-    val imageUrl: String = "",
+    val imageUrl: String? = null,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime,
 ) {

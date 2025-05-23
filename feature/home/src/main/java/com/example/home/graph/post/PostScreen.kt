@@ -504,13 +504,13 @@ private fun PostScreen(
 }
 
 @Composable
-private fun ProfileImage(imageUrl: String?) {
+private fun ProfileImage(profileImageUrl: String?) {
     val profileImage = rememberAsyncImagePainter(
         model = ImageRequest.Builder(LocalContext.current)
-            .data(imageUrl ?: R.drawable.default_profile).crossfade(true).build()
+            .data(profileImageUrl ?: R.drawable.default_profile).crossfade(true).build()
     )
-    val imageSize = if (imageUrl != null) 38.dp else 34.dp
-    val paddingValue = if (imageUrl != null) 1.dp else 3.dp
+    val imageSize = if (profileImageUrl != null) 38.dp else 34.dp
+    val paddingValue = if (profileImageUrl != null) 1.dp else 3.dp
 
     Box(Modifier.padding(paddingValue)) {
         Image(

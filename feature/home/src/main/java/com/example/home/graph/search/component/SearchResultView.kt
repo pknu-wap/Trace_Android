@@ -169,7 +169,7 @@ internal fun SearchResultView(
         }
 
         displayedPosts.forEachIndexed { index, post ->
-            PostFeed(post, onClick = { navigateToPost(1) })
+            PostFeed(post, navigateToPost = { navigateToPost(1) })
 
             Spacer(Modifier.height(8.dp))
 

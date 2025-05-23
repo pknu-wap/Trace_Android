@@ -25,7 +25,7 @@ class PostPagingSource(
                 postType = tabType
             ).getOrThrow()
 
-            val posts = response.toDomain()
+            val postFeeds = response.toDomain()
 
             val nextCursor = if (response.hasNext) Cursor(
                 id = response.cursor!!.id,
@@ -33,7 +33,7 @@ class PostPagingSource(
             ) else null
 
             LoadResult.Page(
-                data = posts,
+                data = postFeeds,
                 prevKey = null,
                 nextKey = nextCursor
             )

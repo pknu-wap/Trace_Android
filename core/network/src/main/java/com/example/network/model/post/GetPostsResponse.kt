@@ -21,6 +21,7 @@ data class GetPostsResponse(
                 title = it.title,
                 content = it.content,
                 nickname = it.nickname,
+                profileImageUrl = it.profileImageUrl,
                 viewCount = it.viewCount,
                 commentCount = it.commentCount,
                 isVerified = it.verified,

@@ -55,7 +55,6 @@ internal fun HomeRoute(
     navigateToWritePost: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
-
     val postFeeds = viewModel.postPagingFlow.collectAsLazyPagingItems()
     val tabType by viewModel.tabType.collectAsStateWithLifecycle()
 
@@ -102,7 +101,7 @@ private fun HomeScreen(
                 postFeeds[index]?.let {
                     PostFeed(
                         postFeed = it,
-                        onClick = navigateToPost
+                        navigateToPost = navigateToPost
                     )
 
                     Spacer(Modifier.height(8.dp))

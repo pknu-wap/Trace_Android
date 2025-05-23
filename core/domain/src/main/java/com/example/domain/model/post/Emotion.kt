@@ -18,7 +18,7 @@ data class EmotionCount(
     companion object {
         fun fromMap(map: Map<String, Int>): EmotionCount {
             return EmotionCount(
-                heartWarmingCount = map["heartWarmingCount"] ?: 0,
+                heartWarmingCount = map["heartwarmingCount"] ?: 0,
                 likeableCount = map["likeableCount"] ?: 0,
                 touchingCount = map["touchingCount"] ?: 0,
                 impressiveCount = map["impressiveCount"] ?: 0,

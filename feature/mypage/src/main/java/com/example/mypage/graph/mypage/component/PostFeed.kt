@@ -41,7 +41,7 @@ internal fun PostFeed(
     postFeed: PostFeed,
     onClick: () -> Unit
 ) {
-    if (postFeed.imageUrl.isNotEmpty()) {
+    if (postFeed.imageUrl != null) {
         val painter = rememberAsyncImagePainter(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(postFeed.imageUrl)
