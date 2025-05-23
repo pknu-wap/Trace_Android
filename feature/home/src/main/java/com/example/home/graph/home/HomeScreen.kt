@@ -14,6 +14,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
@@ -79,6 +83,7 @@ internal fun HomeRoute(
 }
 
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun HomeScreen(
     postFeeds: LazyPagingItems<PostFeed>,
@@ -88,9 +93,16 @@ private fun HomeScreen(
     navigateToPost: (Int) -> Unit,
     navigateToWritePost: () -> Unit,
 ) {
+    val isRefreshing = postFeeds.loadState.refresh is LoadState.Loading
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = isRefreshing,
+        onRefresh = { postFeeds.refresh() }
+    )
+
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .pullRefresh(pullRefreshState)
     ) {
         LazyColumn(
             modifier = Modifier
@@ -138,9 +150,14 @@ private fun HomeScreen(
                     else -> {}
                 }
             }
-
         }
 
+        PullRefreshIndicator(
+            refreshing = isRefreshing,
+            state = pullRefreshState,
+            contentColor = PrimaryDefault,
+            modifier = Modifier.align(Alignment.TopCenter)
+        )
 
         Column(
             modifier = Modifier.align(Alignment.TopCenter)
