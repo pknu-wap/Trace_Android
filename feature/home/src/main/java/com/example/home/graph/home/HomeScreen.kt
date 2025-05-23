@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
@@ -26,6 +27,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -48,8 +53,10 @@ import com.example.designsystem.theme.White
 import com.example.domain.model.post.PostFeed
 import com.example.domain.model.post.TabType
 import com.example.home.graph.home.HomeViewModel.HomeEvent
+import com.example.home.graph.home.component.HomeDropDownMenu
 import com.example.home.graph.home.component.TabSelector
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -93,11 +100,17 @@ private fun HomeScreen(
     navigateToPost: (Int) -> Unit,
     navigateToWritePost: () -> Unit,
 ) {
+    var isHomeDropDownMenuExpanded by remember { mutableStateOf(false) }
+
     val isRefreshing = postFeeds.loadState.refresh is LoadState.Loading
+
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
         onRefresh = { postFeeds.refresh() }
     )
+
+    val listState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
 
     Box(
         modifier = Modifier
@@ -105,6 +118,7 @@ private fun HomeScreen(
             .pullRefresh(pullRefreshState)
     ) {
         LazyColumn(
+            state = listState,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(top = 105.dp, start = 20.dp, end = 20.dp)
@@ -185,12 +199,27 @@ private fun HomeScreen(
 
                 Spacer(Modifier.width(35.dp))
 
-                Image(
-                    painter = painterResource(R.drawable.menu_ic),
-                    contentDescription = "메뉴",
-                    modifier = Modifier.clickable {
+                Box() {
+                    Image(
+                        painter = painterResource(R.drawable.menu_ic),
+                        contentDescription = "메뉴",
+                        modifier = Modifier.clickable {
+                            isHomeDropDownMenuExpanded = true
+                        })
 
-                    })
+                    HomeDropDownMenu(
+                        expanded = isHomeDropDownMenuExpanded,
+                        onDismiss = { isHomeDropDownMenuExpanded = false },
+                        onRefresh = {
+                            postFeeds.refresh()
+                            coroutineScope.launch {
+                                listState.scrollToItem(0)
+                            }
+                        },
+                        onWritePost = { navigateToWritePost() }
+                    )
+                }
+
             }
 
             Row(

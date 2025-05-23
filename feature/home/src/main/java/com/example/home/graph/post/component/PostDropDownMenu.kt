@@ -16,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -49,8 +50,8 @@ internal fun OwnPostDropdownMenu(
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = onDismiss,
-            shape = RoundedCornerShape(8.dp),
             modifier = Modifier
+                .shadow(elevation = 1.dp, RoundedCornerShape(8.dp))
                 .background(White),
         ) {
             Row(
@@ -104,8 +105,8 @@ internal fun OtherPostDropdownMenu(
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = onDismiss,
-            shape = RoundedCornerShape(8.dp),
             modifier = Modifier
+                .shadow(elevation = 1.dp, RoundedCornerShape(8.dp))
                 .background(White),
         ) {
             Row(
