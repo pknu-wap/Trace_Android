@@ -74,7 +74,7 @@ internal fun VerifyMissionRoute(
                     viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("미션 인증에 성공했습니다!"))
                 }
 
-                is VerifyMissionEvent.VerifyMissiontFailure -> {
+                is VerifyMissionEvent.VerifyMissionFailure -> {
                     viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("미션 인증에 실패했습니다."))
                 }
 

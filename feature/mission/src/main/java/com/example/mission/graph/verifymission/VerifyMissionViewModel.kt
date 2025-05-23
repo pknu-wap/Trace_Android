@@ -62,7 +62,7 @@ class VerifyMissionViewModel @Inject constructor(
     sealed class VerifyMissionEvent {
         data object NavigateToBack : VerifyMissionEvent()
         data class VerifyMissionSuccess(val postId: Int) : VerifyMissionEvent()
-        data object VerifyMissiontFailure : VerifyMissionEvent()
+        data object VerifyMissionFailure : VerifyMissionEvent()
     }
 
 }
