@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.rememberAsyncImagePainter
 import com.example.common.util.clickable
 import com.example.designsystem.theme.Black
+import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.White
 
@@ -44,7 +45,7 @@ fun ImageContent(
     removeImage: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val pagerState = rememberPagerState(0, ) { images.size }
+    val pagerState = rememberPagerState(0) { images.size }
     var expanded by remember { mutableStateOf(false) }
 
     if (images.isNotEmpty()) {
@@ -59,7 +60,6 @@ fun ImageContent(
             Box(
                 modifier = modifier.fillMaxWidth(),
             ) {
-
                 Card(
                     modifier = modifier
                         .fillMaxWidth()
@@ -74,6 +74,19 @@ fun ImageContent(
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxSize()
                     )
+                }
+
+                if (pageIndex.equals(0)) {
+                    Box(
+                        modifier = modifier
+                            .align(Alignment.TopStart)
+                            .padding(top = 12.dp, start = 12.dp)
+                            .background(PrimaryDefault, shape = RoundedCornerShape(12.dp))
+                            .padding(horizontal = 10.dp, vertical = 8.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("대표", style = TraceTheme.typography.bodySSB, color = White)
+                    }
                 }
 
                 Box(
@@ -119,18 +132,18 @@ fun ImageContent(
                                 .background(White, shape = RoundedCornerShape(8.dp))
                         ) {
 
-                                DropdownMenuItem(
-                                    text = {
-                                        Text(
-                                            "사진 삭제하기",
-                                            style = TraceTheme.typography.bodySM.copy(fontSize = 12.sp),
-                                        )
-                                    },
-                                    onClick = {
-                                        expanded = false
-                                        removeImage(images[pageIndex])
-                                    },
-                                )
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        "사진 삭제하기",
+                                        style = TraceTheme.typography.bodySM.copy(fontSize = 12.sp),
+                                    )
+                                },
+                                onClick = {
+                                    expanded = false
+                                    removeImage(images[pageIndex])
+                                },
+                            )
 
                         }
                     }

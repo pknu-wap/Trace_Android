@@ -203,6 +203,15 @@ private fun VerifyMissionScreen(
             )
         }
 
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp)
+                .padding(vertical = 5.dp, horizontal = 15.dp)
+                .align(Alignment.BottomCenter), verticalAlignment = Alignment.CenterVertically
+        ) {
+            GalleryPicker(imagesSize = images.size, addImages = addImages)
+        }
 
         if (isVerifyingMission) {
 
