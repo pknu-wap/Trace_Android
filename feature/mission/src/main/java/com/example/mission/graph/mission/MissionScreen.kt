@@ -26,6 +26,7 @@ import com.example.mission.graph.mission.component.VerifiedMissionBox
 internal fun MissionRoute(
     viewModel: MissionViewModel = hiltViewModel(),
     navigateToPost: (Int) -> Unit,
+    navigateToVerifyMission : (String) -> Unit,
 ) {
     val dailyMission by viewModel.dailyMission.collectAsStateWithLifecycle()
     val verifiedMissions by viewModel.verifiedMissions.collectAsStateWithLifecycle()
@@ -34,8 +35,8 @@ internal fun MissionRoute(
         dailyMission = dailyMission,
         verifiedMissions = verifiedMissions,
         changeMission = viewModel::changeMission,
-        verifyMission = {},
-        navigateToPost = navigateToPost
+        navigateToPost = navigateToPost,
+        onVerifyMission = navigateToVerifyMission
     )
 }
 
@@ -44,8 +45,8 @@ private fun MissionScreen(
     dailyMission: DailyMission,
     verifiedMissions: List<MissionFeed>,
     changeMission: () -> Unit,
-    verifyMission: () -> Unit,
     navigateToPost: (Int) -> Unit,
+    onVerifyMission: (String) -> Unit,
 ) {
     LazyColumn(
         modifier = Modifier
@@ -57,7 +58,7 @@ private fun MissionScreen(
                 MissionHeaderView(
                     dailyMission = dailyMission,
                     changeMission = changeMission,
-                    verifyMission = verifyMission
+                    verifyMission = onVerifyMission
                 )
             }
 
@@ -105,7 +106,7 @@ fun MissionScreenPreview() {
         ),
         verifiedMissions = fakeMissionFeeds1,
         changeMission = {},
-        verifyMission = {},
-        navigateToPost = {}
+        navigateToPost = {},
+        onVerifyMission = {}
     )
 }

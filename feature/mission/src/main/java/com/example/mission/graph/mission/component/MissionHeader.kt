@@ -38,7 +38,7 @@ import com.example.domain.model.mission.MAX_MISSION_CHANGE_COUNT
 internal fun MissionHeaderView(
     dailyMission: DailyMission,
     changeMission: () -> Unit,
-    verifyMission: () -> Unit,
+    verifyMission: (String) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -133,7 +133,7 @@ internal fun MissionHeaderView(
                     .background(VerificationButton)
                     .padding(horizontal = 8.dp, vertical = 8.dp)
                     .clickable {
-                        verifyMission()
+                        verifyMission(dailyMission.mission.description)
                     }
             ) {
                 Text(

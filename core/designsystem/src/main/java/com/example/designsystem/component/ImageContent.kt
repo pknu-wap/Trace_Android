@@ -1,4 +1,4 @@
-package com.example.home.graph.writepost.component
+package com.example.designsystem.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -39,7 +39,7 @@ import com.example.designsystem.theme.White
 
 
 @Composable
-internal fun ImageContent(
+fun ImageContent(
     images: List<String>,
     removeImage: (String) -> Unit,
     modifier: Modifier = Modifier

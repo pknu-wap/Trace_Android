@@ -1,10 +1,10 @@
-package com.example.home.graph.updatepost
+package com.example.mission.graph.verifymission
+
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -31,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -39,75 +40,77 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.common.event.TraceEvent
 import com.example.common.util.clickable
 import com.example.designsystem.R
+import com.example.designsystem.component.ImageContent
+import com.example.designsystem.component.TraceContentField
+import com.example.designsystem.component.TraceTitleField
 import com.example.designsystem.theme.Background
 import com.example.designsystem.theme.GrayLine
 import com.example.designsystem.theme.PrimaryActive
 import com.example.designsystem.theme.TextHint
 import com.example.designsystem.theme.TraceTheme
-import com.example.domain.model.post.PostType
-import com.example.home.graph.updatepost.UpdatePostViewModel.UpdatePostEvent
-import com.example.designsystem.component.ImageContent
-import com.example.designsystem.component.TraceContentField
-import com.example.designsystem.component.TraceTitleField
+import com.example.mission.graph.verifymission.VerifyMissionViewModel.VerifyMissionEvent
+import com.example.mission.graph.verifymission.component.VerifyMissionHeaderView
+
 
 @Composable
-internal fun UpdatePostRoute(
+internal fun VerifyMissionRoute(
     navigateBack: () -> Unit,
-    navigateToPost: (Int) -> Unit,
-    viewModel: UpdatePostViewModel = hiltViewModel(),
+    viewModel: VerifyMissionViewModel = hiltViewModel(),
 ) {
-    val type by viewModel.type.collectAsStateWithLifecycle()
+    val description = viewModel.description
+
     val title by viewModel.title.collectAsStateWithLifecycle()
     val content by viewModel.content.collectAsStateWithLifecycle()
     val images by viewModel.images.collectAsStateWithLifecycle()
+    val isVerifyingMission by viewModel.isVerifyingMission.collectAsStateWithLifecycle()
+
+
 
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
             when (event) {
-                is UpdatePostEvent.UpdatePostSuccess -> {
-                    navigateToPost(event.postId)
-                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글이 수정되었습니다."))
+                is VerifyMissionEvent.VerifyMissionSuccess -> {
+                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("미션 인증에 성공했습니다!"))
                 }
 
-                is UpdatePostEvent.UpdatePostFailure -> {
-                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글 수정에 실패했습니다."))
+                is VerifyMissionEvent.VerifyMissiontFailure -> {
+                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("미션 인증에 실패했습니다."))
                 }
 
-                is UpdatePostEvent.NavigateToBack -> navigateBack()
+                is VerifyMissionEvent.NavigateToBack -> navigateBack()
             }
         }
     }
 
-    UpdatePostScreen(
-        type = type,
+    VerifyMissionScreen(
+        description = description,
         title = title,
         content = content,
         images = images,
-        navigateBack = navigateBack,
+        isVerifyingMission = isVerifyingMission,
         onTitleChange = viewModel::setTitle,
         onContentChange = viewModel::setContent,
         addImages = viewModel::addImages,
         removeImage = viewModel::removeImage,
-        onTypeChange = viewModel::setType,
-        updatePost = viewModel::updatePost
+        navigateBack = navigateBack,
     )
 }
 
 @Composable
-private fun UpdatePostScreen(
-    type: PostType,
+private fun VerifyMissionScreen(
+    description: String,
     title: String,
     content: String,
     images: List<String>,
-    onTypeChange: (PostType) -> Unit,
+    isVerifyingMission: Boolean,
     onTitleChange: (String) -> Unit,
     onContentChange: (String) -> Unit,
     addImages: (List<String>) -> Unit,
     removeImage: (String) -> Unit,
-    updatePost : () -> Unit,
     navigateBack: () -> Unit,
 ) {
     val contentFieldFocusRequester = remember { FocusRequester() }
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     val lazyListState = rememberLazyListState()
 
@@ -131,57 +134,9 @@ private fun UpdatePostScreen(
         ) {
 
             item {
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    Row(
-                        modifier = Modifier.clickable(isRipple = true) {
-                            onTypeChange(PostType.GOOD_DEED)
-                        }
-                    ) {
-                        Image(
-                            painter = if (type == PostType.GOOD_DEED) painterResource(R.drawable.checkbox_on) else painterResource(
-                                R.drawable.checkbox_off
-                            ),
-                            contentDescription = "선행 게시글 타입",
-                            modifier = Modifier.size(20.dp)
-                        )
+                VerifyMissionHeaderView(description)
 
-                        Spacer(Modifier.width(2.dp))
-
-
-                        Text(
-                            "선행",
-                            color = if (type == PostType.GOOD_DEED) PrimaryActive else TextHint,
-                            style = TraceTheme.typography.bodySSB,
-                        )
-                    }
-
-                    Spacer(Modifier.width(20.dp))
-
-                    Row(
-                        modifier = Modifier.clickable(isRipple = true) {
-                            onTypeChange(PostType.FREE)
-                        }
-                    ) {
-                        Image(
-                            painter = if (type == PostType.FREE) painterResource(R.drawable.checkbox_on) else painterResource(
-                                R.drawable.checkbox_off
-                            ),
-                            contentDescription = "선행 게시글 타입",
-                            modifier = Modifier.size(20.dp)
-                        )
-
-                        Spacer(Modifier.width(2.dp))
-
-
-                        Text(
-                            "자유",
-                            color = if (type == PostType.FREE) PrimaryActive else TextHint,
-                            style = TraceTheme.typography.bodySSB,
-                        )
-                    }
-                }
-
-                Spacer(Modifier.height(28.dp))
+                Spacer(Modifier.height(12.dp))
 
                 TraceTitleField(
                     value = title,
@@ -206,7 +161,7 @@ private fun UpdatePostScreen(
                     value = content,
                     onValueChange = onContentChange,
                     lazyListState = lazyListState,
-                    hint = if (type == PostType.GOOD_DEED) "따뜻한 흔적을 남겨보세요!" else "내용을 입력하세요.",
+                    hint = "미션에 도전해보세요!",
                     modifier = Modifier.focusRequester(contentFieldFocusRequester)
                 )
             }
@@ -232,9 +187,9 @@ private fun UpdatePostScreen(
                     }
             )
 
-            Spacer(Modifier.width(30.dp))
+            Spacer(Modifier.width(26.dp))
 
-            Text("수정", style = TraceTheme.typography.headingMR)
+            Text("미션 인증하기", style = TraceTheme.typography.headingMR)
 
             Spacer(Modifier.weight(1f))
 
@@ -243,26 +198,20 @@ private fun UpdatePostScreen(
                 style = TraceTheme.typography.bodyMM,
                 color = if (requestAvailable) PrimaryActive else TextHint,
                 modifier = Modifier.clickable(isRipple = true, enabled = requestAvailable) {
-                    updatePost()
+                    keyboardController?.hide()
                 }
             )
         }
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp)
-                .padding(vertical = 5.dp, horizontal = 15.dp)
-                .align(Alignment.BottomCenter), verticalAlignment = Alignment.CenterVertically
-        ) {
-            GalleryPicker(imagesSize = images.size, addImages = addImages)
+
+        if (isVerifyingMission) {
+
         }
     }
 }
 
 @Composable
 private fun GalleryPicker(
-    modifier: Modifier = Modifier,
     imagesSize: Int,
     maxSelection: Int = 5,
     addImages: (List<String>) -> Unit,
@@ -317,20 +266,19 @@ private fun GalleryPicker(
 
 }
 
+
 @Preview
 @Composable
-fun UpdatePostScreenPreview() {
-    UpdatePostScreen(
-        type = PostType.GOOD_DEED,
+fun VerifyMissionScreenPreview() {
+    VerifyMissionScreen(
         title = "",
         content = "",
-        onTypeChange = {},
-        onTitleChange = {},
+        isVerifyingMission = false,
+        images = emptyList(), description = "길거리에서 쓰레기 줍기",
         onContentChange = {},
         navigateBack = {},
-        images = emptyList(),
         addImages = {},
         removeImage = {},
-        updatePost = {}
+        onTitleChange = {}
     )
 }

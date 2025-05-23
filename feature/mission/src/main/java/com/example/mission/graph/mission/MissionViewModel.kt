@@ -5,10 +5,8 @@ import com.example.domain.model.mission.DailyMission
 import com.example.domain.model.mission.Mission
 import com.example.domain.model.mission.MissionFeed
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -16,8 +14,8 @@ import javax.inject.Inject
 class MissionViewModel @Inject constructor(
 
 ) : ViewModel() {
-    private val _eventChannel = Channel<MissionEvent>()
-    val eventChannel = _eventChannel.receiveAsFlow()
+//    private val _eventChannel = Channel<MissionEvent>()
+//    val eventChannel = _eventChannel.receiveAsFlow()
 
     private val _dailyMission = MutableStateFlow(fakeDailyMission)
     val dailyMission = _dailyMission.asStateFlow()
@@ -27,10 +25,6 @@ class MissionViewModel @Inject constructor(
 
     fun changeMission() {
         _dailyMission.value = _dailyMission.value.incrementChange()
-    }
-
-    sealed class MissionEvent {
-        data object SubmitMission : MissionEvent()
     }
 }
 
