@@ -9,13 +9,6 @@ import androidx.compose.ui.unit.sp
 import com.example.designsystem.R
 
 
-val BookkBold = FontFamily(
-    Font(
-        resId = R.font.bookk_myungjo_bold,
-        weight = FontWeight.Bold
-    )
-)
-
 val PretendardBold = FontFamily(
     Font(
         resId = R.font.pretendard_bold,
@@ -50,13 +43,6 @@ val PretendardLight = FontFamily(
     )
 )
 
-val BagelFatOneRegular = FontFamily(
-    Font(
-        resId = R.font.bagel_fat_one_regular,
-        weight = FontWeight.Normal
-    )
-)
-
 val HsJipTokkiRound = FontFamily(
     Font(
         resId = R.font.hs_jiptokki_round,
@@ -74,27 +60,27 @@ val HsGoolTokkiRegular = FontFamily(
 @Immutable
 data class TraceTypography(
     val headingXLB: TextStyle = TextStyle(
-        fontFamily = BookkBold,
+        fontFamily = HsJipTokkiRound,
         fontSize = 50.sp,
         lineHeight = 60.sp
     ),
     val headingLB: TextStyle = TextStyle(
-        fontFamily = BookkBold,
+        fontFamily = HsJipTokkiRound,
         fontSize = 24.sp,
         lineHeight = 32.sp
     ),
     val headingMB: TextStyle = TextStyle(
-        fontFamily = BookkBold,
+        fontFamily = HsJipTokkiRound,
         fontSize = 20.sp,
         lineHeight = 24.sp
     ),
     val headingMR: TextStyle = TextStyle(
-        fontFamily = BagelFatOneRegular,
+        fontFamily = HsJipTokkiRound,
         fontSize = 20.sp,
         lineHeight = 24.sp
     ),
     val missionVerification : TextStyle = TextStyle(
-        fontFamily = BagelFatOneRegular,
+        fontFamily = HsJipTokkiRound,
         fontSize = 14.sp,
         lineHeight = 18.sp
     ),
