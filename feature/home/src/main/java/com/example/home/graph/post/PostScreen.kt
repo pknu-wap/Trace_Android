@@ -400,7 +400,7 @@ private fun PostScreen(
 
             Spacer(Modifier.width(20.dp))
 
-            Text("흔적들", style = TraceTheme.typography.headingMB, color = White)
+            Text(postDetail.postType.label, style = TraceTheme.typography.headingMB, color = White)
 
             Spacer(Modifier.weight(1f))
 
