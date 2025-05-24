@@ -28,8 +28,11 @@ class PostPagingSource(
             val postFeeds = response.toDomain()
 
             val nextCursor = if (response.hasNext) Cursor(
-                id = response.cursor!!.id,
-                dateTime = response.cursor!!.dateTime
+                id = response.cursor?.id
+                    ?: throw IllegalStateException("Cursor must be present when hasNext is true"),
+                dateTime = response.cursor?.dateTime
+                    ?: throw IllegalStateException("Cursor must be present when hasNext is true")
+
             ) else null
 
             LoadResult.Page(
