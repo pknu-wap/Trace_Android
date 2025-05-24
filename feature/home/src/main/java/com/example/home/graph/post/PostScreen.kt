@@ -1,6 +1,5 @@
 package com.example.home.graph.post
 
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -34,7 +33,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -197,26 +195,11 @@ private fun PostScreen(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Box() {
-                        Canvas(modifier = Modifier.size(40.dp)) {
-                            val canvasWidth = size.width
-                            val center = center
-                            val radius = canvasWidth / 2f
-
-                            drawCircle(
-                                color = PrimaryDefault,
-                                radius = radius,
-                                center = center,
-                                style = Stroke(4f)
-                            )
-                        }
-
-                        ProfileImage(
-                            profileImageUrl = postDetail.profileImageUrl,
-                            imageSize = if (postDetail.profileImageUrl != null) 38.dp else 34.dp,
-                            paddingValue = if (postDetail.profileImageUrl != null) 1.dp else 3.dp
-                        )
-                    }
+                    ProfileImage(
+                        profileImageUrl = postDetail.profileImageUrl,
+                        imageSize = if (postDetail.profileImageUrl != null) 38.dp else 34.dp,
+                        paddingValue = if (postDetail.profileImageUrl != null) 1.dp else 3.dp
+                    )
 
                     Spacer(Modifier.width(10.dp))
 
