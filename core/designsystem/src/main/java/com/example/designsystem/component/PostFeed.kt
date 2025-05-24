@@ -1,4 +1,4 @@
-package com.example.home.graph.home.component
+package com.example.designsystem.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -22,6 +22,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.rememberAsyncImagePainter
@@ -35,25 +36,27 @@ import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.WarmGray
 import com.example.domain.model.post.PostFeed
 import com.example.domain.model.post.PostType
+import java.time.LocalDateTime
 
 @Composable
-internal fun PostFeed(
+ fun PostFeed(
     postFeed: PostFeed,
-    onClick: (Int) -> Unit
+    navigateToPost: (Int) -> Unit
 ) {
-    if (postFeed.imageUri.isNotEmpty()) {
+    if (postFeed.imageUrl != null) {
         val painter = rememberAsyncImagePainter(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(postFeed.imageUri)
+                .data(postFeed.imageUrl)
                 .crossfade(true)
                 .build()
         )
 
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .clickable {
-                onClick(1)
-            }) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    navigateToPost(postFeed.postId)
+                }) {
             Column(
                 modifier = Modifier
                     .padding(end = 95.dp)
@@ -67,7 +70,7 @@ internal fun PostFeed(
                         overflow = TextOverflow.Ellipsis
                     )
 
-                    if(postFeed.postType == PostType.GOOD_DEED && postFeed.isVerified) {
+                    if (postFeed.postType == PostType.GOOD_DEED && postFeed.isVerified) {
                         Spacer(Modifier.width(4.dp))
 
                         Image(
@@ -90,8 +93,18 @@ internal fun PostFeed(
                 Spacer(Modifier.height(8.dp))
 
                 Row(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
+                    ProfileImage(
+                        profileImageUrl = postFeed.profileImageUrl,
+                        imageSize = if (postFeed.profileImageUrl != null) 18.dp else 16.dp,
+                        paddingValue = if (postFeed.profileImageUrl != null) 1.dp else 2.dp
+                    )
+
+
+                    Spacer(Modifier.width(6.dp))
+
                     Text(
                         postFeed.nickname,
                         style = TraceTheme.typography.bodySSB.copy(fontSize = 11.sp),
@@ -154,7 +167,7 @@ internal fun PostFeed(
     } else {
         Column(
             modifier = Modifier.clickable {
-                onClick(1)
+                navigateToPost(postFeed.postId)
             }
         ) {
             Text(
@@ -177,8 +190,17 @@ internal fun PostFeed(
             Spacer(Modifier.height(8.dp))
 
             Row(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
+                ProfileImage(
+                    profileImageUrl = postFeed.profileImageUrl,
+                    imageSize = if (postFeed.profileImageUrl != null) 18.dp else 16.dp,
+                    paddingValue = if (postFeed.profileImageUrl != null) 1.dp else 2.dp
+                )
+
+                Spacer(Modifier.width(6.dp))
+
                 Text(
                     postFeed.nickname,
                     style = TraceTheme.typography.bodySSB.copy(fontSize = 11.sp),
@@ -221,5 +243,30 @@ internal fun PostFeed(
             }
 
         }
+    }
+}
+
+@Preview
+@Composable
+private fun PostFeedPreview() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp, vertical = 15.dp)
+    ) {
+        PostFeed(
+            postFeed = PostFeed(
+                postType = PostType.GOOD_DEED,
+                title = "깨끗한 공원 만들기",
+                content = "오늘 공원에서 쓰레기를 줍고 깨끗한 환경을 만들었습니다. 주변 사람들이 함께 참여해주셨습니다.",
+                nickname = "선행자1",
+                createdAt = LocalDateTime.now(),
+
+                viewCount = 150,
+                commentCount = 5,
+                isVerified = true,
+                postId = 1, providerId = "1234", updatedAt = LocalDateTime.now()
+            ),
+        ) { }
     }
 }

@@ -28,6 +28,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.common.util.clickable
 import com.example.designsystem.R
+import com.example.designsystem.component.PostFeed
 import com.example.designsystem.theme.Background
 import com.example.designsystem.theme.Black
 import com.example.designsystem.theme.Gray
@@ -38,7 +39,7 @@ import com.example.designsystem.theme.TraceTheme
 import com.example.domain.model.post.PostFeed
 import com.example.domain.model.post.SearchType
 import com.example.domain.model.post.TabType
-import com.example.home.graph.home.component.PostFeed
+
 
 @Composable
 internal fun SearchResultView(
@@ -169,7 +170,7 @@ internal fun SearchResultView(
         }
 
         displayedPosts.forEachIndexed { index, post ->
-            PostFeed(post, onClick = { navigateToPost(1) })
+            PostFeed(post, navigateToPost = { navigateToPost(1) })
 
             Spacer(Modifier.height(8.dp))
 

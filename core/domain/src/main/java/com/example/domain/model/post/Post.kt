@@ -7,15 +7,18 @@ import java.time.format.DateTimeFormatter
 
 data class PostFeed(
     val postId : Int,
+    val providerId : String,
     val postType: PostType,
     val title: String,
     val content: String,
     val nickname: String,
-    val createdAt: LocalDateTime,
+    val profileImageUrl: String? = null,
     val viewCount: Int = 0,
     val commentCount: Int = 0,
     val isVerified: Boolean = false,
-    val imageUri: String = "",
+    val imageUrl: String? = null,
+    val createdAt: LocalDateTime,
+    val updatedAt: LocalDateTime,
 ) {
     fun getFormattedTime(): String {
         val now = LocalDateTime.now()

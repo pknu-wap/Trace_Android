@@ -1,42 +1,37 @@
 package com.example.data.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.example.common.util.suspendRunCatching
 import com.example.data.image.ImageResizer
+import com.example.data.paging.PostPagingSource
 import com.example.domain.model.post.Emotion
-import com.example.domain.model.post.EmotionCount
 import com.example.domain.model.post.PostDetail
-import com.example.domain.model.post.PostType
+import com.example.domain.model.post.PostFeed
+import com.example.domain.model.post.TabType
 import com.example.domain.model.post.WritePostType
 import com.example.domain.repository.PostRepository
 import com.example.network.source.post.PostDataSource
 import jakarta.inject.Inject
-import kotlinx.datetime.toJavaLocalDateTime
+import kotlinx.coroutines.flow.Flow
 
 class PostRepositoryImpl @Inject constructor(
     private val postDataSource: PostDataSource,
     private val imageResizer: ImageResizer,
 ) : PostRepository {
 
-    override suspend fun getPost(postId: Int): Result<PostDetail> = suspendRunCatching {
-        val response = postDataSource.getPost(postId).getOrThrow()
+    override fun getPostPagingFlow(tabType: TabType): Flow<PagingData<PostFeed>> {
+        return Pager(
+            config = PagingConfig(pageSize = DEFAULT_PAGE_SIZE),
+            pagingSourceFactory = {
+                PostPagingSource(postDataSource, tabType)
+            }
+        ).flow
+    }
 
-        PostDetail(
-            postId = response.id,
-            postType = PostType.fromString(response.postType),
-            viewCount = response.viewCount,
-            emotionCount = EmotionCount.fromMap(response.emotionCount),
-            title = response.title,
-            content = response.content,
-            providerId = response.providerId,
-            nickname = response.nickname,
-            images = response.imageUrls,
-            profileImageUrl = response.profileImageUrl,
-            createdAt = response.createdAt.toJavaLocalDateTime(),
-            updatedAt = response.updatedAt.toJavaLocalDateTime(),
-            comments = emptyList(),
-            isOwner = response.isOwner,
-            isVerified = response.isVerified,
-        )
+    override suspend fun getPost(postId: Int): Result<PostDetail> = suspendRunCatching {
+        postDataSource.getPost(postId).getOrThrow().toDomain()
     }
 
     override suspend fun addPost(
@@ -80,4 +75,7 @@ class PostRepositoryImpl @Inject constructor(
             response.isAdded
         }
 
+    companion object {
+        private const val DEFAULT_PAGE_SIZE = 20
+    }
 }

@@ -3,15 +3,19 @@ package com.example.network.source.post
 import android.os.Build
 import android.util.Log
 import com.example.domain.model.post.Emotion
+import com.example.domain.model.post.TabType
 import com.example.domain.model.post.WritePostType
 import com.example.network.api.TraceApi
 import com.example.network.model.post.AddPostRequest
 import com.example.network.model.post.AddPostResponse
 import com.example.network.model.post.GetPostResponse
+import com.example.network.model.post.GetPostsRequest
+import com.example.network.model.post.GetPostsResponse
 import com.example.network.model.post.ToggleEmotionRequest
 import com.example.network.model.post.ToggleEmotionResponse
 import com.example.network.model.post.UpdatePostRequest
 import com.example.network.model.post.UpdatePostResponse
+import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -24,6 +28,20 @@ import javax.inject.Inject
 class PostDataSourceImpl @Inject constructor(
     private val traceApi: TraceApi,
 ) : PostDataSource {
+    override suspend fun getPosts(
+        cursorDateTime: LocalDateTime?,
+        cursorId: Int?,
+        size: Int,
+        postType: TabType
+    ): Result<GetPostsResponse> = traceApi.getPosts(
+        getPostsRequest = GetPostsRequest(
+            cursorDateTime = cursorDateTime,
+            cursorId = cursorId,
+            size = size,
+            postType = if (postType == TabType.ALL) null else postType.name
+        )
+    )
+
     override suspend fun getPost(postId: Int): Result<GetPostResponse> = traceApi.getPost(postId)
 
     override suspend fun addPost(
@@ -72,7 +90,6 @@ class PostDataSourceImpl @Inject constructor(
 
     override suspend fun updatePost(
         postId: Int,
-
         title: String,
         content: String,
         images: List<InputStream>?

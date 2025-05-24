@@ -8,6 +8,8 @@ import com.example.network.model.comment.AddReplyToCommentRequest
 import com.example.network.model.comment.CommentResponse
 import com.example.network.model.post.AddPostResponse
 import com.example.network.model.post.GetPostResponse
+import com.example.network.model.post.GetPostsRequest
+import com.example.network.model.post.GetPostsResponse
 import com.example.network.model.post.ToggleEmotionRequest
 import com.example.network.model.post.ToggleEmotionResponse
 import com.example.network.model.post.UpdatePostRequest
@@ -44,6 +46,9 @@ interface TraceApi {
 
     @POST("/api/v1/token/expiration")
     suspend fun checkTokenHealth(@Body checkTokenHealthRequest: CheckTokenHealthRequest): Result<CheckTokenHealthResponse>
+
+    @POST("/api/v1/posts/feed")
+    suspend fun getPosts(@Body getPostsRequest : GetPostsRequest) : Result<GetPostsResponse>
 
     @GET("/api/v1/posts/{id}")
     suspend fun getPost(@Path("id") postId: Int): Result<GetPostResponse>

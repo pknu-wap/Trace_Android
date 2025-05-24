@@ -7,21 +7,21 @@ androidxCore = "1.16.0"
 # https://developer.android.com/jetpack/androidx/releases/appcompat
 androidxAppCompat = "1.7.0"
 # https://developer.android.com/jetpack/androidx/releases/lifecycle
-androidxLifecycle = "2.8.7"
+androidxLifecycle = "2.9.0"
 # https://developer.android.com/jetpack/androidx/releases/activity
 androidxActivity = "1.10.1"
 # https://developer.android.com/jetpack/androidx/releases/datastore
-androidxDatastore = "1.1.4"
+androidxDatastore = "1.1.7"
 # https://developer.android.com/jetpack/androidx/releases/navigation
-androidxNavigation = "2.8.9"
+androidxNavigation = "2.9.0"
 # https://developer.android.com/jetpack/androidx/releases/core
 androidxSplashscreen = "1.0.1"
 # https://developer.android.com/develop/ui/compose/bom/bom-mapping
-androidxComposeBom = "2025.04.01"
+androidxComposeBom = "2025.05.01"
 # https://developer.android.com/jetpack/androidx/releases/navigation
-androidxComposeNavigation = "2.8.9"
+androidxComposeNavigation = "2.9.0"
 # https://developer.android.com/jetpack/androidx/releases/compose-foundation
-androidxComposeFoundation = "1.8.0"
+androidxComposeFoundation = "1.8.2"
 # https://developer.android.com/jetpack/androidx/releases/exifinterface
 androidxExifinterface = "1.4.1"
 
@@ -54,15 +54,18 @@ gson = "2.12.1"
 
 ## OAuth
 # https://developers.kakao.com/docs/latest/ko/android/getting-started#apply-sdk
-kakao = "2.21.1"
+kakao = "2.21.3"
 
 ## firebase
 googleServices = "4.4.2"
-firebaseBom = "33.13.0"
+firebaseBom = "33.14.0"
 crashlytics = "3.0.3"
 
 ### coil
 coil = "3.1.0"
+
+### paging
+paging = "3.3.6"
 
 ## Test
 # https://github.com/junit-team/junit4
@@ -115,6 +118,8 @@ androidx-compose-foundation = { group = "androidx.compose.foundation", name = "f
 androidx-compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidxComposeNavigation" }
 compose-compiler-gradle-plugin = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin" }
 
+androidx-paging-runtime = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging" }
+androidx-paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging" }
 
 coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutine" }
 coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutine" }
@@ -146,6 +151,8 @@ kakao-user = { module = "com.kakao.sdk:v2-user", version.ref = "kakao" }
 
 coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
 coil-network = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil" }
+
+
 
 junit4 = { group = "junit", name = "junit", version.ref = "junit4" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
