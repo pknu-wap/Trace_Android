@@ -1,8 +1,8 @@
 package com.example.network.source.post
 
 import android.os.Build
-import android.util.Log
 import com.example.domain.model.post.Emotion
+import com.example.domain.model.post.PostType
 import com.example.domain.model.post.TabType
 import com.example.domain.model.post.WritePostType
 import com.example.network.api.TraceApi
@@ -15,6 +15,7 @@ import com.example.network.model.post.ToggleEmotionRequest
 import com.example.network.model.post.ToggleEmotionResponse
 import com.example.network.model.post.UpdatePostRequest
 import com.example.network.model.post.UpdatePostResponse
+import com.example.network.model.post.VerifyAndAddPostRequest
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -62,9 +63,9 @@ class PostDataSourceImpl @Inject constructor(
             .toRequestBody("application/json; charset=utf-8".toMediaType())
 
         val (imageFileExtension, imageFileName) = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            WEBP_MEDIA_TYPE to "profile_${UUID.randomUUID()}.webp"
+            WEBP_MEDIA_TYPE to "post_${UUID.randomUUID()}.webp"
         } else {
-            JPEG_MEDIA_TYPE to "profile_${UUID.randomUUID()}.jpg"
+            JPEG_MEDIA_TYPE to "post_${UUID.randomUUID()}.jpg"
         }
 
         val mediaType = imageFileExtension.toMediaTypeOrNull()
@@ -79,13 +80,50 @@ class PostDataSourceImpl @Inject constructor(
             )
         }
 
-        Log.d("traceRequest", requestImage.toString() + " size : ${requestImage?.size}")
-
         return traceApi.addPost(
             addPostRequest = requestBody,
-            imageFile = requestImage
+            imageFiles = requestImage
+        )
+    }
+
+    override suspend fun verifyAndAddPost(
+        title: String,
+        content: String,
+        images: List<InputStream>?
+    ): Result<AddPostResponse> {
+        val jsonString = Json.encodeToString(
+            VerifyAndAddPostRequest(
+                postType = PostType.GOOD_DEED.name,
+                title = title,
+                content = content
+            )
         )
 
+        val requestBody = jsonString
+            .toRequestBody("application/json; charset=utf-8".toMediaType())
+
+        val (imageFileExtension, imageFileName) = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            WEBP_MEDIA_TYPE to "post_${UUID.randomUUID()}.webp"
+        } else {
+            JPEG_MEDIA_TYPE to "post_${UUID.randomUUID()}.jpg"
+        }
+
+        val mediaType = imageFileExtension.toMediaTypeOrNull()
+            ?: throw IllegalArgumentException("Invalid media type: $imageFileExtension")
+
+        val requestImage = images?.map { image ->
+            val body = image.readBytes().toRequestBody(mediaType)
+            MultipartBody.Part.createFormData(
+                name = "imageFiles",
+                filename = imageFileName,
+                body = body
+            )
+        }
+
+        return traceApi.verifyAndAddPost(
+            verifyAndAddPostRequest = requestBody,
+            imageFiles = requestImage
+        )
     }
 
     override suspend fun updatePost(

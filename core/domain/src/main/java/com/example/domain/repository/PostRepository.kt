@@ -21,6 +21,12 @@ interface PostRepository {
         images: List<String>?
     ): Result<Int>
 
+    suspend fun verifyAndAddPost(
+        title: String,
+        content: String,
+        images: List<String>?
+    ) : Result<Int>
+
     suspend fun updatePost(
         postId: Int,
         title: String,

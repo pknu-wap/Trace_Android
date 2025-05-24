@@ -37,7 +37,7 @@ fun CheckDialog(
 
 @Composable
 fun CheckCancelDialog(
-    onCheck: () -> Unit, onDismiss: () -> Unit, dialogText: String
+    onCheck: () -> Unit, onDismiss: () -> Unit, checkText: String = "", dialogText: String
 ) {
     AlertDialog(
         onDismissRequest = { onDismiss() },
@@ -45,9 +45,12 @@ fun CheckCancelDialog(
         shape = RoundedCornerShape(8.dp),
         containerColor = White,
         confirmButton = {
-            TextButton(onClick = { onCheck() }) {
+            TextButton(onClick = {
+                onDismiss()
+                onCheck()
+            }) {
                 Text(
-                    stringResource(R.string.dialog_confirm),
+                    if (checkText.isEmpty()) stringResource(R.string.dialog_confirm) else checkText,
                     color = PrimaryDefault,
                     style = TraceTheme.typography.bodySM
                 )

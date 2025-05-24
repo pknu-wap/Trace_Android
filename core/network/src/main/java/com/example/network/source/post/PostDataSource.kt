@@ -28,6 +28,10 @@ interface PostDataSource {
         postType : WritePostType, title: String, content: String, images: List<InputStream>?
     ): Result<AddPostResponse>
 
+    suspend fun verifyAndAddPost(
+        title: String, content: String, images: List<InputStream>?
+    ) : Result<AddPostResponse>
+
     suspend fun updatePost(
         postId : Int, title: String, content: String, images: List<InputStream>?,
     ) : Result<UpdatePostResponse>

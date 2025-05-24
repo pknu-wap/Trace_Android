@@ -65,8 +65,6 @@ internal fun VerifyMissionRoute(
     val images by viewModel.images.collectAsStateWithLifecycle()
     val isVerifyingMission by viewModel.isVerifyingMission.collectAsStateWithLifecycle()
 
-
-
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
             when (event) {
@@ -120,7 +118,6 @@ private fun VerifyMissionScreen(
     val requestAvailable by remember(title, content) {
         derivedStateOf { title.isNotEmpty() && content.isNotEmpty() }
     }
-
 
     Box(
         modifier = Modifier

@@ -20,7 +20,6 @@ class PostRepositoryImpl @Inject constructor(
     private val postDataSource: PostDataSource,
     private val imageResizer: ImageResizer,
 ) : PostRepository {
-
     override fun getPostPagingFlow(tabType: TabType): Flow<PagingData<PostFeed>> {
         return Pager(
             config = PagingConfig(pageSize = DEFAULT_PAGE_SIZE),
@@ -40,11 +39,25 @@ class PostRepositoryImpl @Inject constructor(
         content: String,
         images: List<String>?
     ): Result<Int> = suspendRunCatching {
-        val imageStreams = images?.mapIndexed { index, imageUrl ->
+        val imageStreams = images?.map { imageUrl ->
             imageResizer.resizeImage(imageUrl)
         }
 
         val response = postDataSource.addPost(postType, title, content, imageStreams).getOrThrow()
+
+        response.id
+    }
+
+    override suspend fun verifyAndAddPost(
+        title: String,
+        content: String,
+        images: List<String>?
+    ): Result<Int> = suspendRunCatching {
+        val imageStreams = images?.map { imageUrl ->
+            imageResizer.resizeImage(imageUrl)
+        }
+
+        val response = postDataSource.verifyAndAddPost(title, content, imageStreams).getOrThrow()
 
         response.id
     }

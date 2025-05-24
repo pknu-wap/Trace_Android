@@ -34,7 +34,6 @@ private class TraceCallAdapter(
     override fun responseType(): Type = resultType
 
     override fun adapt(call: Call<Type>): Call<Result<Type>> = TraceCall(call)
-
 }
 
 private class TraceCall<T : Any>(
@@ -45,6 +44,7 @@ private class TraceCall<T : Any>(
         delegate.enqueue(object : Callback<T> {
             override fun onResponse(call: Call<T>, response: Response<T>) {
                 val body = response.body()
+
                 if (response.isSuccessful && body != null) {
                     Log.d("traceResponse", "${response.raw()} body ${body}")
                     callback.onResponse(
