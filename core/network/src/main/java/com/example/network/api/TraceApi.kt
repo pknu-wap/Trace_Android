@@ -48,7 +48,7 @@ interface TraceApi {
     suspend fun checkTokenHealth(@Body checkTokenHealthRequest: CheckTokenHealthRequest): Result<CheckTokenHealthResponse>
 
     @POST("/api/v1/posts/feed")
-    suspend fun getPosts(@Body getPostsRequest : GetPostsRequest) : Result<GetPostsResponse>
+    suspend fun getPosts(@Body getPostsRequest: GetPostsRequest): Result<GetPostsResponse>
 
     @GET("/api/v1/posts/{id}")
     suspend fun getPost(@Path("id") postId: Int): Result<GetPostResponse>
@@ -57,7 +57,14 @@ interface TraceApi {
     @POST("/api/v1/posts")
     suspend fun addPost(
         @Part("request") addPostRequest: RequestBody,
-        @Part imageFile: List<MultipartBody.Part>? = null
+        @Part imageFiles: List<MultipartBody.Part>? = null
+    ): Result<AddPostResponse>
+
+    @Multipart
+    @POST("/api/v1/posts/verify")
+    suspend fun verifyAndAddPost(
+        @Part("request") verifyAndAddPostRequest: RequestBody,
+        @Part imageFiles: List<MultipartBody.Part>? = null
     ): Result<AddPostResponse>
 
     @PUT("/api/v1/posts/{id}")
@@ -73,8 +80,8 @@ interface TraceApi {
 
     @POST("/api/v1/emotion")
     suspend fun toggleEmotion(
-        @Body toggleEmotionRequest : ToggleEmotionRequest,
-    ) : Result<ToggleEmotionResponse>
+        @Body toggleEmotionRequest: ToggleEmotionRequest,
+    ): Result<ToggleEmotionResponse>
 
     @POST("/api/v1/comments/{postId}")
     suspend fun addComment(
@@ -95,11 +102,11 @@ interface TraceApi {
     ): Result<Unit>
 
     @POST("/api/v1/user/logout")
-    suspend fun logout() : Result<Unit>
+    suspend fun logout(): Result<Unit>
 
     @POST("/api/v1/user/delete")
-    suspend fun unregisterUser() : Result<Unit>
+    suspend fun unregisterUser(): Result<Unit>
 
     @GET("/api/v1/user")
-    suspend fun loadUserInfo() : Result<LoadUserInfoResponse>
+    suspend fun loadUserInfo(): Result<LoadUserInfoResponse>
 }

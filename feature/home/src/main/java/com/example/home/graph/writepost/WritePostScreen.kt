@@ -27,7 +27,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -41,6 +43,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.common.event.TraceEvent
 import com.example.common.util.clickable
 import com.example.designsystem.R
+import com.example.designsystem.component.CheckCancelDialog
+import com.example.designsystem.component.ImageContent
+import com.example.designsystem.component.TraceContentField
+import com.example.designsystem.component.TraceTitleField
+import com.example.designsystem.component.VerifyingDialog
 import com.example.designsystem.theme.Background
 import com.example.designsystem.theme.Black
 import com.example.designsystem.theme.GrayLine
@@ -49,9 +56,6 @@ import com.example.designsystem.theme.TextHint
 import com.example.designsystem.theme.TraceTheme
 import com.example.domain.model.post.WritePostType
 import com.example.home.graph.writepost.WritePostViewModel.WritePostEvent
-import com.example.designsystem.component.ImageContent
-import com.example.designsystem.component.TraceContentField
-import com.example.designsystem.component.TraceTitleField
 
 
 @Composable
@@ -66,6 +70,9 @@ internal fun WritePostRoute(
     val images by viewModel.images.collectAsStateWithLifecycle()
     val isVerified by viewModel.isVerified.collectAsStateWithLifecycle()
     val isCreatingPost by viewModel.isCreatingPost.collectAsStateWithLifecycle()
+    val isVerifyingPost by viewModel.isVerifyingPost.collectAsStateWithLifecycle()
+
+    var showVerifyFailDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
@@ -79,9 +86,24 @@ internal fun WritePostRoute(
                     viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글 등록에 실패했습니다."))
                 }
 
+                is WritePostEvent.VerifyFailure -> {
+                    showVerifyFailDialog = true
+                }
+
                 is WritePostEvent.NavigateToBack -> navigateBack()
             }
         }
+    }
+
+    if (showVerifyFailDialog) {
+        CheckCancelDialog(
+            onCheck = {
+                viewModel.addPost()
+            },
+            onDismiss = { showVerifyFailDialog = false },
+            checkText = "등록",
+            dialogText = "게시글이 선행 인증에 실패했습니다.\n그래도 등록하시겠습니까?"
+        )
     }
 
     WritePostScreen(
@@ -91,6 +113,7 @@ internal fun WritePostRoute(
         images = images,
         isVerified = isVerified,
         isCreatingPost = isCreatingPost,
+        isVerifyingPost = isVerifyingPost,
         onTitleChange = viewModel::setTitle,
         onContentChange = viewModel::setContent,
         addImages = viewModel::addImages,
@@ -98,6 +121,7 @@ internal fun WritePostRoute(
         onTypeChange = viewModel::setType,
         onIsVerifiedChange = viewModel::setIsVerified,
         addPost = viewModel::addPost,
+        verifyAndAddPost = viewModel::verifyAndAddPost,
         navigateBack = navigateBack,
     )
 }
@@ -110,6 +134,7 @@ private fun WritePostScreen(
     images: List<String>,
     isVerified: Boolean,
     isCreatingPost: Boolean,
+    isVerifyingPost: Boolean,
     onTypeChange: (WritePostType) -> Unit,
     onTitleChange: (String) -> Unit,
     onContentChange: (String) -> Unit,
@@ -117,6 +142,7 @@ private fun WritePostScreen(
     removeImage: (String) -> Unit,
     onIsVerifiedChange: (Boolean) -> Unit,
     addPost: () -> Unit,
+    verifyAndAddPost: () -> Unit,
     navigateBack: () -> Unit,
 ) {
     val contentFieldFocusRequester = remember { FocusRequester() }
@@ -257,7 +283,7 @@ private fun WritePostScreen(
                 color = if (requestAvailable) PrimaryActive else TextHint,
                 modifier = Modifier.clickable(isRipple = true, enabled = requestAvailable) {
                     keyboardController?.hide()
-                    addPost()
+                    if (type == WritePostType.GOOD_DEED && isVerified) verifyAndAddPost() else addPost()
                 }
             )
         }
@@ -313,6 +339,10 @@ private fun WritePostScreen(
                     modifier = Modifier.align(Alignment.Center)
                 )
             }
+        }
+
+        if (isVerifyingPost) {
+            VerifyingDialog()
         }
     }
 }
@@ -383,6 +413,7 @@ fun WritePostScreenPreview() {
         content = "",
         isVerified = true,
         isCreatingPost = false,
+        isVerifyingPost = false,
         onTypeChange = {},
         onTitleChange = {},
         onContentChange = {},
@@ -392,5 +423,6 @@ fun WritePostScreenPreview() {
         addImages = {},
         removeImage = {},
         addPost = {},
+        verifyAndAddPost = {}
     )
 }
