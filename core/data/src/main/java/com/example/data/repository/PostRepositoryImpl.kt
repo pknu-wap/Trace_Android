@@ -23,7 +23,7 @@ class PostRepositoryImpl @Inject constructor(
 
     override fun getPostPagingFlow(tabType: TabType): Flow<PagingData<PostFeed>> {
         return Pager(
-            config = PagingConfig(pageSize = 20),
+            config = PagingConfig(pageSize = DEFAULT_PAGE_SIZE),
             pagingSourceFactory = {
                 PostPagingSource(postDataSource, tabType)
             }
@@ -75,4 +75,7 @@ class PostRepositoryImpl @Inject constructor(
             response.isAdded
         }
 
+    companion object {
+        private const val DEFAULT_PAGE_SIZE = 20
+    }
 }
