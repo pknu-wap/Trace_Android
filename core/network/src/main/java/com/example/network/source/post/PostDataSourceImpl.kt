@@ -38,7 +38,7 @@ class PostDataSourceImpl @Inject constructor(
             cursorDateTime = cursorDateTime,
             cursorId = cursorId,
             size = size,
-            postType = if (postType.equals(TabType.ALL)) null else postType.name
+            postType = if (postType == TabType.ALL) null else postType.name
         )
     )
 
