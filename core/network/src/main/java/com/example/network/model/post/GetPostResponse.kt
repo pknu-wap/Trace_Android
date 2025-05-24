@@ -18,7 +18,7 @@ data class GetPostResponse(
     val providerId: String,
     val nickname: String,
     val imageUrls : List<String>,
-    val profileImageUrl : String,
+    val profileImageUrl : String? = null,
     val createdAt : LocalDateTime,
     val updatedAt : LocalDateTime,
     val isOwner: Boolean,
