@@ -14,9 +14,11 @@ import com.example.domain.model.post.PostType
 import com.example.domain.repository.CommentRepository
 import com.example.domain.repository.PostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
@@ -38,10 +40,16 @@ class PostViewModel @Inject constructor(
         getPost()
     }
 
+    private val _refreshTrigger = MutableStateFlow(false)
+
     private val _postDetail = MutableStateFlow(fakePostDetail)
     val postDetail = _postDetail.asStateFlow()
 
-    val commentPagingFlow = commentRepository.getCommentPagingFlow(postId)
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val commentPagingFlow = _refreshTrigger
+        .flatMapLatest {
+            commentRepository.getCommentPagingFlow(postId)
+        }
         .cachedIn(viewModelScope)
 
     private val _commentInput = MutableStateFlow("")
@@ -115,6 +123,11 @@ class PostViewModel @Inject constructor(
         }
     }
 
+    private fun refreshComments() = viewModelScope.launch {
+        _refreshTrigger.value = !_refreshTrigger.value
+    }
+
+
     fun addComment() = viewModelScope.launch {
         if (_commentInput.value.isEmpty()) {
             eventHelper.sendEvent(TraceEvent.ShowSnackBar("내용을 입력해주세요."))
@@ -126,6 +139,7 @@ class PostViewModel @Inject constructor(
         commentRepository.addComment(postId = postId, content = _commentInput.value)
             .onSuccess { comment ->
                 _commentInput.value = ""
+                refreshComments()
             }.onFailure {
                 eventHelper.sendEvent(TraceEvent.ShowSnackBar("댓글 작성에 실패했습니다."))
             }
@@ -151,6 +165,7 @@ class PostViewModel @Inject constructor(
                 content = _commentInput.value
             ).onSuccess { replyComment ->
                 clearReplyTargetId()
+                refreshComments()
                 _isCommentLoading.value = false
                 _commentInput.value = ""
 
@@ -160,13 +175,12 @@ class PostViewModel @Inject constructor(
                 _isCommentLoading.value = false
             }
 
-
         }
 
 
     fun deleteComment(commentId: Int) = viewModelScope.launch {
         commentRepository.deleteComment(commentId).onSuccess {
-            
+            refreshComments()
         }.onFailure {
             eventHelper.sendEvent(TraceEvent.ShowSnackBar("댓글 삭제에 실패했습니다."))
         }

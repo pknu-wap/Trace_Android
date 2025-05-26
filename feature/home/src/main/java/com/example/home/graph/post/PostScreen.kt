@@ -177,6 +177,28 @@ private fun PostScreen(
         ) {
 
             item {
+                when (val state = comments.loadState.append) {
+                    is LoadState.Loading -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .align(Alignment.BottomCenter)
+                        ) {
+                            CircularProgressIndicator(
+                                color = PrimaryDefault, modifier = Modifier.align(
+                                    Alignment.Center
+                                )
+                            )
+                        }
+                    }
+
+                    is LoadState.Error -> {}
+
+                    else -> {}
+                }
+            }
+
+            item {
                 Spacer(Modifier.height(25.dp))
 
                 Row(
