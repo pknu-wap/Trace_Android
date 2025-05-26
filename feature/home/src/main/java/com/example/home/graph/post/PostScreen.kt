@@ -130,7 +130,7 @@ internal fun PostRoute(
 @Composable
 private fun PostScreen(
     postDetail: PostDetail,
-    comments : LazyPagingItems<Comment>,
+    comments: LazyPagingItems<Comment>,
     commentInput: String,
     isReplying: Boolean,
     replyTargetId: Int?,
@@ -154,9 +154,7 @@ private fun PostScreen(
     val isRefreshing = comments.loadState.refresh is LoadState.Loading
 
     val pullRefreshState = rememberPullRefreshState(
-        refreshing = isRefreshing,
-        onRefresh = { comments.refresh() }
-    )
+        refreshing = isRefreshing, onRefresh = { comments.refresh() })
 
     val coroutineScope = rememberCoroutineScope()
     val listState = rememberLazyListState()
@@ -176,9 +174,7 @@ private fun PostScreen(
 
         if (isCommentLoading) {
             CircularProgressIndicator(
-                color = PrimaryActive,
-                modifier = Modifier
-                    .align(Alignment.Center)
+                color = PrimaryActive, modifier = Modifier.align(Alignment.Center)
             )
         }
 
@@ -340,8 +336,7 @@ private fun PostScreen(
                             Spacer(Modifier.height(3.dp))
 
                             Text(
-                                emotionCount.formatCount(),
-                                style = TraceTheme.typography.bodySSB
+                                emotionCount.formatCount(), style = TraceTheme.typography.bodySSB
                             )
                         }
                     }
@@ -404,12 +399,10 @@ private fun PostScreen(
                                 keyboardController?.show()
 
                                 listState.animateScrollToItem(
-                                    index = index + 1,
-                                    scrollOffset = scrollOffset
+                                    index = index + 1, scrollOffset = scrollOffset
                                 )
                             }
-                        }
-                    )
+                        })
 
                     if (index != comments.itemCount - 1) {
                         Spacer(Modifier.height(15.dp))
@@ -516,14 +509,15 @@ private fun PostScreen(
                 onReplyComment = {
                     onReplyComment({ commentId ->
                         coroutineScope.launch {
-                            val targetIndex = comments.itemSnapshotList.items.indexOfFirst { it.commentId == commentId }
+                            val targetIndex = (0 until comments.itemCount).firstOrNull { index ->
+                                comments[index]?.commentId == commentId
+                            } ?: -1
 
                             if (targetIndex != -1) {
                                 listState.animateScrollToItem(index = targetIndex)
                             }
                         }
-                    }
-                    )
+                    })
 
                     keyboardController?.hide()
                 },
