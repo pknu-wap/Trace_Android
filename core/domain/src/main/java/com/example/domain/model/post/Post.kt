@@ -64,7 +64,6 @@ data class PostDetail(
     val updatedAt: LocalDateTime,
     val isOwner : Boolean = true,
     val isVerified: Boolean = false,
-    val comments: List<Comment>,
 ) {
     fun getFormattedDate(): String {
         val formatter = DateTimeFormatter.ofPattern("M/d HH:mm")

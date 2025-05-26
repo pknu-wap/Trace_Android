@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
@@ -41,6 +40,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.LoadState
+import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.common.event.TraceEvent
 import com.example.common.util.clickable
 import com.example.common.util.formatCount
@@ -56,6 +59,7 @@ import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.WarmGray
 import com.example.designsystem.theme.White
+import com.example.domain.model.post.Comment
 import com.example.domain.model.post.Emotion
 import com.example.domain.model.post.PostDetail
 import com.example.domain.model.post.PostType
@@ -65,6 +69,7 @@ import com.example.home.graph.post.component.OtherPostDropdownMenu
 import com.example.home.graph.post.component.OwnPostDropdownMenu
 import com.example.home.graph.post.component.PostImageContent
 import com.example.home.graph.post.component.TraceCommentField
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 
 
@@ -74,6 +79,7 @@ internal fun PostRoute(
     navigateToUpdatePost: (Int) -> Unit,
     viewModel: PostViewModel = hiltViewModel()
 ) {
+    val comments = viewModel.commentPagingFlow.collectAsLazyPagingItems()
     val commentInput by viewModel.commentInput.collectAsStateWithLifecycle()
     val postDetail by viewModel.postDetail.collectAsStateWithLifecycle()
     val isCommentLoading by viewModel.isCommentLoading.collectAsStateWithLifecycle()
@@ -96,6 +102,7 @@ internal fun PostRoute(
 
     PostScreen(
         postDetail = postDetail,
+        comments = comments,
         commentInput = commentInput,
         isCommentLoading = isCommentLoading,
         isReplying = replyTargetId != null,
@@ -118,6 +125,7 @@ internal fun PostRoute(
 @Composable
 private fun PostScreen(
     postDetail: PostDetail,
+    comments : LazyPagingItems<Comment>,
     commentInput: String,
     isReplying: Boolean,
     replyTargetId: Int?,
@@ -308,7 +316,7 @@ private fun PostScreen(
                         .background(GrayLine)
                 )
 
-                if (postDetail.comments.isEmpty()) {
+                if (comments.itemCount == 0 && comments.loadState.refresh is LoadState.NotLoading) {
                     Column(
                         modifier = Modifier.fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally
@@ -335,49 +343,50 @@ private fun PostScreen(
             }
 
 
-            itemsIndexed(
-                items = postDetail.comments,
-                key = { _, comment -> comment.commentId }
-            ) { index, comment ->
-                Spacer(Modifier.height(13.dp))
+            items(
+                comments.itemCount
+            ) { index ->
+                comments[index]?.let {
+                    Spacer(Modifier.height(13.dp))
 
-                CommentView(
-                    comment = comment,
-                    replyTargetId = replyTargetId,
-                    onDelete = onDeleteComment,
-                    onReport = onReportComment,
-                    onReply = {
-                        onReplyTargetIdChange(comment.commentId)
+                    CommentView(
+                        comment = it,
+                        replyTargetId = replyTargetId,
+                        onDelete = onDeleteComment,
+                        onReport = onReportComment,
+                        onReply = {
+                            onReplyTargetIdChange(it.commentId)
 
-                        coroutineScope.launch {
-                            focusRequester.requestFocus()
-                            keyboardController?.show()
+                            coroutineScope.launch {
+                                focusRequester.requestFocus()
+                                keyboardController?.show()
 
-                            listState.animateScrollToItem(
-                                index = index + 1,
-                                scrollOffset = scrollOffset
-                            )
+                                listState.animateScrollToItem(
+                                    index = index + 1,
+                                    scrollOffset = scrollOffset
+                                )
+                            }
                         }
-                    }
-                )
-
-                if (index != postDetail.comments.size - 1) {
-                    Spacer(Modifier.height(15.dp))
-                    Spacer(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(1.dp)
-                            .background(GrayLine)
                     )
+
+                    if (index != comments.itemCount - 1) {
+                        Spacer(Modifier.height(15.dp))
+
+                        Spacer(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(1.dp)
+                                .background(GrayLine)
+                        )
+                    }
                 }
             }
+
 
             item {
                 Spacer(Modifier.height(300.dp))
             }
-
         }
-
 
 
         Row(
@@ -453,7 +462,7 @@ private fun PostScreen(
                     coroutineScope.launch {
                         val visibleItems = listState.layoutInfo.visibleItemsInfo
                         val lastVisibleIndex = visibleItems.lastOrNull()?.index ?: 0
-                        val lastItemIndex = postDetail.comments.size
+                        val lastItemIndex = comments.itemCount
 
                         if (lastVisibleIndex < lastItemIndex) {
                             listState.animateScrollToItem(index = lastItemIndex)
@@ -463,9 +472,7 @@ private fun PostScreen(
                 onReplyComment = {
                     onReplyComment({ commentId ->
                         coroutineScope.launch {
-                            val targetIndex =
-                                postDetail.comments.indexOfFirst { it.commentId == commentId }
-
+                            val targetIndex = comments.itemSnapshotList.items.indexOfFirst { it.commentId == commentId }
 
                             if (targetIndex != -1) {
                                 listState.animateScrollToItem(index = targetIndex)
@@ -490,6 +497,7 @@ fun PostScreenPreview() {
     PostScreen(
         commentInput = "",
         postDetail = fakePostDetail,
+        comments = fakeLazyPagingComments(),
         isCommentLoading = false,
         isReplying = true,
         onCommentInputChange = {},
@@ -507,3 +515,13 @@ fun PostScreenPreview() {
         replyTargetId = null
     )
 }
+
+@Composable
+fun fakeLazyPagingComments(): LazyPagingItems<Comment> {
+    return flowOf(
+        PagingData.from(
+            fakeComments
+        )
+    ).collectAsLazyPagingItems()
+}
+

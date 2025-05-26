@@ -40,7 +40,6 @@ data class GetPostResponse(
             updatedAt = updatedAt.toJavaLocalDateTime(),
             isOwner = isOwner,
             isVerified = isVerified,
-            comments = emptyList()
         )
     }
 }

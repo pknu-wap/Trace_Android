@@ -2,35 +2,18 @@ package com.example.network.model.post
 
 import com.example.domain.model.post.PostFeed
 import com.example.domain.model.post.PostType
+import com.example.network.model.cursor.Cursor
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.toJavaLocalDateTime
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class GetPostsResponse(
-    val content : List<PostContent>,
-    val hasNext : Boolean,
-    val cursor : Cursor?,
+    val hasNext: Boolean,
+    val cursor: Cursor?,
+    val content: List<PostContent>,
 ) {
-    fun toDomain() : List<PostFeed> {
-        return content.map {
-            PostFeed(
-                postId = it.postId,
-                providerId = it.providerId,
-                postType = PostType.fromString(it.postType),
-                title = it.title,
-                content = it.content,
-                nickname = it.nickname,
-                profileImageUrl = it.profileImageUrl,
-                viewCount = it.viewCount,
-                commentCount = it.commentCount,
-                isVerified = it.verified,
-                imageUrl = it.imageUrl,
-                createdAt = it.createdAt.toJavaLocalDateTime(),
-                updatedAt = it.updatedAt.toJavaLocalDateTime()
-            )
-        }
-    }
+    fun toDomain(): List<PostFeed> = content.map { it.toDomain() }
 }
 
 @Serializable
@@ -48,10 +31,22 @@ data class PostContent(
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime,
     val verified: Boolean
-)
+) {
+    fun toDomain(): PostFeed =
+        PostFeed(
+            postId = postId,
+            providerId = providerId,
+            postType = PostType.fromString(postType),
+            title = title,
+            content = content,
+            nickname = nickname,
+            profileImageUrl = profileImageUrl,
+            viewCount = viewCount,
+            commentCount = commentCount,
+            isVerified = verified,
+            imageUrl = imageUrl,
+            createdAt = createdAt.toJavaLocalDateTime(),
+            updatedAt = updatedAt.toJavaLocalDateTime()
+        )
+}
 
-@Serializable
-data class Cursor(
-    val dateTime : LocalDateTime,
-    val id : Int,
-)
