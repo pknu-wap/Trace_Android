@@ -17,8 +17,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -122,6 +126,7 @@ internal fun PostRoute(
     )
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun PostScreen(
     postDetail: PostDetail,
@@ -146,6 +151,13 @@ private fun PostScreen(
     var isOwnPostDropDownMenuExpanded by remember { mutableStateOf(false) }
     var isOtherPostDropDownMenuExpanded by remember { mutableStateOf(false) }
 
+    val isRefreshing = comments.loadState.refresh is LoadState.Loading
+
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = isRefreshing,
+        onRefresh = { comments.refresh() }
+    )
+
     val coroutineScope = rememberCoroutineScope()
     val listState = rememberLazyListState()
 
@@ -159,6 +171,7 @@ private fun PostScreen(
             .fillMaxSize()
             .background(Background)
             .imePadding()
+            .pullRefresh(pullRefreshState)
     ) {
 
         if (isCommentLoading) {
@@ -168,6 +181,13 @@ private fun PostScreen(
                     .align(Alignment.Center)
             )
         }
+
+        PullRefreshIndicator(
+            refreshing = isRefreshing,
+            state = pullRefreshState,
+            contentColor = PrimaryDefault,
+            modifier = Modifier.align(Alignment.TopCenter)
+        )
 
         LazyColumn(
             state = listState,
@@ -450,6 +470,7 @@ private fun PostScreen(
                 OwnPostDropdownMenu(
                     expanded = isOwnPostDropDownMenuExpanded,
                     onDismiss = { isOwnPostDropDownMenuExpanded = false },
+                    onRefresh = { comments.refresh() },
                     onUpdate = { navigateToUpdatePost(postDetail.postId) },
                     onDelete = onDeletePost,
                 )
@@ -457,6 +478,7 @@ private fun PostScreen(
                 OtherPostDropdownMenu(
                     expanded = isOtherPostDropDownMenuExpanded,
                     onDismiss = { isOtherPostDropDownMenuExpanded = false },
+                    onRefresh = { comments.refresh() },
                     onReport = onReportPost
                 )
             }
