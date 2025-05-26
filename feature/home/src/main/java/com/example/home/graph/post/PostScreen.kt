@@ -319,14 +319,6 @@ private fun PostScreen(
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Text(
-                                emotion.label,
-                                style = TraceTheme.typography.bodySR,
-                                color = EmotionLabel
-                            )
-
-                            Spacer(Modifier.height(3.dp))
-
                             IconButton(onClick = {
                                 toggleEmotion(emotion)
                             }, modifier = Modifier.then(Modifier.size(20.dp))) {
@@ -338,6 +330,14 @@ private fun PostScreen(
                             }
 
                             Spacer(Modifier.height(5.dp))
+
+                            Text(
+                                emotion.label,
+                                style = TraceTheme.typography.bodySR,
+                                color = EmotionLabel
+                            )
+
+                            Spacer(Modifier.height(3.dp))
 
                             Text(
                                 emotionCount.formatCount(),
