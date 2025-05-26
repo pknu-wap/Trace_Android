@@ -277,12 +277,12 @@ fun HomeScreenPreview() {
         navigateToPost = {},
         navigateToWritePost = {},
         navigateToSearch = {},
-        postFeeds = fakeLazyPagingItems()
+        postFeeds = fakeLazyPagingPosts()
     )
 }
 
 @Composable
-fun fakeLazyPagingItems(): LazyPagingItems<PostFeed> {
+fun fakeLazyPagingPosts(): LazyPagingItems<PostFeed> {
     return flowOf(
         PagingData.from(
             fakePostFeeds

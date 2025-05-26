@@ -2,30 +2,28 @@ package com.example.data.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.example.domain.model.post.PostFeed
-import com.example.domain.model.post.TabType
+import com.example.domain.model.post.Comment
 import com.example.network.model.cursor.Cursor
-import com.example.network.source.post.PostDataSource
+import com.example.network.source.comment.CommentDataSource
 
+class CommentPagingSource(
+    private val commentDataSource: CommentDataSource,
+    private val postId : Int,
+    private val pageSize: Int = 30
+) : PagingSource<Cursor, Comment>() {
 
-class PostPagingSource(
-    private val postDatasource: PostDataSource,
-    private val tabType: TabType,
-    private val pageSize: Int = 20
-) : PagingSource<Cursor, PostFeed>() {
-
-    override suspend fun load(params: LoadParams<Cursor>): LoadResult<Cursor, PostFeed> {
+    override suspend fun load(params: LoadParams<Cursor>): LoadResult<Cursor, Comment> {
         return try {
             val cursor = params.key
 
-            val response = postDatasource.getPosts(
+            val response = commentDataSource.getComments(
+                postId = postId,
                 cursorDateTime = cursor?.dateTime,
                 cursorId = cursor?.id,
                 size = pageSize,
-                postType = tabType
             ).getOrThrow()
 
-            val postFeeds = response.toDomain()
+            val comments = response.toDomain()
 
             val nextCursor = if (response.hasNext && response.cursor != null) Cursor(
                 id = response.cursor?.id
@@ -38,7 +36,7 @@ class PostPagingSource(
             val safeNextCursor = if (nextCursor == params.key) null else nextCursor
 
             LoadResult.Page(
-                data = postFeeds,
+                data = comments,
                 prevKey = null,
                 nextKey = safeNextCursor
             )
@@ -48,5 +46,6 @@ class PostPagingSource(
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Cursor, PostFeed>): Cursor? = null
+    override fun getRefreshKey(state: PagingState<Cursor, Comment>): Cursor? = null
+
 }

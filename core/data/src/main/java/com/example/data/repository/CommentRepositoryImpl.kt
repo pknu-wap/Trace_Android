@@ -1,15 +1,29 @@
 package com.example.data.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.example.common.util.suspendRunCatching
+import com.example.data.paging.CommentPagingSource
 import com.example.domain.model.post.Comment
 import com.example.domain.repository.CommentRepository
 import com.example.network.source.comment.CommentDataSource
+import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.toJavaLocalDateTime
 import javax.inject.Inject
 
 class CommentRepositoryImpl @Inject constructor(
     private val commentDataSource: CommentDataSource,
 ) : CommentRepository {
+    override fun getCommentPagingFlow(postId: Int): Flow<PagingData<Comment>> {
+        return Pager(
+            config = PagingConfig(pageSize = DEFAULT_PAGE_SIZE),
+            pagingSourceFactory = {
+                CommentPagingSource(commentDataSource, postId)
+            }
+        ).flow
+    }
+
     override suspend fun addComment(postId: Int, content: String): Result<Comment> =
         suspendRunCatching {
             val response =
@@ -59,5 +73,9 @@ class CommentRepositoryImpl @Inject constructor(
 
     override suspend fun deleteComment(commentId: Int): Result<Unit> = suspendRunCatching {
         commentDataSource.deleteComment(commentId = commentId)
+    }
+
+    companion object {
+        private const val DEFAULT_PAGE_SIZE = 30
     }
 }

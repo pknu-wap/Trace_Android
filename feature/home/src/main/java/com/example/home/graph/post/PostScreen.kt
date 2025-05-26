@@ -16,10 +16,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -41,6 +44,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.LoadState
+import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.common.event.TraceEvent
 import com.example.common.util.clickable
 import com.example.common.util.formatCount
@@ -56,6 +63,7 @@ import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.WarmGray
 import com.example.designsystem.theme.White
+import com.example.domain.model.post.Comment
 import com.example.domain.model.post.Emotion
 import com.example.domain.model.post.PostDetail
 import com.example.domain.model.post.PostType
@@ -65,6 +73,7 @@ import com.example.home.graph.post.component.OtherPostDropdownMenu
 import com.example.home.graph.post.component.OwnPostDropdownMenu
 import com.example.home.graph.post.component.PostImageContent
 import com.example.home.graph.post.component.TraceCommentField
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 
 
@@ -74,6 +83,7 @@ internal fun PostRoute(
     navigateToUpdatePost: (Int) -> Unit,
     viewModel: PostViewModel = hiltViewModel()
 ) {
+    val comments = viewModel.commentPagingFlow.collectAsLazyPagingItems()
     val commentInput by viewModel.commentInput.collectAsStateWithLifecycle()
     val postDetail by viewModel.postDetail.collectAsStateWithLifecycle()
     val isCommentLoading by viewModel.isCommentLoading.collectAsStateWithLifecycle()
@@ -96,6 +106,7 @@ internal fun PostRoute(
 
     PostScreen(
         postDetail = postDetail,
+        comments = comments,
         commentInput = commentInput,
         isCommentLoading = isCommentLoading,
         isReplying = replyTargetId != null,
@@ -115,9 +126,11 @@ internal fun PostRoute(
     )
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun PostScreen(
     postDetail: PostDetail,
+    comments: LazyPagingItems<Comment>,
     commentInput: String,
     isReplying: Boolean,
     replyTargetId: Int?,
@@ -138,6 +151,11 @@ private fun PostScreen(
     var isOwnPostDropDownMenuExpanded by remember { mutableStateOf(false) }
     var isOtherPostDropDownMenuExpanded by remember { mutableStateOf(false) }
 
+    val isRefreshing = comments.loadState.refresh is LoadState.Loading
+
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = isRefreshing, onRefresh = { comments.refresh() })
+
     val coroutineScope = rememberCoroutineScope()
     val listState = rememberLazyListState()
 
@@ -151,15 +169,21 @@ private fun PostScreen(
             .fillMaxSize()
             .background(Background)
             .imePadding()
+            .pullRefresh(pullRefreshState)
     ) {
 
         if (isCommentLoading) {
             CircularProgressIndicator(
-                color = PrimaryActive,
-                modifier = Modifier
-                    .align(Alignment.Center)
+                color = PrimaryActive, modifier = Modifier.align(Alignment.Center)
             )
         }
+
+        PullRefreshIndicator(
+            refreshing = isRefreshing,
+            state = pullRefreshState,
+            contentColor = PrimaryDefault,
+            modifier = Modifier.align(Alignment.TopCenter)
+        )
 
         LazyColumn(
             state = listState,
@@ -167,6 +191,28 @@ private fun PostScreen(
                 .fillMaxSize()
                 .padding(top = 45.dp, start = 20.dp, end = 20.dp, bottom = 50.dp)
         ) {
+
+            item {
+                when (val state = comments.loadState.append) {
+                    is LoadState.Loading -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .align(Alignment.BottomCenter)
+                        ) {
+                            CircularProgressIndicator(
+                                color = PrimaryDefault, modifier = Modifier.align(
+                                    Alignment.Center
+                                )
+                            )
+                        }
+                    }
+
+                    is LoadState.Error -> {}
+
+                    else -> {}
+                }
+            }
 
             item {
                 Spacer(Modifier.height(25.dp))
@@ -269,14 +315,6 @@ private fun PostScreen(
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Text(
-                                emotion.label,
-                                style = TraceTheme.typography.bodySR,
-                                color = EmotionLabel
-                            )
-
-                            Spacer(Modifier.height(3.dp))
-
                             IconButton(onClick = {
                                 toggleEmotion(emotion)
                             }, modifier = Modifier.then(Modifier.size(20.dp))) {
@@ -290,8 +328,15 @@ private fun PostScreen(
                             Spacer(Modifier.height(5.dp))
 
                             Text(
-                                emotionCount.formatCount(),
-                                style = TraceTheme.typography.bodySSB
+                                emotion.label,
+                                style = TraceTheme.typography.bodySR,
+                                color = EmotionLabel
+                            )
+
+                            Spacer(Modifier.height(3.dp))
+
+                            Text(
+                                emotionCount.formatCount(), style = TraceTheme.typography.bodySSB
                             )
                         }
                     }
@@ -308,7 +353,7 @@ private fun PostScreen(
                         .background(GrayLine)
                 )
 
-                if (postDetail.comments.isEmpty()) {
+                if (comments.itemCount == 0 && comments.loadState.refresh is LoadState.NotLoading) {
                     Column(
                         modifier = Modifier.fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally
@@ -335,49 +380,48 @@ private fun PostScreen(
             }
 
 
-            itemsIndexed(
-                items = postDetail.comments,
-                key = { _, comment -> comment.commentId }
-            ) { index, comment ->
-                Spacer(Modifier.height(13.dp))
+            items(
+                comments.itemCount
+            ) { index ->
+                comments[index]?.let {
+                    Spacer(Modifier.height(13.dp))
 
-                CommentView(
-                    comment = comment,
-                    replyTargetId = replyTargetId,
-                    onDelete = onDeleteComment,
-                    onReport = onReportComment,
-                    onReply = {
-                        onReplyTargetIdChange(comment.commentId)
+                    CommentView(
+                        comment = it,
+                        replyTargetId = replyTargetId,
+                        onDelete = onDeleteComment,
+                        onReport = onReportComment,
+                        onReply = {
+                            onReplyTargetIdChange(it.commentId)
 
-                        coroutineScope.launch {
-                            focusRequester.requestFocus()
-                            keyboardController?.show()
+                            coroutineScope.launch {
+                                focusRequester.requestFocus()
+                                keyboardController?.show()
 
-                            listState.animateScrollToItem(
-                                index = index + 1,
-                                scrollOffset = scrollOffset
-                            )
-                        }
+                                listState.animateScrollToItem(
+                                    index = index + 1, scrollOffset = scrollOffset
+                                )
+                            }
+                        })
+
+                    if (index != comments.itemCount - 1) {
+                        Spacer(Modifier.height(15.dp))
+
+                        Spacer(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(1.dp)
+                                .background(GrayLine)
+                        )
                     }
-                )
-
-                if (index != postDetail.comments.size - 1) {
-                    Spacer(Modifier.height(15.dp))
-                    Spacer(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(1.dp)
-                            .background(GrayLine)
-                    )
                 }
             }
+
 
             item {
                 Spacer(Modifier.height(300.dp))
             }
-
         }
-
 
 
         Row(
@@ -419,6 +463,7 @@ private fun PostScreen(
                 OwnPostDropdownMenu(
                     expanded = isOwnPostDropDownMenuExpanded,
                     onDismiss = { isOwnPostDropDownMenuExpanded = false },
+                    onRefresh = { comments.refresh() },
                     onUpdate = { navigateToUpdatePost(postDetail.postId) },
                     onDelete = onDeletePost,
                 )
@@ -426,6 +471,7 @@ private fun PostScreen(
                 OtherPostDropdownMenu(
                     expanded = isOtherPostDropDownMenuExpanded,
                     onDismiss = { isOtherPostDropDownMenuExpanded = false },
+                    onRefresh = { comments.refresh() },
                     onReport = onReportPost
                 )
             }
@@ -453,7 +499,7 @@ private fun PostScreen(
                     coroutineScope.launch {
                         val visibleItems = listState.layoutInfo.visibleItemsInfo
                         val lastVisibleIndex = visibleItems.lastOrNull()?.index ?: 0
-                        val lastItemIndex = postDetail.comments.size
+                        val lastItemIndex = comments.itemCount
 
                         if (lastVisibleIndex < lastItemIndex) {
                             listState.animateScrollToItem(index = lastItemIndex)
@@ -463,16 +509,15 @@ private fun PostScreen(
                 onReplyComment = {
                     onReplyComment({ commentId ->
                         coroutineScope.launch {
-                            val targetIndex =
-                                postDetail.comments.indexOfFirst { it.commentId == commentId }
-
+                            val targetIndex = (0 until comments.itemCount).firstOrNull { index ->
+                                comments[index]?.commentId == commentId
+                            } ?: -1
 
                             if (targetIndex != -1) {
                                 listState.animateScrollToItem(index = targetIndex)
                             }
                         }
-                    }
-                    )
+                    })
 
                     keyboardController?.hide()
                 },
@@ -490,6 +535,7 @@ fun PostScreenPreview() {
     PostScreen(
         commentInput = "",
         postDetail = fakePostDetail,
+        comments = fakeLazyPagingComments(),
         isCommentLoading = false,
         isReplying = true,
         onCommentInputChange = {},
@@ -507,3 +553,13 @@ fun PostScreenPreview() {
         replyTargetId = null
     )
 }
+
+@Composable
+fun fakeLazyPagingComments(): LazyPagingItems<Comment> {
+    return flowOf(
+        PagingData.from(
+            fakeComments
+        )
+    ).collectAsLazyPagingItems()
+}
+

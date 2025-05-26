@@ -5,8 +5,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,6 +33,7 @@ import com.example.designsystem.theme.White
 internal fun OwnPostDropdownMenu(
     expanded: Boolean,
     onDismiss: () -> Unit,
+    onRefresh : () -> Unit,
     onUpdate: () -> Unit,
     onDelete: () -> Unit,
 ) {
@@ -58,12 +62,30 @@ internal fun OwnPostDropdownMenu(
                 modifier = Modifier
                     .clickable(isRipple = true) {
                         onDismiss()
+                        onRefresh()
+                    }
+                    .padding(top = 15.dp, bottom = 15.dp, start = 15.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Image(imageVector = Icons.Outlined.Refresh, contentDescription = "새로고침", modifier = Modifier.size(24.dp))
+
+                Spacer(Modifier.width(12.dp))
+
+                Text(stringResource(R.string.refresh), style = TraceTheme.typography.bodyMR)
+
+                Spacer(Modifier.width(70.dp))
+            }
+
+            Row(
+                modifier = Modifier
+                    .clickable(isRipple = true) {
+                        onDismiss()
                         onUpdate()
                     }
                     .padding(top = 15.dp, bottom = 15.dp, start = 15.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Image(painter = painterResource(R.drawable.edit_ic), contentDescription = "신고하기")
+                Image(painter = painterResource(R.drawable.edit_ic), contentDescription = "신고하기", modifier = Modifier.size(24.dp))
 
                 Spacer(Modifier.width(12.dp))
 
@@ -81,7 +103,7 @@ internal fun OwnPostDropdownMenu(
                     .padding(top = 15.dp, bottom = 15.dp, start = 15.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Image(painter = painterResource(R.drawable.delete_ic), contentDescription = "삭제하기")
+                Image(painter = painterResource(R.drawable.delete_ic), contentDescription = "삭제하기", modifier = Modifier.size(24.dp))
 
                 Spacer(Modifier.width(12.dp))
 
@@ -99,6 +121,7 @@ internal fun OwnPostDropdownMenu(
 internal fun OtherPostDropdownMenu(
     expanded: Boolean,
     onDismiss: () -> Unit,
+    onRefresh : () -> Unit,
     onReport: () -> Unit,
 ) {
     if (expanded) {
@@ -113,12 +136,30 @@ internal fun OtherPostDropdownMenu(
                 modifier = Modifier
                     .clickable(isRipple = true) {
                         onDismiss()
+                        onRefresh()
+                    }
+                    .padding(top = 15.dp, bottom = 15.dp, start = 15.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Image(imageVector = Icons.Outlined.Refresh, contentDescription = "새로고침", modifier = Modifier.size(24.dp))
+
+                Spacer(Modifier.width(12.dp))
+
+                Text(stringResource(R.string.refresh), style = TraceTheme.typography.bodyMR)
+
+                Spacer(Modifier.width(70.dp))
+            }
+
+            Row(
+                modifier = Modifier
+                    .clickable(isRipple = true) {
+                        onDismiss()
                         onReport()
                     }
                     .padding(top = 15.dp, bottom = 15.dp, start = 15.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Image(painter = painterResource(R.drawable.report_ic), contentDescription = "신고하기")
+                Image(painter = painterResource(R.drawable.report_ic), contentDescription = "신고하기", modifier = Modifier.size(24.dp))
 
                 Spacer(Modifier.width(12.dp))
 

@@ -1,9 +1,9 @@
 package com.example.home.graph.post
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import com.example.common.event.EventHelper
 import com.example.common.event.TraceEvent
 import com.example.domain.model.post.Comment
@@ -14,9 +14,11 @@ import com.example.domain.model.post.PostType
 import com.example.domain.repository.CommentRepository
 import com.example.domain.repository.PostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
@@ -32,14 +34,23 @@ class PostViewModel @Inject constructor(
     private val _eventChannel = Channel<PostEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
 
-    private val postId: Int = savedStateHandle["postId"] ?: 5
+    private val postId: Int = savedStateHandle["postId"] ?: 99999
 
     init {
         getPost()
     }
 
+    private val _refreshTrigger = MutableStateFlow(false)
+
     private val _postDetail = MutableStateFlow(fakePostDetail)
     val postDetail = _postDetail.asStateFlow()
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val commentPagingFlow = _refreshTrigger
+        .flatMapLatest {
+            commentRepository.getCommentPagingFlow(postId)
+        }
+        .cachedIn(viewModelScope)
 
     private val _commentInput = MutableStateFlow("")
     val commentInput = _commentInput.asStateFlow()
@@ -63,10 +74,9 @@ class PostViewModel @Inject constructor(
     }
 
     private fun getPost() = viewModelScope.launch {
-        if (postId != 1) {
+        if (postId != 99999) {
             postRepository.getPost(postId).onSuccess {
                 _postDetail.value = it
-                Log.d("postDetail", _postDetail.value.toString())
             }.onFailure {
                 _postDetail.value = fakePostDetail
             }
@@ -113,6 +123,11 @@ class PostViewModel @Inject constructor(
         }
     }
 
+    private fun refreshComments() = viewModelScope.launch {
+        _refreshTrigger.value = !_refreshTrigger.value
+    }
+
+
     fun addComment() = viewModelScope.launch {
         if (_commentInput.value.isEmpty()) {
             eventHelper.sendEvent(TraceEvent.ShowSnackBar("내용을 입력해주세요."))
@@ -123,11 +138,8 @@ class PostViewModel @Inject constructor(
 
         commentRepository.addComment(postId = postId, content = _commentInput.value)
             .onSuccess { comment ->
-                _postDetail.value = _postDetail.value.copy(
-                    comments = _postDetail.value.comments + comment
-                )
-
                 _commentInput.value = ""
+                refreshComments()
             }.onFailure {
                 eventHelper.sendEvent(TraceEvent.ShowSnackBar("댓글 작성에 실패했습니다."))
             }
@@ -152,15 +164,8 @@ class PostViewModel @Inject constructor(
                 commentId = parentId,
                 content = _commentInput.value
             ).onSuccess { replyComment ->
-                val updatedComments = _postDetail.value.comments.map { comment ->
-                    if (comment.commentId == parentId) {
-                        comment.copy(replies = comment.replies + replyComment)
-                    } else comment
-                }
-
-                _postDetail.value = _postDetail.value.copy(comments = updatedComments)
-
                 clearReplyTargetId()
+                refreshComments()
                 _isCommentLoading.value = false
                 _commentInput.value = ""
 
@@ -170,41 +175,12 @@ class PostViewModel @Inject constructor(
                 _isCommentLoading.value = false
             }
 
-
         }
 
 
     fun deleteComment(commentId: Int) = viewModelScope.launch {
         commentRepository.deleteComment(commentId).onSuccess {
-            val updatedComments = _postDetail.value.comments.mapNotNull { comment ->
-                when {
-                    // 원댓글이 삭제 대상인 경우
-                    comment.commentId == commentId -> {
-                        if (comment.replies.isNotEmpty()) {
-                            // 대댓글이 있으면 isDeleted만 true로 바꿈
-                            comment.copy(isDeleted = true)
-                        } else {
-                            null
-                        }
-                    }
-
-                    // 대댓글 중 삭제 대상이 있는 경우
-                    comment.replies.any { it.commentId == commentId } -> {
-                        val updatedReplies = comment.replies.mapNotNull { reply ->
-                            if (reply.commentId == commentId) {
-                                // 대댓글은 무조건 제거
-                                null
-                            } else reply
-                        }
-                        comment.copy(replies = updatedReplies)
-                    }
-
-                    // 나머지 댓글은 그대로
-                    else -> comment
-                }
-            }
-
-            _postDetail.value = _postDetail.value.copy(comments = updatedComments)
+            refreshComments()
         }.onFailure {
             eventHelper.sendEvent(TraceEvent.ShowSnackBar("댓글 삭제에 실패했습니다."))
         }
@@ -291,7 +267,6 @@ val fakePostDetail = PostDetail(
     content = "오늘은 작은 선행을 나누었습니다. 많은 사람들에게 도움이 되었으면 좋겠습니다.",
     nickname = "홍길동",
     viewCount = 120,
-    comments = fakeComments,
     emotionCount = EmotionCount(
         heartWarmingCount = 35,
         likeableCount = 50,
