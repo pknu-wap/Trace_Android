@@ -45,11 +45,8 @@ class NotificationService : FirebaseMessagingService() {
 
         val title = message.notification?.title ?: "흔적"
         val body = message.notification?.body ?: ""
-        // val data = message.data
-        val data: Map<String, String> = mapOf(
-            "type" to "comment",
-            "postId" to "1",
-        )
+        val data = message.data
+
 
         val intent = Intent(this, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP

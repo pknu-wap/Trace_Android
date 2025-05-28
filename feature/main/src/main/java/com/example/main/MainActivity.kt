@@ -2,7 +2,6 @@ package com.example.main
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -36,11 +35,11 @@ import com.example.designsystem.component.TraceSnackBar
 import com.example.designsystem.component.TraceSnackBarHost
 import com.example.designsystem.theme.Background
 import com.example.designsystem.theme.TraceTheme
-import com.example.home.navigation.navigateToPost
 import com.example.main.navigation.AppBottomBar
 import com.example.main.navigation.AppNavHost
-import com.example.mission.navigation.navigateToMission
-import com.example.navigation.AuthGraphBaseRoute
+import com.example.navigation.HomeGraph
+import com.example.navigation.MissionGraph
+import com.example.navigation.NavigationEvent
 import com.example.navigation.shouldHideBottomBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -55,56 +54,52 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         installSplashScreen()
+
         if (intent.extras != null) { // 백그라운드 알림으로 앱에 진입
             val type = intent.getStringExtra("type")
 
-//            if (type == "mission") {
-//                navController.navigateToMission()
-//            }
-//
-//            if (type == "comment" || type == "emotion") {
-//                val postId = intent.getStringExtra("postId")?.toIntOrNull()
-//                postId?.let {
-//                    navController.navigateToPost(postId)
-//                }
-//            }
-        } else {
+            type?.let {
+                if (type == "mission") {
+                    viewModel.navigationHelper.navigate(
+                        NavigationEvent.To(MissionGraph.MissionRoute, popUpTo = true)
+                    )
+                }
 
+                if (type == "comment" || type == "emotion") {
+                    val postId = intent.getStringExtra("postId")?.toIntOrNull()
+                    postId?.let {
+                        viewModel.navigationHelper.navigate(
+                            NavigationEvent.StackAndTo(
+                                stackRoute = HomeGraph.HomeRoute,
+                                toRoute = HomeGraph.PostRoute(postId)
+                            )
+                        )
+                    }
+                }
+            }
+
+        } else {
+            viewModel.checkSession()
         }
 
         enableEdgeToEdge()
         setContent {
             val navController = rememberNavController()
 
-            val type = remember(intent) { intent.getStringExtra("type") }
-            val postId = remember(intent) { intent.getStringExtra("postId")?.toIntOrNull() }
-
-
-            LaunchedEffect(type, postId) {
-                when (type) {
-                    "mission" -> {
-                        navController.navigateToMission()
-                    }
-
-                    "comment", "emotion" -> {
-                        postId?.let {
-                            navController.navigateToPost(it)
-                        }
-                    }
-                }
-            }
-
             val currentDestination = navController.currentBackStackEntryAsState()
                 .value?.destination
             val snackBarHostState = remember { SnackbarHostState() }
-
-
 
             LaunchedEffect(Unit) {
                 lifecycleScope.launch {
                     lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED, {
                         launch {
-
+                            viewModel.navigationHelper.navigationFlow.collect { event ->
+                                handleNavigationEvent(
+                                    navController = navController,
+                                    event = event,
+                                )
+                            }
                         }
 
                         launch {
@@ -177,17 +172,23 @@ class MainActivity : ComponentActivity() {
 
         type?.let {
             if (type == "mission") {
-                Log.d("traceIntent", "mission")
+                viewModel.navigationHelper.navigate(
+                    NavigationEvent.To(MissionGraph.MissionRoute, popUpTo = true)
+                )
             }
 
             if (type == "comment" || type == "emotion") {
                 val postId = intent.getStringExtra("postId")?.toIntOrNull()
                 postId?.let {
-                    Log.d("traceIntent", postId.toString())
+                    viewModel.navigationHelper.navigate(
+                        NavigationEvent.StackAndTo(
+                            stackRoute = HomeGraph.HomeRoute,
+                            toRoute = HomeGraph.PostRoute(postId)
+                        )
+                    )
                 }
             }
         }
-
     }
 }
 
@@ -199,12 +200,9 @@ private fun handleNavigationEvent(
         is NavigationEvent.To -> {
             val navOptions = navOptions {
                 if (event.popUpTo) {
-                    popUpTo(
-                        navController.currentBackStackEntry?.destination?.route
-                            ?: navController.graph.startDestinationRoute
-                            ?: AuthGraphBaseRoute.toString()
-                    ) { inclusive = true }
+                    popUpTo(0) { inclusive = true }
                 }
+
                 launchSingleTop = true
             }
 
@@ -216,29 +214,14 @@ private fun handleNavigationEvent(
 
         is NavigationEvent.Up -> navController.navigateUp()
 
-        is NavigationEvent.TopLevelTo -> {
-            val topLevelNavOptions = navOptions {
+        is NavigationEvent.StackAndTo -> {
+            navController.navigate(event.stackRoute, navOptions = navOptions {
                 popUpTo(0) { inclusive = true }
                 launchSingleTop = true
-            }
-
-            navController.navigate(
-                route = event.route,
-                navOptions = topLevelNavOptions
-            )
-        }
-
-        is BottomBarTo -> {
-            val topLevelNavOptions = navOptions {
-                popUpTo(MatchingGraph.MatchingRoute) { saveState = true }
+            })
+            navController.navigate(event.toRoute, navOptions = navOptions {
                 launchSingleTop = true
-                restoreState = true
-            }
-
-            navController.navigate(
-                route = event.route,
-                navOptions = topLevelNavOptions
-            )
+            })
         }
     }
 }
