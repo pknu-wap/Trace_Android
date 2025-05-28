@@ -30,6 +30,5 @@ class TraceApplication : Application() {
         val manager = getSystemService(NotificationManager::class.java)
         manager.createNotificationChannel(channel)
     }
-
 }
 

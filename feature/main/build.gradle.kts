@@ -21,7 +21,4 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.runtimeCompose)
     implementation(libs.androidx.lifecycle.viewModelCompose)
-
-    implementation(libs.firebase.messaging)
-
 }

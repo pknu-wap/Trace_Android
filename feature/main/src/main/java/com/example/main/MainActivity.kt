@@ -110,7 +110,6 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     AppNavHost(navController, Modifier.padding(innerPadding))
                 }
-
             }
         }
     }
