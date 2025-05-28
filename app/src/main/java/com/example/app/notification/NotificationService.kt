@@ -4,6 +4,8 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.example.domain.repository.NotificationRepository
@@ -47,6 +49,8 @@ class NotificationService : FirebaseMessagingService() {
         val body = message.notification?.body ?: ""
         val data = message.data
 
+        val type = data["type"]
+        Log.d("traceIntent", type.toString())
 
         val intent = Intent(this, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
@@ -63,13 +67,21 @@ class NotificationService : FirebaseMessagingService() {
             PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
 
+        val emotionEmoji = if (type == "emotion") BitmapFactory.decodeResource(
+            context.resources,
+            com.example.designsystem.R.drawable.heart
+        ) else null
+
         val builder = NotificationCompat.Builder(context, BACKGROUND_CHANNEL)
             .setSmallIcon(com.example.designsystem.R.drawable.app_icon_pencil)
+            .setLargeIcon(emotionEmoji)
             .setColor(ContextCompat.getColor(context, R.color.white))
             .setContentTitle(title)
             .setContentText(body)
+            .setShowWhen(true)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
+
 
         val notificationManager: NotificationManager =
             context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
