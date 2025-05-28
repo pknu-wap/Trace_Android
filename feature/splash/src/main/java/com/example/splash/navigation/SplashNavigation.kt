@@ -7,18 +7,11 @@ import androidx.navigation.compose.composable
 import com.example.navigation.SplashRoute
 import com.example.splash.SplashRoute
 
-fun NavController.navigateToSplash(navOptions: NavOptions? = null) {
-    navigate(SplashRoute, navOptions)
-}
 
 fun NavGraphBuilder.splashScreen(
-    navigateToHome: () -> Unit,
-    navigateToLogin: () -> Unit
+
 ) {
     composable<SplashRoute> {
-        SplashRoute(
-            navigateToHome = navigateToHome,
-            navigateToLogin = navigateToLogin
-        )
+        SplashRoute()
     }
 }
