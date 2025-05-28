@@ -1,6 +1,6 @@
 [versions]
 ## Android gradle plugin
-androidGradlePlugin = "8.9.2"
+androidGradlePlugin = "8.9.3"
 ## AndroidX
 # https://developer.android.com/jetpack/androidx/releases/core
 androidxCore = "1.16.0"
@@ -142,6 +142,7 @@ retrofit-kotlin-serialization = { module = "com.squareup.retrofit2:converter-kot
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
+firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging" }
 
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinxDateTime" }
@@ -151,7 +152,6 @@ kakao-user = { module = "com.kakao.sdk:v2-user", version.ref = "kakao" }
 
 coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
 coil-network = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil" }
-
 
 
 junit4 = { group = "junit", name = "junit", version.ref = "junit4" }

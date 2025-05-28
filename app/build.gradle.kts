@@ -43,10 +43,10 @@ android {
 
 dependencies {
     implementation(projects.feature.main)
-
-    implementation(libs.kakao.user)
-
     implementation(projects.core.designsystem)
     implementation(projects.core.data)
     implementation(projects.core.domain)
+
+    implementation(libs.kakao.user)
+    implementation(libs.firebase.messaging)
 }

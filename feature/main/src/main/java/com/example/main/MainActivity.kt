@@ -1,7 +1,6 @@
 package com.example.main
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -34,7 +33,6 @@ import com.example.designsystem.theme.TraceTheme
 import com.example.main.navigation.AppBottomBar
 import com.example.main.navigation.AppNavHost
 import com.example.navigation.shouldHideBottomBar
-import com.kakao.sdk.common.KakaoSdk
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -49,8 +47,8 @@ class MainActivity : ComponentActivity() {
 
         installSplashScreen()
 
-
         enableEdgeToEdge()
+
         setContent {
             val navController = rememberNavController()
             val currentDestination = navController.currentBackStackEntryAsState()
@@ -115,8 +113,6 @@ class MainActivity : ComponentActivity() {
 
             }
         }
-
-
     }
 }
 
