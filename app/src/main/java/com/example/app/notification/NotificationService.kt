@@ -43,18 +43,6 @@ class NotificationService : FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
 
-        val channel = android.app.NotificationChannel(
-            BACKGROUND_CHANNEL_ID,
-            BACKGROUND_CHANNEL,
-            NotificationManager.IMPORTANCE_DEFAULT
-        ).apply {
-            description = BACKGROUND_CHANNEL_DESCRIPTION
-        }
-
-        val manager = context.getSystemService(NotificationManager::class.java)
-        manager.createNotificationChannel(channel)
-
-
         val title = message.notification?.title ?: "흔적"
         val body = message.notification?.body ?: ""
         val data = message.data
