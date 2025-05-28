@@ -44,12 +44,12 @@ class NotificationService : FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
 
-        val title = message.notification?.title ?: "흔적"
-        val body = message.notification?.body ?: ""
+
         val data = message.data
 
+        val title = data["title"] ?: "흔적"
+        val body = data["body"] ?: ""
         val type = data["type"]
-
 
         val intent = Intent(this, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
