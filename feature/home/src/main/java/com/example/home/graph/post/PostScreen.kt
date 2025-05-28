@@ -383,36 +383,39 @@ private fun PostScreen(
             items(
                 comments.itemCount
             ) { index ->
-                comments[index]?.let {
-                    Spacer(Modifier.height(13.dp))
+                comments[index]?.let { comment ->
+                    if (!comment.isDeleted) {
 
-                    CommentView(
-                        comment = it,
-                        replyTargetId = replyTargetId,
-                        onDelete = onDeleteComment,
-                        onReport = onReportComment,
-                        onReply = {
-                            onReplyTargetIdChange(it.commentId)
+                        Spacer(Modifier.height(13.dp))
 
-                            coroutineScope.launch {
-                                focusRequester.requestFocus()
-                                keyboardController?.show()
+                        CommentView(
+                            comment = comment,
+                            replyTargetId = replyTargetId,
+                            onDelete = onDeleteComment,
+                            onReport = onReportComment,
+                            onReply = {
+                                onReplyTargetIdChange(comment.commentId)
 
-                                listState.animateScrollToItem(
-                                    index = index + 1, scrollOffset = scrollOffset
-                                )
-                            }
-                        })
+                                coroutineScope.launch {
+                                    focusRequester.requestFocus()
+                                    keyboardController?.show()
 
-                    if (index != comments.itemCount - 1) {
-                        Spacer(Modifier.height(15.dp))
+                                    listState.animateScrollToItem(
+                                        index = index + 1, scrollOffset = scrollOffset
+                                    )
+                                }
+                            })
 
-                        Spacer(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(1.dp)
-                                .background(GrayLine)
-                        )
+                        if (index != comments.itemCount - 1) {
+                            Spacer(Modifier.height(15.dp))
+
+                            Spacer(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(1.dp)
+                                    .background(GrayLine)
+                            )
+                        }
                     }
                 }
             }

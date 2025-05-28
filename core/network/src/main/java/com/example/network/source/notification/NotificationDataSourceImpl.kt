@@ -1,6 +1,5 @@
 package com.example.network.source.notification
 
-import android.util.Log
 import com.example.network.api.TraceApi
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.messaging.FirebaseMessaging
@@ -18,7 +17,6 @@ class NotificationDataSourceImpl @Inject constructor(
 
     override suspend fun postDeviceToken(): Result<Unit> {
         val token = getDeviceToken()
-        Log.d("fcmToken", token)
         return Result.success(Unit)
     }
 
