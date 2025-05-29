@@ -21,6 +21,11 @@ class NotificationDataSourceImpl @Inject constructor(
     }
 
     override suspend fun getDeviceToken(): String = withContext(Dispatchers.IO) {
-        Tasks.await(firebaseMessaging.token)
+        try {
+            Tasks.await(firebaseMessaging.token)
+        } catch (e : Exception) {
+            throw Exception("Failed to get FCM token", e)
+        }
+
     }
 }
