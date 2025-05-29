@@ -2,6 +2,7 @@ package com.example.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -43,6 +44,8 @@ import com.example.navigation.MissionGraph
 import com.example.navigation.NavigationEvent
 import com.example.navigation.NavigationHelper
 import com.example.navigation.shouldHideBottomBar
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -56,6 +59,16 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         installSplashScreen()
+
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                return@OnCompleteListener
+            }
+
+            val token = task.result
+            Log.d("traceMessaging", token.toString())
+
+        })
 
         if (intent.extras != null) { // 백그라운드 알림으로 앱에 진입
             handleNotificationIntent(intent, viewModel.navigationHelper)

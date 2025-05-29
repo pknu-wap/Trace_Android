@@ -7,6 +7,7 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import com.example.domain.model.post.Emotion
 import com.example.domain.repository.NotificationRepository
 import com.example.main.MainActivity
 import com.example.trace.R
@@ -44,7 +45,6 @@ class NotificationService : FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
 
-
         val data = message.data
 
         val title = data["title"] ?: "흔적"
@@ -66,10 +66,25 @@ class NotificationService : FirebaseMessagingService() {
             PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
 
-        val emotionEmoji = if (type == "emotion") BitmapFactory.decodeResource(
-            context.resources,
-            com.example.designsystem.R.drawable.heart
-        ) else null
+        val emotionEmoji = if (type == "emotion" && data["emotion"] != null) {
+            val emotion = Emotion.fromString(data["emotion"])
+
+            val emotionResId = when (emotion) {
+                Emotion.HEARTWARMING -> com.example.designsystem.R.drawable.hearwarming
+                Emotion.LIKEABLE -> com.example.designsystem.R.drawable.likeable
+                Emotion.TOUCHING -> com.example.designsystem.R.drawable.touching
+                Emotion.IMPRESSIVE -> com.example.designsystem.R.drawable.impressive
+                Emotion.GRATEFUL -> com.example.designsystem.R.drawable.grateful
+                else -> null
+            }
+
+            if (emotionResId == null) return
+
+            BitmapFactory.decodeResource(
+                context.resources,
+                emotionResId
+            )
+        } else null
 
         val builder = NotificationCompat.Builder(context, BACKGROUND_CHANNEL_ID)
             .setSmallIcon(com.example.designsystem.R.drawable.app_icon_pencil)

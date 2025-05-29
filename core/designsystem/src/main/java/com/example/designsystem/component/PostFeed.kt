@@ -278,7 +278,6 @@ import java.time.LocalDateTime
                     color = WarmGray
                 )
             }
-
         }
     }
 }
