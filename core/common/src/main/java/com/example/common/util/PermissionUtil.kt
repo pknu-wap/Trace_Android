@@ -10,11 +10,10 @@ object PermissionUtil {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val permission = Manifest.permission.POST_NOTIFICATIONS
 
-            when {
-                ActivityCompat.shouldShowRequestPermissionRationale(activity, permission) -> {
-                    ActivityCompat.requestPermissions(activity, arrayOf(permission), 1001)
-                }
+            if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)) {
+                ActivityCompat.requestPermissions(activity, arrayOf(permission), 1001)
             }
+
         }
     }
 }
