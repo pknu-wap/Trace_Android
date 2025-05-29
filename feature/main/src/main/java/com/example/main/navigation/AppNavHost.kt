@@ -35,22 +35,7 @@ fun AppNavHost(
     ) {
         val currentRoute = navController.currentDestination?.route
 
-        splashScreen(
-            navigateToHome = {
-                navController.navigateToHome(
-                    navOptions {
-                        popUpTo(0) { inclusive = true }
-                    }
-                )
-            },
-            navigateToLogin = {
-                navController.navigateToLogin(
-                    navOptions {
-                        popUpTo(0) { inclusive = true }
-                    }
-                )
-            }
-        )
+        splashScreen()
 
         authNavGraph(
             navigateToHome = {

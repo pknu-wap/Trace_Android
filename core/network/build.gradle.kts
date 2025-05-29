@@ -29,13 +29,11 @@ android {
 
 dependencies {
     implementation(projects.core.domain)
-
-
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.kotlin.serialization)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.datetime)
-
     implementation(libs.okhttp.logging)
 
+    implementation(libs.firebase.messaging)
 }

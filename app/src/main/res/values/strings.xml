@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">흔적</string>
+    <string name="app_channel_id">흔적 알림 채널</string>
 </resources>

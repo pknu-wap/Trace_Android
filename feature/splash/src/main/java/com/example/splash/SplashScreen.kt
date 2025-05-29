@@ -5,30 +5,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.designsystem.R
-import com.example.splash.SplashViewModel.SplashEvent
 
 @Composable
-internal fun SplashRoute(
-    navigateToHome: () -> Unit,
-    navigateToLogin: () -> Unit,
-    viewModel: SplashViewModel = hiltViewModel(),
-) {
-    LaunchedEffect(true) {
-        viewModel.eventChannel.collect { event ->
-            when (event) {
-                is SplashEvent.NavigateToHome -> navigateToLogin()
-                is SplashEvent.NavigateToLogin -> navigateToLogin()
-            }
-        }
-    }
-
+internal fun SplashRoute() {
     SplashScreen()
 }
 
@@ -50,6 +34,5 @@ private fun SplashScreen() {
 @Preview
 @Composable
 fun SplashScreenPreview() {
-    SplashScreen(
-    )
+    SplashScreen()
 }

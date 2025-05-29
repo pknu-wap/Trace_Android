@@ -14,7 +14,7 @@ data class AddPostResponse(
     val providerId: String,
     val nickname: String,
     val imageUrls: List<String>,
-    val profileImageUrl: String,
+    val profileImageUrl: String?,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime,
     val isOwner: Boolean,

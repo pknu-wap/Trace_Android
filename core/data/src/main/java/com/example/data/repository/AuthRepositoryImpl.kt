@@ -8,7 +8,9 @@ import com.example.domain.model.auth.User
 import com.example.domain.model.auth.UserRole
 import com.example.domain.repository.AuthRepository
 import com.example.network.source.auth.AuthDataSource
+import com.example.network.source.notification.NotificationDataSource
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,6 +18,7 @@ class AuthRepositoryImpl @Inject constructor(
     private val authDataSource: AuthDataSource,
     private val localTokenDataSource: LocalTokenDataSource,
     private val localUserDataSource: LocalUserDataSource,
+    private val notificationDataSource: NotificationDataSource,
     private val imageResizer: ImageResizer,
 ) : AuthRepository {
     override suspend fun loginKakao(idToken: String): Result<User> = suspendRunCatching {
@@ -33,12 +36,11 @@ class AuthRepositoryImpl @Inject constructor(
                     response.refreshToken?.let { localTokenDataSource.setRefreshToken(it) }
                 }
 
-                accessTokenJob.join()
-                refreshTokenJob.join()
-
-                User(UserRole.USER)
+                joinAll(accessTokenJob, refreshTokenJob)
             }
 
+            notificationDataSource.postDeviceToken()
+            User(UserRole.USER)
         }
     }
 
@@ -62,9 +64,10 @@ class AuthRepositoryImpl @Inject constructor(
                 response.refreshToken.let { localTokenDataSource.setRefreshToken(it) }
             }
 
-            accessTokenJob.join()
-            refreshTokenJob.join()
+            joinAll(accessTokenJob, refreshTokenJob)
         }
+
+        notificationDataSource.postDeviceToken()
     }
 
     override suspend fun logOut(): Result<Unit> = suspendRunCatching {
@@ -79,8 +82,7 @@ class AuthRepositoryImpl @Inject constructor(
                 localUserDataSource.clearUserInfo()
             }
 
-            clearTokenJob.join()
-            userInfoJob.join()
+            joinAll(clearTokenJob, userInfoJob)
         }
 
     }
@@ -97,8 +99,7 @@ class AuthRepositoryImpl @Inject constructor(
                 localUserDataSource.clearUserInfo()
             }
 
-            clearTokenJob.join()
-            userInfoJob.join()
+            joinAll(clearTokenJob, userInfoJob)
         }
     }
 }
