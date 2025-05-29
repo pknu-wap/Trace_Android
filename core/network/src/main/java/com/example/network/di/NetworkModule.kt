@@ -24,7 +24,7 @@ import javax.inject.Singleton
 abstract class NetworkModule {
     @Binds
     @Singleton
-    abstract fun NotificationDataSource(notificationDataSourceImpl: NotificationDataSourceImpl): NotificationDataSource
+    abstract fun bindsNotificationDataSource(notificationDataSourceImpl: NotificationDataSourceImpl): NotificationDataSource
 
     @Binds
     @Singleton
