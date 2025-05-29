@@ -60,6 +60,7 @@ data class PostDetail(
     val nickname: String,
     val images: List<String> = emptyList(),
     val profileImageUrl: String? = null,
+    val yourEmotionType : String? = null,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime,
     val isOwner : Boolean = true,

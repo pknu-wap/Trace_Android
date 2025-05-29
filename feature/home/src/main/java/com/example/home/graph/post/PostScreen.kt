@@ -268,7 +268,6 @@ private fun PostScreen(
                                 color = DarkGray
                             )
                         }
-
                     }
                 }
 
