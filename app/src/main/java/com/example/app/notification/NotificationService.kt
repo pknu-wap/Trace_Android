@@ -71,7 +71,7 @@ class NotificationService : FirebaseMessagingService() {
             com.example.designsystem.R.drawable.heart
         ) else null
 
-        val builder = NotificationCompat.Builder(context, BACKGROUND_CHANNEL)
+        val builder = NotificationCompat.Builder(context, BACKGROUND_CHANNEL_ID)
             .setSmallIcon(com.example.designsystem.R.drawable.app_icon_pencil)
             .setLargeIcon(emotionEmoji)
             .setColor(ContextCompat.getColor(context, R.color.white))
