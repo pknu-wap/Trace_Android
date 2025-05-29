@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,6 +34,7 @@ import com.example.common.util.clickable
 import com.example.designsystem.R
 import com.example.designsystem.theme.DarkGray
 import com.example.designsystem.theme.PrimaryDefault
+import com.example.designsystem.theme.Red
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.WarmGray
 import com.example.domain.model.post.PostFeed
@@ -111,7 +114,7 @@ import java.time.LocalDateTime
                         color = WarmGray
                     )
 
-                    Spacer(Modifier.width(17.dp))
+                    Spacer(Modifier.width(12.dp))
 
                     Text(
                         postFeed.getFormattedTime(),
@@ -143,6 +146,23 @@ import java.time.LocalDateTime
                         "${postFeed.commentCount}",
                         style = TraceTheme.typography.bodySSB.copy(fontSize = 11.sp),
                         color = PrimaryDefault
+                    )
+
+                    Spacer(Modifier.width(10.dp))
+
+                    Image(
+                        imageVector = Icons.Default.Favorite,
+                        contentDescription = "감정표현",
+                        colorFilter = ColorFilter.tint(Red),
+                        modifier = Modifier.size(15.dp)
+                    )
+
+                    Spacer(Modifier.width(3.dp))
+
+                    Text(
+                        postFeed.emotionCount.toString(),
+                        style = TraceTheme.typography.bodySSB.copy(fontSize = 11.sp),
+                        color = WarmGray
                     )
                 }
 
@@ -240,8 +260,24 @@ import java.time.LocalDateTime
                     style = TraceTheme.typography.bodySSB.copy(fontSize = 11.sp),
                     color = PrimaryDefault
                 )
-            }
 
+                Spacer(Modifier.width(10.dp))
+
+                Image(
+                    imageVector = Icons.Default.Favorite,
+                    contentDescription = "감정표현",
+                    colorFilter = ColorFilter.tint(Red),
+                    modifier = Modifier.size(15.dp)
+                )
+
+                Spacer(Modifier.width(3.dp))
+
+                Text(
+                    postFeed.emotionCount.toString(),
+                    style = TraceTheme.typography.bodySSB.copy(fontSize = 11.sp),
+                    color = WarmGray
+                )
+            }
         }
     }
 }

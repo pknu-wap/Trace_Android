@@ -2,6 +2,7 @@ package com.example.home.graph.post
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,9 +18,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -270,7 +270,6 @@ private fun PostScreen(
                                 color = DarkGray
                             )
                         }
-
                     }
                 }
 
@@ -304,38 +303,48 @@ private fun PostScreen(
                 ) {
                     Emotion.entries.forEach { emotion ->
                         val emotionCount = when (emotion) {
-                            Emotion.HeartWarming -> postDetail.emotionCount.heartWarmingCount
-                            Emotion.Likeable -> postDetail.emotionCount.likeableCount
-                            Emotion.Touching -> postDetail.emotionCount.touchingCount
-                            Emotion.Impressive -> postDetail.emotionCount.impressiveCount
-                            Emotion.Grateful -> postDetail.emotionCount.gratefulCount
+                            Emotion.HEARTWARMING -> postDetail.emotionCount.heartWarmingCount
+                            Emotion.LIKEABLE -> postDetail.emotionCount.likeableCount
+                            Emotion.TOUCHING -> postDetail.emotionCount.touchingCount
+                            Emotion.IMPRESSIVE -> postDetail.emotionCount.impressiveCount
+                            Emotion.GRATEFUL -> postDetail.emotionCount.gratefulCount
                         }
+
+                        val emotionResource =  when (emotion) {
+                            Emotion.HEARTWARMING -> R.drawable.hearwarming
+                            Emotion.LIKEABLE -> R.drawable.likeable
+                            Emotion.TOUCHING -> R.drawable.touching
+                            Emotion.IMPRESSIVE -> R.drawable.impressive
+                            Emotion.GRATEFUL -> R.drawable.grateful
+                        }
+
+                        val borderWidth = if(emotion == postDetail.yourEmotionType) 2.dp else 0.dp
 
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             IconButton(onClick = {
                                 toggleEmotion(emotion)
-                            }, modifier = Modifier.then(Modifier.size(20.dp))) {
+                            }, modifier = Modifier.then(Modifier.size(26.dp))) {
                                 Image(
-                                    imageVector = Icons.Default.Favorite,
+                                    painter = painterResource(emotionResource),
                                     contentDescription = emotion.label,
-                                    modifier = Modifier.size(20.dp)
+                                    modifier = Modifier.size(26.dp).border(borderWidth, PrimaryDefault, CircleShape)
                                 )
                             }
 
-                            Spacer(Modifier.height(5.dp))
+                            Spacer(Modifier.height(3.dp))
 
                             Text(
                                 emotion.label,
                                 style = TraceTheme.typography.bodySR,
-                                color = EmotionLabel
+                                color = if(emotion == postDetail.yourEmotionType) PrimaryDefault else EmotionLabel
                             )
 
                             Spacer(Modifier.height(3.dp))
 
                             Text(
-                                emotionCount.formatCount(), style = TraceTheme.typography.bodySSB
+                                emotionCount.formatCount(), style = TraceTheme.typography.bodySSB, color = if(emotion == postDetail.yourEmotionType) PrimaryDefault else Black
                             )
                         }
                     }

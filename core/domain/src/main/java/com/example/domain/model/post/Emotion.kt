@@ -1,11 +1,16 @@
 package com.example.domain.model.post
 
 enum class Emotion(val label: String) {
-    HeartWarming("따뜻해요"),
-    Likeable("좋아요"),
-    Touching("감동이에요"),
-    Impressive("멋져요"),
-    Grateful("고마워요")
+    HEARTWARMING("따뜻해요"),
+    LIKEABLE("좋아요"),
+    TOUCHING("감동이에요"),
+    IMPRESSIVE("멋져요"),
+    GRATEFUL("고마워요");
+
+    companion object {
+        fun fromString(emotionType: String?): Emotion? =
+            Emotion.entries.find { it.name == emotionType }
+    }
 }
 
 data class EmotionCount(

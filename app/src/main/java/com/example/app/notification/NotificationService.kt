@@ -4,9 +4,11 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import com.example.domain.model.post.Emotion
 import com.example.domain.repository.NotificationRepository
 import com.example.main.MainActivity
 import com.example.trace.R
@@ -44,7 +46,6 @@ class NotificationService : FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
 
-
         val data = message.data
 
         val title = data["title"] ?: "흔적"
@@ -66,14 +67,9 @@ class NotificationService : FirebaseMessagingService() {
             PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
 
-        val emotionEmoji = if (type == "emotion") BitmapFactory.decodeResource(
-            context.resources,
-            com.example.designsystem.R.drawable.heart
-        ) else null
-
         val builder = NotificationCompat.Builder(context, BACKGROUND_CHANNEL_ID)
             .setSmallIcon(com.example.designsystem.R.drawable.app_icon_pencil)
-            .setLargeIcon(emotionEmoji)
+            .setLargeIcon(getEmotionBitmap(context, type, data["emotion"]))
             .setColor(ContextCompat.getColor(context, R.color.white))
             .setContentTitle(title)
             .setContentText(body)
@@ -98,3 +94,25 @@ class NotificationService : FirebaseMessagingService() {
         const val BACKGROUND_CHANNEL_DESCRIPTION = "백그라운드 알림을 관리하는 채널입니다."
     }
 }
+
+
+private fun getEmotionBitmap(context: Context, type: String?, emotionType: String?): Bitmap? {
+    if (type == "emotion" && emotionType != null) {
+        val emotion = Emotion.fromString(emotionType)
+        val emotionResId = when (emotion) {
+            Emotion.HEARTWARMING -> com.example.designsystem.R.drawable.hearwarming
+            Emotion.LIKEABLE -> com.example.designsystem.R.drawable.likeable
+            Emotion.TOUCHING -> com.example.designsystem.R.drawable.touching
+            Emotion.IMPRESSIVE -> com.example.designsystem.R.drawable.impressive
+            Emotion.GRATEFUL -> com.example.designsystem.R.drawable.grateful
+            else -> null
+        }
+
+        return emotionResId?.let {
+            BitmapFactory.decodeResource(context.resources, it)
+        }
+    }
+
+    return null
+}
+

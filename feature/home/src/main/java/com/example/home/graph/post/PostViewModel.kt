@@ -97,36 +97,42 @@ class PostViewModel @Inject constructor(
         postRepository.toggleEmotion(postId = postId, emotionType = emotion).onSuccess { isAdded ->
             val current = _postDetail.value
 
-            val updatedEmotionCount = when (emotion) {
-                Emotion.HeartWarming -> current.emotionCount.copy(
-                    heartWarmingCount = current.emotionCount.heartWarmingCount + if (isAdded) 1 else -1
-                )
+            val updatedEmotionCount = current.emotionCount.let { count ->
+                var result = count
 
-                Emotion.Likeable -> current.emotionCount.copy(
-                    likeableCount = current.emotionCount.likeableCount + if (isAdded) 1 else -1
-                )
+                if (emotion != _postDetail.value.yourEmotionType && _postDetail.value.yourEmotionType != null) {
+                    result = when (_postDetail.value.yourEmotionType) {
+                        Emotion.HEARTWARMING -> result.copy(heartWarmingCount = result.heartWarmingCount - 1)
+                        Emotion.LIKEABLE -> result.copy(likeableCount = result.likeableCount - 1)
+                        Emotion.TOUCHING -> result.copy(touchingCount = result.touchingCount - 1)
+                        Emotion.IMPRESSIVE -> result.copy(impressiveCount = result.impressiveCount - 1)
+                        Emotion.GRATEFUL -> result.copy(gratefulCount = result.gratefulCount - 1)
+                        else -> result
+                    }
+                }
 
-                Emotion.Touching -> current.emotionCount.copy(
-                    touchingCount = current.emotionCount.touchingCount + if (isAdded) 1 else -1
-                )
+                result = when (emotion) {
+                    Emotion.HEARTWARMING -> result.copy(heartWarmingCount = result.heartWarmingCount + if (isAdded) 1 else -1)
+                    Emotion.LIKEABLE -> result.copy(likeableCount = result.likeableCount + if (isAdded) 1 else -1)
+                    Emotion.TOUCHING -> result.copy(touchingCount = result.touchingCount + if (isAdded) 1 else -1)
+                    Emotion.IMPRESSIVE -> result.copy(impressiveCount = result.impressiveCount + if (isAdded) 1 else -1)
+                    Emotion.GRATEFUL -> result.copy(gratefulCount = result.gratefulCount + if (isAdded) 1 else -1)
+                }
 
-                Emotion.Impressive -> current.emotionCount.copy(
-                    impressiveCount = current.emotionCount.impressiveCount + if (isAdded) 1 else -1
-                )
-
-                Emotion.Grateful -> current.emotionCount.copy(
-                    gratefulCount = current.emotionCount.gratefulCount + if (isAdded) 1 else -1
-                )
+                result
             }
 
-            _postDetail.value = current.copy(emotionCount = updatedEmotionCount)
+            _postDetail.value =
+                current.copy(
+                    yourEmotionType = if (isAdded) emotion else null,
+                    emotionCount = updatedEmotionCount
+                )
         }
     }
 
     private fun refreshComments() = viewModelScope.launch {
         _refreshTrigger.value = !_refreshTrigger.value
     }
-
 
     fun addComment() = viewModelScope.launch {
         if (_commentInput.value.isEmpty()) {

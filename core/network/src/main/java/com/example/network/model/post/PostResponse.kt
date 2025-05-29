@@ -1,5 +1,6 @@
 package com.example.network.model.post
 
+import com.example.domain.model.post.Emotion
 import com.example.domain.model.post.EmotionCount
 import com.example.domain.model.post.PostDetail
 import com.example.domain.model.post.PostType
@@ -19,6 +20,7 @@ data class PostResponse(
     val nickname: String,
     val imageUrls: List<String>,
     val profileImageUrl: String?,
+    val yourEmotionType : String?,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime,
     val isOwner: Boolean,
@@ -41,6 +43,7 @@ data class PostResponse(
             nickname = nickname,
             images = imageUrls,
             profileImageUrl = profileImageUrl,
+            yourEmotionType = Emotion.fromString(yourEmotionType),
             createdAt = createdAt.toJavaLocalDateTime(),
             updatedAt = updatedAt.toJavaLocalDateTime(),
             isOwner = isOwner,

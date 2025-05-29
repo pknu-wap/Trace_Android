@@ -91,8 +91,9 @@ interface TraceApi {
         @Path("id") postId: Int,
     ): Result<Unit>
 
-    @POST("/api/v1/emotion")
+    @POST("/api/v1/emotion/{postId}")
     suspend fun toggleEmotion(
+        @Path("postId") postId: Int,
         @Body toggleEmotionRequest: ToggleEmotionRequest,
     ): Result<ToggleEmotionResponse>
 
