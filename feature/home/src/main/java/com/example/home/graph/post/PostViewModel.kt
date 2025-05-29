@@ -97,61 +97,36 @@ class PostViewModel @Inject constructor(
         postRepository.toggleEmotion(postId = postId, emotionType = emotion).onSuccess { isAdded ->
             val current = _postDetail.value
 
-            if (emotion != _postDetail.value.yourEmotionType) {
-                when (emotion) {
-                    Emotion.HEARTWARMING -> {
-                        current.emotionCount.copy(
-                            heartWarmingCount = current.emotionCount.heartWarmingCount - 1
-                        )
+            val updatedEmotionCount = current.emotionCount.let { count ->
+                var result = count
+
+                if (emotion != _postDetail.value.yourEmotionType && _postDetail.value.yourEmotionType != null) {
+                    result = when (_postDetail.value.yourEmotionType) {
+                        Emotion.HEARTWARMING -> result.copy(heartWarmingCount = result.heartWarmingCount - 1)
+                        Emotion.LIKEABLE -> result.copy(likeableCount = result.likeableCount - 1)
+                        Emotion.TOUCHING -> result.copy(touchingCount = result.touchingCount - 1)
+                        Emotion.IMPRESSIVE -> result.copy(impressiveCount = result.impressiveCount - 1)
+                        Emotion.GRATEFUL -> result.copy(gratefulCount = result.gratefulCount - 1)
+                        else -> result
                     }
-
-                    Emotion.LIKEABLE -> current.emotionCount.copy(
-                        likeableCount = current.emotionCount.likeableCount - 1
-                    )
-
-                    Emotion.TOUCHING -> current.emotionCount.copy(
-                        touchingCount = current.emotionCount.touchingCount - 1
-                    )
-
-                    Emotion.IMPRESSIVE -> current.emotionCount.copy(
-                        impressiveCount = current.emotionCount.impressiveCount - 1
-                    )
-
-                    Emotion.GRATEFUL -> current.emotionCount.copy(
-                        gratefulCount = current.emotionCount.gratefulCount - 1
-                    )
                 }
 
-            }
-
-            val yourEmotionType = if (isAdded) emotion else null
-
-            val updatedEmotionCount = when (emotion) {
-                Emotion.HEARTWARMING -> {
-                    current.emotionCount.copy(
-                        heartWarmingCount = current.emotionCount.heartWarmingCount + if (isAdded) 1 else -1
-                    )
+                result = when (emotion) {
+                    Emotion.HEARTWARMING -> result.copy(heartWarmingCount = result.heartWarmingCount + if (isAdded) 1 else -1)
+                    Emotion.LIKEABLE -> result.copy(likeableCount = result.likeableCount + if (isAdded) 1 else -1)
+                    Emotion.TOUCHING -> result.copy(touchingCount = result.touchingCount + if (isAdded) 1 else -1)
+                    Emotion.IMPRESSIVE -> result.copy(impressiveCount = result.impressiveCount + if (isAdded) 1 else -1)
+                    Emotion.GRATEFUL -> result.copy(gratefulCount = result.gratefulCount + if (isAdded) 1 else -1)
                 }
 
-                Emotion.LIKEABLE -> current.emotionCount.copy(
-                    likeableCount = current.emotionCount.likeableCount + if (isAdded) 1 else -1
-                )
-
-                Emotion.TOUCHING -> current.emotionCount.copy(
-                    touchingCount = current.emotionCount.touchingCount + if (isAdded) 1 else -1
-                )
-
-                Emotion.IMPRESSIVE -> current.emotionCount.copy(
-                    impressiveCount = current.emotionCount.impressiveCount + if (isAdded) 1 else -1
-                )
-
-                Emotion.GRATEFUL -> current.emotionCount.copy(
-                    gratefulCount = current.emotionCount.gratefulCount + if (isAdded) 1 else -1
-                )
+                result
             }
 
             _postDetail.value =
-                current.copy(yourEmotionType = yourEmotionType, emotionCount = updatedEmotionCount)
+                current.copy(
+                    yourEmotionType = if (isAdded) emotion else null,
+                    emotionCount = updatedEmotionCount
+                )
         }
     }
 
