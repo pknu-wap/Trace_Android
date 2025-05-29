@@ -31,6 +31,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.example.common.event.TraceEvent
 import com.example.common.ui.TraceBottomBarAnimation
+import com.example.common.util.PermissionUtil
 import com.example.designsystem.component.TraceSnackBar
 import com.example.designsystem.component.TraceSnackBarHost
 import com.example.designsystem.theme.Background
@@ -60,6 +61,7 @@ class MainActivity : ComponentActivity() {
             handleNotificationIntent(intent, viewModel.navigationHelper)
         } else {
             viewModel.checkSession()
+            PermissionUtil.requestNotificationPermission(this)
         }
 
         enableEdgeToEdge()

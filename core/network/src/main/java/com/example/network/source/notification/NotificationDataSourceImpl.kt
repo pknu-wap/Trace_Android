@@ -26,6 +26,5 @@ class NotificationDataSourceImpl @Inject constructor(
         } catch (e : Exception) {
             throw Exception("Failed to get FCM token", e)
         }
-
     }
 }
