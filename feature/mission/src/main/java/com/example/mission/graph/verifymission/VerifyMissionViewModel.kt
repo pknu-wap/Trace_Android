@@ -4,9 +4,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.common.event.EventHelper
+import com.example.domain.repository.MissionRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -15,6 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class VerifyMissionViewModel @Inject constructor(
+    private val missionRepository: MissionRepository,
     private val savedStateHandle: SavedStateHandle,
     val eventHelper: EventHelper
 ) : ViewModel() {
@@ -54,7 +55,15 @@ class VerifyMissionViewModel @Inject constructor(
     fun verifyMission() = viewModelScope.launch {
         _isVerifyingMission.value = true
 
-        delay(4000)
+        missionRepository.verifyDailyMission(
+            title = _title.value,
+            content = _content.value,
+            images = _images.value
+        ).onSuccess { postId ->
+            _eventChannel.send(VerifyMissionEvent.VerifyMissionSuccess(postId = postId))
+        }.onFailure {
+            _eventChannel.send(VerifyMissionEvent.VerifyMissionFailure)
+        }
 
         _isVerifyingMission.value = false
     }
@@ -64,5 +73,4 @@ class VerifyMissionViewModel @Inject constructor(
         data class VerifyMissionSuccess(val postId: Int) : VerifyMissionEvent()
         data object VerifyMissionFailure : VerifyMissionEvent()
     }
-
 }

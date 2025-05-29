@@ -56,6 +56,7 @@ import com.example.mission.graph.verifymission.component.VerifyMissionHeaderView
 @Composable
 internal fun VerifyMissionRoute(
     navigateBack: () -> Unit,
+    navigateToPost: (Int) -> Unit,
     viewModel: VerifyMissionViewModel = hiltViewModel(),
 ) {
     val description = viewModel.description
@@ -70,6 +71,7 @@ internal fun VerifyMissionRoute(
             when (event) {
                 is VerifyMissionEvent.VerifyMissionSuccess -> {
                     viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("미션 인증에 성공했습니다!"))
+                    navigateToPost(event.postId)
                 }
 
                 is VerifyMissionEvent.VerifyMissionFailure -> {
