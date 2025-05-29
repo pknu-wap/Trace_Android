@@ -8,34 +8,39 @@ import kotlinx.datetime.toJavaLocalDateTime
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GetPostResponse(
+data class PostResponse(
     val id: Int,
-    val postType : String,
-    val viewCount : Int,
-    val emotionCount : Map<String, Int>,
+    val postType: String,
+    val emotionCount: Map<String, Int>?,
+    val viewCount: Int,
     val title: String,
     val content: String,
     val providerId: String,
     val nickname: String,
-    val imageUrls : List<String>,
-    val profileImageUrl : String? = null,
-    val createdAt : LocalDateTime,
-    val updatedAt : LocalDateTime,
+    val imageUrls: List<String>,
+    val profileImageUrl: String?,
+    val createdAt: LocalDateTime,
+    val updatedAt: LocalDateTime,
     val isOwner: Boolean,
-    val isVerified : Boolean,
+    val isVerified: Boolean,
 ) {
-    fun toDomain() : PostDetail {
+    fun toDomain(): PostDetail {
         return PostDetail(
             postId = id,
             postType = PostType.fromString(postType),
             viewCount = viewCount,
-            emotionCount = EmotionCount.fromMap(emotionCount),
+            emotionCount = emotionCount?.let { EmotionCount.fromMap(emotionCount) } ?: EmotionCount(
+                0,
+                0,
+                0,
+                0
+            ),
             title = title,
             content = content,
             providerId = providerId,
             nickname = nickname,
             images = imageUrls,
-            profileImageUrl =  profileImageUrl,
+            profileImageUrl = profileImageUrl,
             createdAt = createdAt.toJavaLocalDateTime(),
             updatedAt = updatedAt.toJavaLocalDateTime(),
             isOwner = isOwner,

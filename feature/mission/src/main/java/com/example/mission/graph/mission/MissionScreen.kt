@@ -34,7 +34,7 @@ internal fun MissionRoute(
     MissionScreen(
         dailyMission = dailyMission,
         verifiedMissions = verifiedMissions,
-        changeMission = viewModel::changeMission,
+        changeMission = viewModel::changeDailyMission,
         navigateToPost = navigateToPost,
         onVerifyMission = navigateToVerifyMission
     )
@@ -69,7 +69,6 @@ private fun MissionScreen(
             }
 
             Spacer(Modifier.height(16.dp))
-
         }
 
         item {
@@ -101,7 +100,6 @@ fun MissionScreenPreview() {
                 description = "길거리에서 쓰레기 줍기",
                 isVerified = false,
             ),
-
             changeCount = 0
         ),
         verifiedMissions = fakeMissionFeeds1,
