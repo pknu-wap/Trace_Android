@@ -18,8 +18,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -311,20 +309,28 @@ private fun PostScreen(
                             Emotion.Grateful -> postDetail.emotionCount.gratefulCount
                         }
 
+                        val emotionResource =  when (emotion) {
+                            Emotion.HeartWarming -> R.drawable.hearwarming
+                            Emotion.Likeable -> R.drawable.likeable
+                            Emotion.Touching -> R.drawable.touching
+                            Emotion.Impressive -> R.drawable.impressive
+                            Emotion.Grateful -> R.drawable.grateful
+                        }
+
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             IconButton(onClick = {
                                 toggleEmotion(emotion)
-                            }, modifier = Modifier.then(Modifier.size(20.dp))) {
+                            }, modifier = Modifier.then(Modifier.size(30.dp))) {
                                 Image(
-                                    imageVector = Icons.Default.Favorite,
+                                    painter = painterResource(emotionResource),
                                     contentDescription = emotion.label,
-                                    modifier = Modifier.size(20.dp)
+                                    modifier = Modifier.size(30.dp)
                                 )
                             }
 
-                            Spacer(Modifier.height(5.dp))
+                            Spacer(Modifier.height(3.dp))
 
                             Text(
                                 emotion.label,
