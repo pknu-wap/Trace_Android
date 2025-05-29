@@ -5,7 +5,12 @@ enum class Emotion(val label: String) {
     LIKEABLE("좋아요"),
     TOUCHING("감동이에요"),
     IMPRESSIVE("멋져요"),
-    GRATEFUL("고마워요")
+    GRATEFUL("고마워요");
+
+    companion object {
+        fun fromString(emotionType: String?): Emotion? =
+            Emotion.entries.find { it.name == emotionType }
+    }
 }
 
 data class EmotionCount(

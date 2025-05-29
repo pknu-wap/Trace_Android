@@ -2,6 +2,7 @@ package com.example.home.graph.post
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
@@ -316,16 +318,18 @@ private fun PostScreen(
                             Emotion.GRATEFUL -> R.drawable.grateful
                         }
 
+                        val borderWidth = if(emotion == postDetail.yourEmotionType) 2.dp else 0.dp
+
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             IconButton(onClick = {
                                 toggleEmotion(emotion)
-                            }, modifier = Modifier.then(Modifier.size(28.dp))) {
+                            }, modifier = Modifier.then(Modifier.size(26.dp))) {
                                 Image(
                                     painter = painterResource(emotionResource),
                                     contentDescription = emotion.label,
-                                    modifier = Modifier.size(28.dp)
+                                    modifier = Modifier.size(26.dp).border(borderWidth, PrimaryDefault, CircleShape)
                                 )
                             }
 
@@ -334,13 +338,13 @@ private fun PostScreen(
                             Text(
                                 emotion.label,
                                 style = TraceTheme.typography.bodySR,
-                                color = EmotionLabel
+                                color = if(emotion == postDetail.yourEmotionType) PrimaryDefault else EmotionLabel
                             )
 
                             Spacer(Modifier.height(3.dp))
 
                             Text(
-                                emotionCount.formatCount(), style = TraceTheme.typography.bodySSB
+                                emotionCount.formatCount(), style = TraceTheme.typography.bodySSB, color = if(emotion == postDetail.yourEmotionType) PrimaryDefault else Black
                             )
                         }
                     }
