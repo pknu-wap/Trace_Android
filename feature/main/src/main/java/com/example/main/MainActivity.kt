@@ -40,6 +40,7 @@ import com.example.main.navigation.AppNavHost
 import com.example.navigation.HomeGraph
 import com.example.navigation.MissionGraph
 import com.example.navigation.NavigationEvent
+import com.example.navigation.NavigationHelper
 import com.example.navigation.shouldHideBottomBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -56,28 +57,7 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
 
         if (intent.extras != null) { // 백그라운드 알림으로 앱에 진입
-            val type = intent.getStringExtra("type")
-
-            type?.let {
-                if (type == "mission") {
-                    viewModel.navigationHelper.navigate(
-                        NavigationEvent.To(MissionGraph.MissionRoute, popUpTo = true)
-                    )
-                }
-
-                if (type == "comment" || type == "emotion") {
-                    val postId = intent.getStringExtra("postId")?.toIntOrNull()
-                    postId?.let {
-                        viewModel.navigationHelper.navigate(
-                            NavigationEvent.StackAndTo(
-                                stackRoute = HomeGraph.HomeRoute,
-                                toRoute = HomeGraph.PostRoute(postId)
-                            )
-                        )
-                    }
-                }
-            }
-
+            handleNotificationIntent(intent, viewModel.navigationHelper)
         } else {
             viewModel.checkSession()
         }
@@ -167,20 +147,56 @@ class MainActivity : ComponentActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
+        handleNotificationIntent(intent, viewModel.navigationHelper)
+    }
 
-        val type = intent.getStringExtra("type")
+    private fun handleNavigationEvent(
+        navController: NavController,
+        event: NavigationEvent
+    ) {
+        when (event) {
+            is NavigationEvent.To -> {
+                val navOptions = navOptions {
+                    if (event.popUpTo) {
+                        popUpTo(0) { inclusive = true }
+                    }
 
-        type?.let {
-            if (type == "mission") {
-                viewModel.navigationHelper.navigate(
+                    launchSingleTop = true
+                }
+
+                navController.navigate(
+                    route = event.route,
+                    navOptions = navOptions
+                )
+            }
+
+            is NavigationEvent.Up -> navController.navigateUp()
+
+            is NavigationEvent.StackAndTo -> {
+                navController.navigate(event.stackRoute, navOptions = navOptions {
+                    popUpTo(0) { inclusive = true }
+                    launchSingleTop = true
+                })
+                navController.navigate(event.toRoute, navOptions = navOptions {
+                    launchSingleTop = true
+                })
+            }
+        }
+    }
+
+    private fun handleNotificationIntent(intent: Intent, navigationHelper: NavigationHelper) {
+        val type = intent.getStringExtra("type") ?: return
+
+        when (type) {
+            "mission" -> {
+                navigationHelper.navigate(
                     NavigationEvent.To(MissionGraph.MissionRoute, popUpTo = true)
                 )
             }
 
-            if (type == "comment" || type == "emotion") {
-                val postId = intent.getStringExtra("postId")?.toIntOrNull()
-                postId?.let {
-                    viewModel.navigationHelper.navigate(
+            "comment", "emotion" -> {
+                intent.getStringExtra("postId")?.toIntOrNull()?.let { postId ->
+                    navigationHelper.navigate(
                         NavigationEvent.StackAndTo(
                             stackRoute = HomeGraph.HomeRoute,
                             toRoute = HomeGraph.PostRoute(postId)
@@ -191,38 +207,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-private fun handleNavigationEvent(
-    navController: NavController,
-    event: NavigationEvent
-) {
-    when (event) {
-        is NavigationEvent.To -> {
-            val navOptions = navOptions {
-                if (event.popUpTo) {
-                    popUpTo(0) { inclusive = true }
-                }
-
-                launchSingleTop = true
-            }
-
-            navController.navigate(
-                route = event.route,
-                navOptions = navOptions
-            )
-        }
-
-        is NavigationEvent.Up -> navController.navigateUp()
-
-        is NavigationEvent.StackAndTo -> {
-            navController.navigate(event.stackRoute, navOptions = navOptions {
-                popUpTo(0) { inclusive = true }
-                launchSingleTop = true
-            })
-            navController.navigate(event.toRoute, navOptions = navOptions {
-                launchSingleTop = true
-            })
-        }
-    }
-}
-
