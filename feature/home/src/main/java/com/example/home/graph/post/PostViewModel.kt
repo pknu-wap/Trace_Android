@@ -134,7 +134,6 @@ class PostViewModel @Inject constructor(
         _refreshTrigger.value = !_refreshTrigger.value
     }
 
-
     fun addComment() = viewModelScope.launch {
         if (_commentInput.value.isEmpty()) {
             eventHelper.sendEvent(TraceEvent.ShowSnackBar("내용을 입력해주세요."))
