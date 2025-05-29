@@ -66,7 +66,6 @@ import com.example.designsystem.theme.White
 import com.example.domain.model.post.Comment
 import com.example.domain.model.post.Emotion
 import com.example.domain.model.post.PostDetail
-import com.example.domain.model.post.PostType
 import com.example.home.graph.post.PostViewModel.PostEvent
 import com.example.home.graph.post.component.CommentView
 import com.example.home.graph.post.component.OtherPostDropdownMenu
@@ -223,7 +222,7 @@ private fun PostScreen(
                 ) {
                     Text(postDetail.title, style = TraceTheme.typography.bodyLSB)
 
-                    if (postDetail.postType == PostType.GOOD_DEED && postDetail.isVerified) {
+                    if (postDetail.isVerified) {
                         Spacer(Modifier.width(8.dp))
 
                         Image(

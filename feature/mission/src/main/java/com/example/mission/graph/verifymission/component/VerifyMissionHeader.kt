@@ -68,7 +68,7 @@ internal fun VerifyMissionHeaderView(
 
         Spacer(Modifier.height(10.dp))
 
-        Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 25.dp)) {
+        Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 30.dp)) {
             Text(
                 description,
                 style = TraceTheme.typography.missionTitle.copy(fontSize = 24.sp, lineHeight = 28.sp),
