@@ -145,8 +145,8 @@ class PostDataSourceImpl @Inject constructor(
         emotionType: Emotion
     ): Result<ToggleEmotionResponse> =
         traceApi.toggleEmotion(
+            postId = postId,
             toggleEmotionRequest = ToggleEmotionRequest(
-                postId = postId,
                 emotionType = emotionType.name
             )
         )

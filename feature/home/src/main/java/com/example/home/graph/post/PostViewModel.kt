@@ -98,23 +98,23 @@ class PostViewModel @Inject constructor(
             val current = _postDetail.value
 
             val updatedEmotionCount = when (emotion) {
-                Emotion.HeartWarming -> current.emotionCount.copy(
+                Emotion.HEARTWARMING -> current.emotionCount.copy(
                     heartWarmingCount = current.emotionCount.heartWarmingCount + if (isAdded) 1 else -1
                 )
 
-                Emotion.Likeable -> current.emotionCount.copy(
+                Emotion.LIKEABLE -> current.emotionCount.copy(
                     likeableCount = current.emotionCount.likeableCount + if (isAdded) 1 else -1
                 )
 
-                Emotion.Touching -> current.emotionCount.copy(
+                Emotion.TOUCHING -> current.emotionCount.copy(
                     touchingCount = current.emotionCount.touchingCount + if (isAdded) 1 else -1
                 )
 
-                Emotion.Impressive -> current.emotionCount.copy(
+                Emotion.IMPRESSIVE -> current.emotionCount.copy(
                     impressiveCount = current.emotionCount.impressiveCount + if (isAdded) 1 else -1
                 )
 
-                Emotion.Grateful -> current.emotionCount.copy(
+                Emotion.GRATEFUL -> current.emotionCount.copy(
                     gratefulCount = current.emotionCount.gratefulCount + if (isAdded) 1 else -1
                 )
             }

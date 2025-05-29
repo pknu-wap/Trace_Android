@@ -302,19 +302,19 @@ private fun PostScreen(
                 ) {
                     Emotion.entries.forEach { emotion ->
                         val emotionCount = when (emotion) {
-                            Emotion.HeartWarming -> postDetail.emotionCount.heartWarmingCount
-                            Emotion.Likeable -> postDetail.emotionCount.likeableCount
-                            Emotion.Touching -> postDetail.emotionCount.touchingCount
-                            Emotion.Impressive -> postDetail.emotionCount.impressiveCount
-                            Emotion.Grateful -> postDetail.emotionCount.gratefulCount
+                            Emotion.HEARTWARMING -> postDetail.emotionCount.heartWarmingCount
+                            Emotion.LIKEABLE -> postDetail.emotionCount.likeableCount
+                            Emotion.TOUCHING -> postDetail.emotionCount.touchingCount
+                            Emotion.IMPRESSIVE -> postDetail.emotionCount.impressiveCount
+                            Emotion.GRATEFUL -> postDetail.emotionCount.gratefulCount
                         }
 
                         val emotionResource =  when (emotion) {
-                            Emotion.HeartWarming -> R.drawable.hearwarming
-                            Emotion.Likeable -> R.drawable.likeable
-                            Emotion.Touching -> R.drawable.touching
-                            Emotion.Impressive -> R.drawable.impressive
-                            Emotion.Grateful -> R.drawable.grateful
+                            Emotion.HEARTWARMING -> R.drawable.hearwarming
+                            Emotion.LIKEABLE -> R.drawable.likeable
+                            Emotion.TOUCHING -> R.drawable.touching
+                            Emotion.IMPRESSIVE -> R.drawable.impressive
+                            Emotion.GRATEFUL -> R.drawable.grateful
                         }
 
                         Column(
@@ -322,11 +322,11 @@ private fun PostScreen(
                         ) {
                             IconButton(onClick = {
                                 toggleEmotion(emotion)
-                            }, modifier = Modifier.then(Modifier.size(30.dp))) {
+                            }, modifier = Modifier.then(Modifier.size(28.dp))) {
                                 Image(
                                     painter = painterResource(emotionResource),
                                     contentDescription = emotion.label,
-                                    modifier = Modifier.size(30.dp)
+                                    modifier = Modifier.size(28.dp)
                                 )
                             }
 
