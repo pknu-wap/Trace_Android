@@ -70,7 +70,7 @@ import java.time.LocalDateTime
                         overflow = TextOverflow.Ellipsis
                     )
 
-                    if (postFeed.postType == PostType.GOOD_DEED && postFeed.isVerified) {
+                    if (postFeed.isVerified) {
                         Spacer(Modifier.width(4.dp))
 
                         Image(

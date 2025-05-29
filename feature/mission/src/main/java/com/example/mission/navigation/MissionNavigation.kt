@@ -34,6 +34,7 @@ fun NavGraphBuilder.missionNavGraph(
 
         composable<MissionGraph.VerifyMissionRoute> {
             VerifyMissionRoute(
+                navigateToPost = navigateToPost,
                navigateBack = navigateBack,
             )
         }

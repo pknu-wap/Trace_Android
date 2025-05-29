@@ -113,12 +113,11 @@ internal fun MissionHeaderView(
 
         Spacer(Modifier.height(38.dp))
 
-        Box(modifier = Modifier.fillMaxWidth()) {
+        Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 25.dp)) {
             Text(
                 dailyMission.mission.description,
                 style = TraceTheme.typography.missionTitle,
                 color = Black,
-                modifier = Modifier.align(Alignment.Center)
             )
         }
 

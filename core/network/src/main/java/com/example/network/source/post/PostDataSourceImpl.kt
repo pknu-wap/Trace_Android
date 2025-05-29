@@ -7,14 +7,12 @@ import com.example.domain.model.post.TabType
 import com.example.domain.model.post.WritePostType
 import com.example.network.api.TraceApi
 import com.example.network.model.post.AddPostRequest
-import com.example.network.model.post.AddPostResponse
-import com.example.network.model.post.GetPostResponse
 import com.example.network.model.post.GetPostsRequest
 import com.example.network.model.post.GetPostsResponse
+import com.example.network.model.post.PostResponse
 import com.example.network.model.post.ToggleEmotionRequest
 import com.example.network.model.post.ToggleEmotionResponse
 import com.example.network.model.post.UpdatePostRequest
-import com.example.network.model.post.UpdatePostResponse
 import com.example.network.model.post.VerifyAndAddPostRequest
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.json.Json
@@ -43,14 +41,14 @@ class PostDataSourceImpl @Inject constructor(
         )
     )
 
-    override suspend fun getPost(postId: Int): Result<GetPostResponse> = traceApi.getPost(postId)
+    override suspend fun getPost(postId: Int): Result<PostResponse> = traceApi.getPost(postId)
 
     override suspend fun addPost(
         postType: WritePostType,
         title: String,
         content: String,
         images: List<InputStream>?
-    ): Result<AddPostResponse> {
+    ): Result<PostResponse> {
         val jsonString = Json.encodeToString(
             AddPostRequest(
                 postType = postType.name,
@@ -90,7 +88,7 @@ class PostDataSourceImpl @Inject constructor(
         title: String,
         content: String,
         images: List<InputStream>?
-    ): Result<AddPostResponse> {
+    ): Result<PostResponse> {
         val jsonString = Json.encodeToString(
             VerifyAndAddPostRequest(
                 postType = PostType.GOOD_DEED.name,
@@ -131,7 +129,7 @@ class PostDataSourceImpl @Inject constructor(
         title: String,
         content: String,
         images: List<InputStream>?
-    ): Result<UpdatePostResponse> =
+    ): Result<PostResponse> =
         traceApi.updatePost(
             postId = postId,
             updatePostRequest = UpdatePostRequest(
@@ -157,5 +155,4 @@ class PostDataSourceImpl @Inject constructor(
         private const val WEBP_MEDIA_TYPE = "image/webp"
         private const val JPEG_MEDIA_TYPE = "image/jpeg"
     }
-
 }
