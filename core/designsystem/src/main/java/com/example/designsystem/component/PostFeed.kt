@@ -160,7 +160,7 @@ import java.time.LocalDateTime
                     Spacer(Modifier.width(3.dp))
 
                     Text(
-                        postFeed.emotionCount.toString(),
+                        postFeed.totalEmotionCount.toString(),
                         style = TraceTheme.typography.bodySSB.copy(fontSize = 11.sp),
                         color = WarmGray
                     )
@@ -273,7 +273,7 @@ import java.time.LocalDateTime
                 Spacer(Modifier.width(3.dp))
 
                 Text(
-                    postFeed.emotionCount.toString(),
+                    postFeed.totalEmotionCount.toString(),
                     style = TraceTheme.typography.bodySSB.copy(fontSize = 11.sp),
                     color = WarmGray
                 )
