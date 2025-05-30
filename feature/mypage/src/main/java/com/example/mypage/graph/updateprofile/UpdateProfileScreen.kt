@@ -69,6 +69,10 @@ internal fun UpdateProfileRoute(
     val name by viewModel.name.collectAsStateWithLifecycle()
     val isNameValid by viewModel.isNameValid.collectAsStateWithLifecycle()
     val profileImageUrl by viewModel.profileImage.collectAsStateWithLifecycle()
+    val isNameChanged by viewModel.isNameChanged.collectAsStateWithLifecycle()
+    val isProfileImageChanged by viewModel.isProfileImageChanged.collectAsStateWithLifecycle()
+    val isChanged = isNameChanged || isProfileImageChanged
+
 
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
@@ -83,6 +87,7 @@ internal fun UpdateProfileRoute(
         name = name,
         isNameValid = isNameValid,
         profileImageUrl = profileImageUrl,
+        isChanged = isChanged,
         onNameChange = viewModel::setName,
         onProfileImageUrlChange = viewModel::setProfileImageUrl,
         updateProfile = viewModel::updateProfile
@@ -95,9 +100,10 @@ private fun UpdateProfileScreen(
     name: String,
     isNameValid: Boolean,
     profileImageUrl: String?,
+    isChanged: Boolean,
     onNameChange: (String) -> Unit,
     onProfileImageUrlChange: (String?) -> Unit,
-    updateProfile : () -> Unit
+    updateProfile: () -> Unit
 ) {
     val imageLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
@@ -115,9 +121,9 @@ private fun UpdateProfileScreen(
         listOf("사진/앨범에서 불러오기")
     }
 
-    val editProfileAvailability by remember(name, isNameValid) {
+    val editProfileAvailability by remember(isNameValid, isChanged) {
         derivedStateOf {
-            name.isNotEmpty() && isNameValid
+            isNameValid && isChanged
         }
     }
 
@@ -335,6 +341,7 @@ fun SettingScreenPreview() {
         navigateBack = {}, profileImageUrl = null,
         isNameValid = true, name = "닉네임", onNameChange = {},
         onProfileImageUrlChange = {},
+        isChanged = true,
         updateProfile = {}
     )
 }

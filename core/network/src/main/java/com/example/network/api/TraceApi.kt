@@ -19,6 +19,7 @@ import com.example.network.model.token.CheckTokenHealthRequest
 import com.example.network.model.token.CheckTokenHealthResponse
 import com.example.network.model.token.RefreshTokenRequest
 import com.example.network.model.user.LoadUserInfoResponse
+import com.example.network.model.user.UpdateNicknameRequest
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.Body
@@ -51,6 +52,17 @@ interface TraceApi {
 
     @GET("/api/v1/user")
     suspend fun loadUserInfo(): Result<LoadUserInfoResponse>
+
+    @PUT("/api/v1/user/profile/nickname")
+    suspend fun updateNickname(
+        @Body updateNicknameRequest : UpdateNicknameRequest
+    ) : Result<LoadUserInfoResponse>
+
+    @Multipart
+    @PUT("/api/v1/user/profile/image")
+    suspend fun updateProfileImage(
+        @Part profileImage: MultipartBody.Part
+    ) : Result<LoadUserInfoResponse>
 
     // 토큰
     @HTTP(method = "POST", path = "/api/v1/token/refresh", hasBody = true)
