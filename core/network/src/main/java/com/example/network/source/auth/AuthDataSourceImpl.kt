@@ -80,5 +80,4 @@ class AuthDataSourceImpl @Inject constructor(
         private const val WEBP_MEDIA_TYPE = "image/webp"
         private const val JPEG_MEDIA_TYPE = "image/jpeg"
     }
-
 }

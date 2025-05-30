@@ -6,7 +6,7 @@ import com.example.domain.model.mypage.MyPageTab
 import com.example.domain.model.post.PostFeed
 import com.example.domain.model.post.PostType
 import com.example.domain.repository.UserRepository
-import com.example.domain.user.UserInfo
+import com.example.domain.model.user.UserInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow

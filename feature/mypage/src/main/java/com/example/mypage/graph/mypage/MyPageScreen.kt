@@ -39,7 +39,7 @@ import com.example.designsystem.theme.TabIndicator
 import com.example.designsystem.theme.TraceTheme
 import com.example.domain.model.mypage.MyPageTab
 import com.example.domain.model.post.PostFeed
-import com.example.domain.user.UserInfo
+import com.example.domain.model.user.UserInfo
 import com.example.mypage.graph.mypage.MyPageViewModel.MyPageEvent
 
 

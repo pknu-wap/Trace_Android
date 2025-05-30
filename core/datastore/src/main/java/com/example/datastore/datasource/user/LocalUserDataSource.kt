@@ -1,6 +1,6 @@
 package com.example.datastore.datasource.user
 
-import com.example.domain.user.UserInfo
+import com.example.domain.model.user.UserInfo
 import kotlinx.coroutines.flow.Flow
 
 interface LocalUserDataSource {

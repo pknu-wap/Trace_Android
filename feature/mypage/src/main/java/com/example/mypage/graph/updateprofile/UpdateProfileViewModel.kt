@@ -2,6 +2,8 @@ package com.example.mypage.graph.updateprofile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.common.event.EventHelper
+import com.example.common.event.TraceEvent
 import com.example.domain.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -13,7 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UpdateProfileViewModel @Inject constructor(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val eventHelper: EventHelper
 ) : ViewModel() {
     private val _eventChannel = Channel<UpdateProfileEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
@@ -27,12 +30,24 @@ class UpdateProfileViewModel @Inject constructor(
     private val _profileImageUrl = MutableStateFlow<String?>(null)
     val profileImage = _profileImageUrl.asStateFlow()
 
+    private val _isNameChanged = MutableStateFlow(false)
+    val isNameChanged = _isNameChanged.asStateFlow()
+
+    private val _isProfileImageChanged = MutableStateFlow(false)
+    val isProfileImageChanged = _isProfileImageChanged.asStateFlow()
+
+    private var originalName: String = ""
+    private var originalProfileImageUrl: String? = null
+
     init {
         getUserInfo()
     }
 
     private fun getUserInfo() = viewModelScope.launch {
         userRepository.loadUserInfo().onSuccess { userInfo ->
+            originalName = userInfo.name
+            originalProfileImageUrl = userInfo.profileImageUrl
+
             setName(userInfo.name)
             setProfileImageUrl(userInfo.profileImageUrl)
         }
@@ -41,10 +56,12 @@ class UpdateProfileViewModel @Inject constructor(
     fun setName(name: String) {
         _name.value = name
         validateName()
+        _isNameChanged.value = _name.value != originalName
     }
 
     fun setProfileImageUrl(imageUrl: String?) {
         _profileImageUrl.value = imageUrl
+        _isProfileImageChanged.value = _profileImageUrl.value != originalProfileImageUrl
     }
 
     private fun validateName() {
@@ -52,8 +69,31 @@ class UpdateProfileViewModel @Inject constructor(
         _isNameValid.value = _name.value.trim().matches(nicknameRegex)
     }
 
-    fun updateProfile() {}
+    fun updateProfile() {
+        if (!_isNameChanged.value && !_isProfileImageChanged.value) return
 
+        viewModelScope.launch {
+            var success = true
+
+            if (_isNameChanged.value) {
+                val result = userRepository.updateNickname(_name.value)
+                if (result.isFailure) success = false
+            }
+
+            if (_isProfileImageChanged.value) {
+                val result = userRepository.updateProfileImage(_profileImageUrl.value)
+                if (result.isFailure) success = false
+            }
+
+            if (!success) {
+                userRepository.loadUserInfo().onSuccess {
+                    _eventChannel.send(UpdateProfileEvent.NavigateBack)
+                }
+            } else {
+                eventHelper.sendEvent(TraceEvent.ShowSnackBar("프로필 수정에 실패했습니다."))
+            }
+        }
+    }
 
     companion object {
         private const val NAME_MIN_LENGTH = 2
