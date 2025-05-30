@@ -61,7 +61,7 @@ interface TraceApi {
     @Multipart
     @PUT("/api/v1/user/profile/image")
     suspend fun updateProfileImage(
-        @Part profileImage: MultipartBody.Part? = null
+        @Part profileImage: MultipartBody.Part
     ) : Result<LoadUserInfoResponse>
 
     // 토큰

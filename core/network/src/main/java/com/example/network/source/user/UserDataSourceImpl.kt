@@ -30,13 +30,18 @@ class UserDataSourceImpl @Inject constructor(
         val mediaType = imageFileExtension.toMediaTypeOrNull()
             ?: throw IllegalArgumentException("Invalid media type: $imageFileExtension")
 
-        val requestImage = profileImage?.let {
+
+        val requestImage = if (profileImage != null) {
             MultipartBody.Part.createFormData(
                 name = "profileImage",
                 filename = imageFileName,
                 body = profileImage.readBytes().toRequestBody(mediaType)
             )
-        }
+        } else MultipartBody.Part.createFormData(
+            name = "profileImage",
+            filename = "",
+            body = ByteArray(0).toRequestBody("application/octet-stream".toMediaTypeOrNull())
+        )
 
         return traceApi.updateProfileImage(requestImage)
     }
