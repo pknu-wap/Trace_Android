@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.domain.model.mypage.MyPageTab
 import com.example.domain.model.post.PostFeed
 import com.example.domain.model.post.PostType
-import com.example.domain.repository.UserRepository
 import com.example.domain.model.user.UserInfo
+import com.example.domain.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -50,7 +50,7 @@ class MyPageViewModel @Inject constructor(
     private val _reactedPosts: MutableStateFlow<List<PostFeed>> = MutableStateFlow(fakePostFeeds)
     val reactedPosts = _reactedPosts.asStateFlow()
 
-    private fun getUserInfo() = viewModelScope.launch {
+    fun getUserInfo() = viewModelScope.launch {
         userRepository.getUserInfo().onSuccess { userInfo ->
             _userInfo.value = userInfo
         }

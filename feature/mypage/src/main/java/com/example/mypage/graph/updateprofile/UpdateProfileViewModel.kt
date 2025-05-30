@@ -85,7 +85,7 @@ class UpdateProfileViewModel @Inject constructor(
                 if (result.isFailure) success = false
             }
 
-            if (!success) {
+            if (success) {
                 userRepository.loadUserInfo().onSuccess {
                     _eventChannel.send(UpdateProfileEvent.NavigateBack)
                 }
