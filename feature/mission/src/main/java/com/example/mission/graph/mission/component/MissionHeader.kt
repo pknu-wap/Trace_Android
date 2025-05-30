@@ -47,7 +47,7 @@ internal fun MissionHeaderView(
                 RoundedCornerShape(16.dp)
             )
             .background(MissionBackground)
-            .padding(start = 20.dp, end = 12.dp, top = 4.dp)
+            .padding(end = 12.dp, top = 4.dp)
 
     ) {
         Box(
@@ -69,7 +69,7 @@ internal fun MissionHeaderView(
                 Text(
                     "오늘의 선행 미션",
                     style = TraceTheme.typography.missionHeader,
-                    color = MissionHeader
+                    color = MissionHeader,
                 )
 
                 Spacer(Modifier.width(4.dp))
@@ -111,17 +111,18 @@ internal fun MissionHeaderView(
             }
         }
 
-        Spacer(Modifier.height(38.dp))
+        Spacer(Modifier.height(30.dp))
 
-        Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 25.dp)) {
+        Box(modifier = Modifier.fillMaxWidth().padding(start = 36.dp, end = 20.dp)) {
             Text(
                 dailyMission.mission.description,
                 style = TraceTheme.typography.missionTitle,
                 color = Black,
+                modifier = Modifier.align(Alignment.Center)
             )
         }
 
-        Spacer(Modifier.height(35.dp))
+        Spacer(Modifier.height(30.dp))
 
         Row(modifier = Modifier.fillMaxWidth()) {
             Spacer(Modifier.weight(1f))
