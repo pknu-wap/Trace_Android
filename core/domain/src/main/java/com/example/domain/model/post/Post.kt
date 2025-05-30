@@ -15,7 +15,7 @@ data class PostFeed(
     val profileImageUrl: String? = null,
     val viewCount: Int = 0,
     val commentCount: Int = 0,
-    val emotionCount : Int = 0,
+    val totalEmotionCount : Int = 0,
     val isVerified: Boolean = false,
     val imageUrl: String? = null,
     val createdAt: LocalDateTime,

@@ -28,9 +28,10 @@ data class PostContent(
     val imageUrl: String? = null,
     val viewCount: Int,
     val commentCount: Int,
+    val emotionCountSum : Int,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime,
-    val verified: Boolean
+    val isVerified: Boolean
 ) {
     fun toDomain(): PostFeed =
         PostFeed(
@@ -43,7 +44,8 @@ data class PostContent(
             profileImageUrl = profileImageUrl,
             viewCount = viewCount,
             commentCount = commentCount,
-            isVerified = verified,
+            totalEmotionCount = emotionCountSum,
+            isVerified = isVerified,
             imageUrl = imageUrl,
             createdAt = createdAt.toJavaLocalDateTime(),
             updatedAt = updatedAt.toJavaLocalDateTime()
