@@ -57,6 +57,7 @@ data class PostDetail(
     val emotionCount: EmotionCount,
     val title: String,
     val content: String,
+    val missionContent : String? = null,
     val providerId :String,
     val nickname: String,
     val images: List<String> = emptyList(),
