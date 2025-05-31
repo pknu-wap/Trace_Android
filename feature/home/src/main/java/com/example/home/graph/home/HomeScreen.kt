@@ -19,6 +19,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -101,8 +102,8 @@ private fun HomeScreen(
 ) {
     var isHomeDropDownMenuExpanded by remember { mutableStateOf(false) }
 
-    val isRefreshing =
-        postFeeds.loadState.refresh is LoadState.Loading
+    val isRefreshing = postFeeds.loadState.refresh is LoadState.Loading
+    val isAppending = postFeeds.loadState.append is LoadState.Loading
 
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
@@ -236,6 +237,14 @@ private fun HomeScreen(
             Icon(
                 painter = painterResource(id = R.drawable.write_ic),
                 contentDescription = "게시글 쓰기",
+            )
+        }
+
+        if (isRefreshing || isAppending) {
+            CircularProgressIndicator(
+                color = PrimaryDefault, modifier = Modifier.align(
+                    if (isRefreshing) Alignment.Center else Alignment.BottomCenter
+                )
             )
         }
     }

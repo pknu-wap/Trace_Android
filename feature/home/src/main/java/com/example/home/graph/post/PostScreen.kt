@@ -151,6 +151,7 @@ private fun PostScreen(
     var isOtherPostDropDownMenuExpanded by remember { mutableStateOf(false) }
 
     val isRefreshing = comments.loadState.refresh is LoadState.Loading
+    val isAppending = comments.loadState.append is LoadState.Loading
 
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing, onRefresh = { comments.refresh() })
@@ -190,28 +191,6 @@ private fun PostScreen(
                 .fillMaxSize()
                 .padding(top = 45.dp, start = 20.dp, end = 20.dp, bottom = 50.dp)
         ) {
-
-            item {
-                when (val state = comments.loadState.append) {
-                    is LoadState.Loading -> {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .align(Alignment.BottomCenter)
-                        ) {
-                            CircularProgressIndicator(
-                                color = PrimaryDefault, modifier = Modifier.align(
-                                    Alignment.Center
-                                )
-                            )
-                        }
-                    }
-
-                    is LoadState.Error -> {}
-
-                    else -> {}
-                }
-            }
 
             item {
                 Spacer(Modifier.height(25.dp))
@@ -434,7 +413,6 @@ private fun PostScreen(
             }
         }
 
-
         Row(
             modifier = Modifier
                 .align(Alignment.TopCenter)
@@ -536,6 +514,14 @@ private fun PostScreen(
             )
 
             Spacer(modifier = Modifier.height(8.dp))
+        }
+
+        if (isRefreshing || isAppending) {
+            CircularProgressIndicator(
+                color = PrimaryDefault, modifier = Modifier.align(
+                    if (isRefreshing) Alignment.Center else Alignment.BottomCenter
+                )
+            )
         }
     }
 }
