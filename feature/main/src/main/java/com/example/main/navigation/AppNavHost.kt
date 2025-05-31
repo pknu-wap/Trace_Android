@@ -19,7 +19,6 @@ import com.example.mission.navigation.navigateToVerifyMission
 import com.example.mypage.navigation.myPageNavGraph
 import com.example.mypage.navigation.navigateToSetting
 import com.example.mypage.navigation.navigateToUpdateProfile
-import com.example.navigation.HomeGraph
 import com.example.navigation.SplashRoute
 import com.example.splash.navigation.splashScreen
 
@@ -53,11 +52,7 @@ fun AppNavHost(
 
         homeNavGraph(
             navigateToPost = { postId ->
-                navController.navigateToPost(postId, navOptions {
-                    popUpTo<HomeGraph.HomeRoute> {
-                        inclusive = false
-                    }
-                })
+                navController.navigateToPost(postId)
             },
             navigateToWritePost = {
                 navController.navigateToWritePost()
@@ -75,7 +70,7 @@ fun AppNavHost(
             navigateToPost = { postId ->
                 navController.navigateToPost(postId)
             },
-            navigateToVerifyMission = {description ->
+            navigateToVerifyMission = { description ->
                 navController.navigateToVerifyMission(description)
             },
             navigateBack = { navigateBack(navController) }

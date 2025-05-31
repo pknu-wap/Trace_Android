@@ -189,6 +189,10 @@ internal fun SearchResultView(
 
             }
         }
+
+        item {
+            Spacer(Modifier.height(200.dp))
+        }
     }
 
 }
