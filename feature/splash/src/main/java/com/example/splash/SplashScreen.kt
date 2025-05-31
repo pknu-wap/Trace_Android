@@ -22,9 +22,9 @@ private fun SplashScreen() {
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(Modifier.weight(0.75f))
+        Spacer(Modifier.weight(0.9f))
 
-        Image(painter = painterResource(R.drawable.app_icon_pencil), contentDescription = "앱 아이콘", modifier = Modifier.weight(0.5f))
+        Image(painter = painterResource(R.drawable.ic_splash), contentDescription = "스플래시 아이콘")
 
         Spacer(Modifier.weight(1f))
     }
