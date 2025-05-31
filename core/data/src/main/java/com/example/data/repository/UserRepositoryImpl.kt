@@ -36,8 +36,8 @@ class UserRepositoryImpl @Inject constructor(
         val userInfo = UserInfo(
             name = response.nickname,
             profileImageUrl = response.profileImageUrl,
-            goodDeedScore = response.goodDeedScore,
-            goodDeedMarkCount = response.goodDeedMarkCount,
+            verificationScore = response.verificationScore,
+            verificationCount = response.verificationCount,
         )
 
         localUserDataSource.setUserInfo(userInfo)

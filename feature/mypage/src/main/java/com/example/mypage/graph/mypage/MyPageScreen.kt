@@ -168,12 +168,12 @@ private fun MyPageScreen(
 
                     Spacer(Modifier.height(10.dp))
 
-                    Text("선행 점수 ${userInfo.goodDeedScore}", style = TraceTheme.typography.bodyML)
+                    Text("선행 점수 ${userInfo.verificationScore}", style = TraceTheme.typography.bodyML)
 
                     Spacer(Modifier.height(5.dp))
 
                     Text(
-                        "선행 마크 ${userInfo.goodDeedMarkCount}",
+                        "선행 마크 ${userInfo.verificationCount}",
                         style = TraceTheme.typography.bodyML
                     )
                 }
