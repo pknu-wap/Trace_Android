@@ -3,13 +3,10 @@ package com.example.auth.login
 import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -53,7 +50,6 @@ internal fun LoginRoute(
     LoginScreen(
         viewModel::loginKakao,
         onLoginFailure = { viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("로그인에 실패했습니다")) },
-        navigateToHome = { viewModel.onEvent(LoginEvent.NavigateToHome) },
     )
 }
 
@@ -61,7 +57,6 @@ internal fun LoginRoute(
 private fun LoginScreen(
     loginKakao: (String) -> Unit,
     onLoginFailure: () -> Unit,
-    navigateToHome: () -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -69,30 +64,20 @@ private fun LoginScreen(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Spacer(Modifier.height(160.dp))
+        Spacer(Modifier.weight(4f))
 
-        Box(
-            modifier = Modifier
-                .width(260.dp)
-                .height(170.dp)
-        ) {
-            Text(
-                "흔적",
-                style = TraceTheme.typography.headingXLB,
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-            )
-
-            Image(
-                painter = painterResource(R.drawable.app_icon_pencil),
-                contentDescription = "앱 아이콘",
-                modifier = Modifier
-                    .size(130.dp)
-                    .align(Alignment.TopEnd)
-            )
-        }
+        Image(
+            painter = painterResource(R.drawable.app_title),
+            contentDescription = "앱 타이틀",
+        )
 
         Spacer(Modifier.height(50.dp))
+
+        Text("작은 선행,", style = TraceTheme.typography.appDescription)
+
+        Text("따뜻한 흔적을 남기다", style = TraceTheme.typography.appDescription)
+
+        Spacer(Modifier.height(40.dp))
 
         Image(
             painter = painterResource(id = R.drawable.kakao_login),
@@ -102,7 +87,7 @@ private fun LoginScreen(
             }
         )
 
-        Spacer(Modifier.weight(1f))
+        Spacer(Modifier.weight(5f))
 
     }
 }
@@ -149,6 +134,5 @@ fun LoginScreenPreview() {
     LoginScreen(
         loginKakao = {},
         onLoginFailure = {},
-        navigateToHome = {},
     )
 }

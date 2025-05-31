@@ -20,10 +20,6 @@ class LoginViewModel @Inject constructor(
     private val _eventChannel = Channel<LoginEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
 
-    internal fun onEvent(event: LoginEvent) = viewModelScope.launch {
-        _eventChannel.send(event)
-    }
-
     internal fun loginKakao(idToken: String) = viewModelScope.launch {
         authRepository.loginKakao(idToken).onSuccess { user ->
             if (user.role == UserRole.NONE) {
@@ -47,9 +43,7 @@ class LoginViewModel @Inject constructor(
     }
 
     sealed class LoginEvent {
-        data class NavigateEditProfile(val signUpToken: String, val providerId: String) :
-            LoginEvent()
-
+        data class NavigateEditProfile(val signUpToken: String, val providerId: String) : LoginEvent()
         data object NavigateToHome : LoginEvent()
     }
 
