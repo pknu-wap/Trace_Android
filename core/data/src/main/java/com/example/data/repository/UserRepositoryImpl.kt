@@ -21,7 +21,7 @@ class UserRepositoryImpl @Inject constructor(
 ) : UserRepository {
     override suspend fun checkTokenHealth(): Result<Unit> = suspendRunCatching {
         val token = localTokenDataSource.accessToken.first()
-        if (token.isEmpty()) return@suspendRunCatching
+        if (token.isEmpty()) throw IllegalStateException("Access token is empty")
 
         authDataSource.checkTokenHealth(token)
     }

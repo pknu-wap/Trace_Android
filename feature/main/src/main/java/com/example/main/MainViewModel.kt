@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.common.event.EventHelper
 import com.example.domain.repository.UserRepository
 import com.example.navigation.AuthGraph
+import com.example.navigation.HomeGraph
 import com.example.navigation.NavigationEvent
 import com.example.navigation.NavigationHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +20,7 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
     fun checkSession() = viewModelScope.launch {
         userRepository.checkTokenHealth().onSuccess {
-            navigationHelper.navigate(NavigationEvent.To(AuthGraph.LoginRoute, popUpTo = true))
+            navigationHelper.navigate(NavigationEvent.To(HomeGraph.HomeRoute, popUpTo = true))
         }.onFailure {
             navigationHelper.navigate(NavigationEvent.To(AuthGraph.LoginRoute, popUpTo = true))
         }
