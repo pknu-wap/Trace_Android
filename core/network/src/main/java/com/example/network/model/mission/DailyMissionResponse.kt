@@ -7,13 +7,13 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class DailyMissionResponse(
     val content: String,
-    val changCount: Int,
+    val changeCount: Int,
     val isVerified : Boolean,
 ) {
     fun toDomain(): DailyMission {
         return DailyMission(
             mission = Mission(content, isVerified),
-            changeCount = changCount
+            changeCount = changeCount
         )
     }
 }
