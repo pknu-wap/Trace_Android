@@ -161,7 +161,7 @@ internal fun MissionCompletedHeaderView(
                 RoundedCornerShape(16.dp)
             )
             .background(MissionCompletedBackground)
-            .padding(start = 20.dp, end = 20.dp, top = 25.dp),
+            .padding(top = 25.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
