@@ -141,8 +141,6 @@ private fun SearchScreen(
                     navigateToPost = navigateToPost,
                 )
             }
-
-            Spacer(Modifier.height(100.dp))
         }
 
         Row(
@@ -152,8 +150,7 @@ private fun SearchScreen(
                 .background(
                     PrimaryDefault
                 )
-                .padding(horizontal = 20.dp)
-                .height(50.dp),
+                .padding(horizontal = 20.dp, vertical = 10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(

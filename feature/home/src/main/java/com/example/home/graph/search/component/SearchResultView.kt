@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -25,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import com.example.common.util.clickable
 import com.example.designsystem.component.PostFeed
@@ -32,6 +34,7 @@ import com.example.designsystem.theme.Background
 import com.example.designsystem.theme.Black
 import com.example.designsystem.theme.Gray
 import com.example.designsystem.theme.GrayLine
+import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.TabIndicator
 import com.example.designsystem.theme.TraceTheme
 import com.example.domain.model.post.PostFeed
@@ -193,6 +196,26 @@ internal fun SearchResultView(
         item {
             Spacer(Modifier.height(200.dp))
         }
-    }
 
+        item {
+            when (val state = displayedPosts.loadState.append) {
+                is LoadState.Loading -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+                        CircularProgressIndicator(
+                            color = PrimaryDefault, modifier = Modifier.align(
+                                Alignment.Center
+                            )
+                        )
+                    }
+                }
+
+                is LoadState.Error -> {}
+
+                else -> {}
+            }
+        }
+    }
 }

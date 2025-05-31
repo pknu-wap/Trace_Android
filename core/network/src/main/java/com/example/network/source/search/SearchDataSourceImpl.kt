@@ -23,7 +23,7 @@ class SearchDataSourceImpl @Inject constructor(
             cursorDateTime = cursorDateTime,
             cursorId = cursorId,
             size = size,
-            postType = tabType.name,
+            postType = if(tabType != TabType.ALL) tabType.name else null,
             keyword = keyword,
             searchType = searchType.name
         )

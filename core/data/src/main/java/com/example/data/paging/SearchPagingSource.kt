@@ -13,7 +13,7 @@ class SearchPagingSource(
     private val keyword: String,
     private val tabType: TabType,
     private val searchType: SearchType,
-    private val pageSize: Int = 20,
+    private val pageSize: Int = 10,
 ) : PagingSource<Cursor, PostFeed>() {
 
     override suspend fun load(params: LoadParams<Cursor>): LoadResult<Cursor, PostFeed> {

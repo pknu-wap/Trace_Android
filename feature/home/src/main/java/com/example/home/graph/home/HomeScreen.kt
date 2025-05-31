@@ -19,7 +19,6 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -102,7 +101,8 @@ private fun HomeScreen(
 ) {
     var isHomeDropDownMenuExpanded by remember { mutableStateOf(false) }
 
-    val isRefreshing = postFeeds.loadState.refresh is LoadState.Loading
+    val isRefreshing =
+        postFeeds.loadState.refresh is LoadState.Loading
 
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
@@ -141,28 +141,6 @@ private fun HomeScreen(
                 }
 
                 Spacer(Modifier.height(15.dp))
-            }
-
-            item {
-                when (val state = postFeeds.loadState.append) {
-                    is LoadState.Loading -> {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .align(Alignment.BottomCenter)
-                        ) {
-                            CircularProgressIndicator(
-                                color = PrimaryDefault, modifier = Modifier.align(
-                                    Alignment.Center
-                                )
-                            )
-                        }
-                    }
-
-                    is LoadState.Error -> {}
-
-                    else -> {}
-                }
             }
         }
 
@@ -230,9 +208,6 @@ private fun HomeScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(
-                    modifier = Modifier.clickable {
-
-                    },
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     TabType.entries.forEachIndexed { index, type ->
@@ -264,7 +239,6 @@ private fun HomeScreen(
             )
         }
     }
-
 }
 
 
