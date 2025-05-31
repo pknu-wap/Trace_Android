@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -37,6 +38,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.common.util.clickable
+import com.example.designsystem.R
 import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.SearchField
 import com.example.designsystem.theme.TraceTheme
@@ -112,7 +114,7 @@ internal fun TraceSearchField(
                             Spacer(Modifier.weight(1f))
 
                             Image(
-                                painter = painterResource(com.example.designsystem.R.drawable.remove_keyword_ic),
+                                painter = painterResource(R.drawable.remove_keyword_ic),
                                 contentDescription = "검색어 초기화",
                                 modifier = Modifier.clickable {
                                     onValueChange("")
@@ -131,6 +133,7 @@ internal fun TraceSearchField(
                 )
                 .background(SearchField)
                 .padding(start = 14.dp, end = 10.dp)
+                .height(35.dp),
         )
     }
 }
