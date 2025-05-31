@@ -24,7 +24,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val searchRepository : SearchRepository,
+    private val searchRepository: SearchRepository,
     val eventHelper: EventHelper
 ) : ViewModel() {
     private val _eventChannel = Channel<SearchEvent>()
@@ -67,6 +67,7 @@ class SearchViewModel @Inject constructor(
             )
         }
         .cachedIn(viewModelScope)
+
     init {
         loadRecentKeywords()
     }
@@ -83,13 +84,18 @@ class SearchViewModel @Inject constructor(
         _tabType.value = tabType
     }
 
-    fun setKeywordInput(keywordInput : String) {
+    fun setKeywordInput(keywordInput: String) {
         _keywordInput.value = keywordInput
     }
 
     fun searchByInput() = viewModelScope.launch {
-        if(_keywordInput.value.isEmpty()) {
+        if (_keywordInput.value.isEmpty()) {
             eventHelper.sendEvent(TraceEvent.ShowSnackBar("검색할 키워드를 입력해주세요."))
+            return@launch
+        }
+
+        if (_keywordInput.value.length < 2) {
+            eventHelper.sendEvent(TraceEvent.ShowSnackBar("검색어는 두 글자 이상 입력해 주세요."))
             return@launch
         }
 
@@ -97,7 +103,7 @@ class SearchViewModel @Inject constructor(
         addKeyword(_keywordInput.value)
     }
 
-    fun searchByRecentKeyword(keyword : String) {
+    fun searchByRecentKeyword(keyword: String) {
         _keywordInput.value = keyword
         _isSearched.value = true
         addKeyword(keyword)
@@ -123,6 +129,6 @@ class SearchViewModel @Inject constructor(
 
     sealed class SearchEvent {
         data object NavigateBack : SearchEvent()
-        data class NavigateToPost(val postId : Int) : SearchEvent()
+        data class NavigateToPost(val postId: Int) : SearchEvent()
     }
 }
