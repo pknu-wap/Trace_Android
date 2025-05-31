@@ -2,24 +2,29 @@ package com.example.home.graph.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import com.example.common.event.EventHelper
 import com.example.common.event.TraceEvent
-import com.example.domain.model.post.PostFeed
 import com.example.domain.model.post.SearchType
 import com.example.domain.model.post.TabType
+import com.example.domain.model.search.SearchCondition
 import com.example.domain.repository.SearchRepository
-import com.example.home.graph.home.fakePostFeeds
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val searchRepository : SearchRepository,
+    private val searchRepository: SearchRepository,
     val eventHelper: EventHelper
 ) : ViewModel() {
     private val _eventChannel = Channel<SearchEvent>()
@@ -38,17 +43,30 @@ class SearchViewModel @Inject constructor(
     private val _isSearched = MutableStateFlow(false)
     val isSearched = _isSearched.asStateFlow()
 
-    private val _searchType = MutableStateFlow(SearchType.CONTENT)
+    private val _searchType = MutableStateFlow(SearchType.ALL)
     val searchType = _searchType.asStateFlow()
 
     private val _tabType = MutableStateFlow(TabType.ALL)
     val tabType = _tabType.asStateFlow()
 
-    private val _titleMatchedPosts = MutableStateFlow<List<PostFeed>>(fakePostFeeds)
-    val titleMatchedPosts = _titleMatchedPosts.asStateFlow()
-
-    private val _contentMatchedPosts = MutableStateFlow<List<PostFeed>>(emptyList())
-    val contentMatchedPosts = _contentMatchedPosts.asStateFlow()
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val postPagingFlow = combine(
+        _keywordInput,
+        _tabType,
+        _searchType,
+        _isSearched
+    ) { keyword, tab, searchType, isSearched ->
+        SearchCondition(keyword, tab, searchType, isSearched)
+    }.filter { it.isSearched }
+        .map { Triple(it.keyword, it.tabType, it.searchType) }
+        .flatMapLatest { (keyword, tab, searchType) ->
+            searchRepository.searchPosts(
+                keyword = keyword,
+                tabType = tab,
+                searchType = searchType
+            )
+        }
+        .cachedIn(viewModelScope)
 
     init {
         loadRecentKeywords()
@@ -66,13 +84,18 @@ class SearchViewModel @Inject constructor(
         _tabType.value = tabType
     }
 
-    fun setKeywordInput(keywordInput : String) {
+    fun setKeywordInput(keywordInput: String) {
         _keywordInput.value = keywordInput
     }
 
     fun searchByInput() = viewModelScope.launch {
-        if(_keywordInput.value.isEmpty()) {
+        if (_keywordInput.value.isEmpty()) {
             eventHelper.sendEvent(TraceEvent.ShowSnackBar("검색할 키워드를 입력해주세요."))
+            return@launch
+        }
+
+        if (_keywordInput.value.length < 2) {
+            eventHelper.sendEvent(TraceEvent.ShowSnackBar("검색어는 두 글자 이상 입력해 주세요."))
             return@launch
         }
 
@@ -80,10 +103,10 @@ class SearchViewModel @Inject constructor(
         addKeyword(_keywordInput.value)
     }
 
-    fun searchByRecentKeyword(keyword : String) {
-        addKeyword(keyword)
-
+    fun searchByRecentKeyword(keyword: String) {
+        _keywordInput.value = keyword
         _isSearched.value = true
+        addKeyword(keyword)
     }
 
     fun loadRecentKeywords() = viewModelScope.launch {
@@ -104,9 +127,8 @@ class SearchViewModel @Inject constructor(
         loadRecentKeywords()
     }
 
-
     sealed class SearchEvent {
         data object NavigateBack : SearchEvent()
-        data class NavigateToPost(val postId : Int) : SearchEvent()
+        data class NavigateToPost(val postId: Int) : SearchEvent()
     }
 }

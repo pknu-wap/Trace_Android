@@ -10,6 +10,8 @@ import com.example.network.source.notification.NotificationDataSource
 import com.example.network.source.notification.NotificationDataSourceImpl
 import com.example.network.source.post.PostDataSource
 import com.example.network.source.post.PostDataSourceImpl
+import com.example.network.source.search.SearchDataSource
+import com.example.network.source.search.SearchDataSourceImpl
 import com.example.network.source.user.UserDataSource
 import com.example.network.source.user.UserDataSourceImpl
 import com.google.firebase.messaging.FirebaseMessaging
@@ -43,6 +45,10 @@ abstract class NetworkModule {
     @Binds
     @Singleton
     abstract fun bindsCommentDataSource(commentDataSourceImpl: CommentDataSourceImpl): CommentDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindsSearchDataSource(searchDataSourceImpl: SearchDataSourceImpl): SearchDataSource
 
     @Binds
     @Singleton
