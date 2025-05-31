@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -128,6 +129,7 @@ internal fun TraceCommentField(
                 )
                 .background(CommentField)
                 .padding(start = 14.dp, end = 10.dp)
+                .heightIn(max = 150.dp)
         )
     }
 }
