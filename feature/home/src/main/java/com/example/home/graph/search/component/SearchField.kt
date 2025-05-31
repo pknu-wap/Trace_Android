@@ -72,7 +72,6 @@ internal fun TraceSearchField(
         }
     }
 
-
     CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
         BasicTextField(
             value = value,

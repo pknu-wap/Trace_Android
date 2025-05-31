@@ -4,7 +4,6 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -42,56 +42,64 @@ internal fun SearchInitialView(
     removeKeyword: (String) -> Unit,
     clearKeywords: () -> Unit
 ) {
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
             .background(Background)
     ) {
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            Text("최근 검색어", style = TraceTheme.typography.bodySSB)
+        item {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text("최근 검색어", style = TraceTheme.typography.bodySSB)
 
-            Spacer(Modifier.weight(1f))
+                Spacer(Modifier.weight(1f))
 
-            if (recentKeywords.isNotEmpty()) {
-                TextButton(onClick = clearKeywords) {
+                if (recentKeywords.isNotEmpty()) {
+                    TextButton(onClick = clearKeywords) {
+                        Text(
+                            "전체 삭제",
+                            style = TraceTheme.typography.bodySM,
+                            color = LightGray
+                        )
+                    }
+
+                }
+            }
+
+            Spacer(Modifier.height(10.dp))
+
+            if (recentKeywords.isEmpty()) {
+                Spacer(Modifier.height(50.dp))
+
+                Box(modifier = Modifier.fillMaxWidth()) {
                     Text(
-                        "전체 삭제",
-                        style = TraceTheme.typography.bodySM,
-                        color = LightGray
+                        "최근 검색어 내역이 없습니다.",
+                        style = TraceTheme.typography.bodyMM,
+                        color = Gray,
+                        modifier = Modifier.align(Alignment.Center)
                     )
                 }
+            }
 
+            if (recentKeywords.isNotEmpty()) {
+                FlowRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(7.dp)
+                ) {
+                    recentKeywords.forEach { keyword ->
+                        RecentKeyword(
+                            value = keyword,
+                            onSearch = onSearch,
+                            removeKeyword = removeKeyword
+                        )
+                    }
+                }
             }
         }
     }
-
-    Spacer(Modifier.height(10.dp))
-
-    if (recentKeywords.isEmpty()) {
-        Spacer(Modifier.height(50.dp))
-
-        Box(modifier = Modifier.fillMaxWidth()) {
-            Text(
-                "최근 검색어 내역이 없습니다.",
-                style = TraceTheme.typography.bodyMM,
-                color = Gray,
-                modifier = Modifier.align(Alignment.Center)
-            )
-        }
-    }
-
-    if (recentKeywords.isNotEmpty()) {
-        FlowRow(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalArrangement = Arrangement.spacedBy(7.dp)
-        ) {
-            recentKeywords.forEach { keyword ->
-                RecentKeyword(value = keyword, onSearch = onSearch, removeKeyword = removeKeyword)
-            }
-        }
-    }
-
 }
 
 

@@ -15,6 +15,7 @@ import com.example.network.model.post.PostResponse
 import com.example.network.model.post.ToggleEmotionRequest
 import com.example.network.model.post.ToggleEmotionResponse
 import com.example.network.model.post.UpdatePostRequest
+import com.example.network.model.search.SearchPostsRequest
 import com.example.network.model.token.CheckTokenHealthRequest
 import com.example.network.model.token.CheckTokenHealthResponse
 import com.example.network.model.token.RefreshTokenRequest
@@ -133,6 +134,12 @@ interface TraceApi {
     suspend fun deleteComment(
         @Path("commentId") commentId: Int,
     ): Result<Unit>
+
+    // 검색
+    @POST("/api/v1/posts/search")
+    suspend fun searchPosts(
+        @Body searchPostsRequest : SearchPostsRequest
+    ) : Result<GetPostsResponse>
 
     // 미션
     @GET("/api/v1/missions/today")

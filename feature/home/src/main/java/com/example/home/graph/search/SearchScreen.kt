@@ -3,6 +3,7 @@ package com.example.home.graph.search
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -24,6 +24,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.common.util.clickable
 import com.example.designsystem.R
 import com.example.designsystem.theme.Background
@@ -31,7 +33,7 @@ import com.example.designsystem.theme.PrimaryDefault
 import com.example.domain.model.post.PostFeed
 import com.example.domain.model.post.SearchType
 import com.example.domain.model.post.TabType
-import com.example.home.graph.home.fakePostFeeds
+import com.example.home.graph.home.fakeLazyPagingPosts
 import com.example.home.graph.search.SearchViewModel.SearchEvent
 import com.example.home.graph.search.component.SearchInitialView
 import com.example.home.graph.search.component.SearchResultView
@@ -48,8 +50,7 @@ internal fun SearchRoute(
     val isSearched by viewModel.isSearched.collectAsStateWithLifecycle()
     val searchType by viewModel.searchType.collectAsStateWithLifecycle()
     val tabType by viewModel.tabType.collectAsStateWithLifecycle()
-    val titleMatchedPosts by viewModel.titleMatchedPosts.collectAsStateWithLifecycle()
-    val contentMatchedPosts by viewModel.contentMatchedPosts.collectAsStateWithLifecycle()
+    val displayedPosts = viewModel.postPagingFlow.collectAsLazyPagingItems()
 
     LaunchedEffect(isSearched) {
         viewModel.loadRecentKeywords()
@@ -70,10 +71,7 @@ internal fun SearchRoute(
         isSearched = isSearched,
         searchType = searchType,
         tabType = tabType,
-        displayedPosts = when (searchType) {
-            SearchType.CONTENT -> contentMatchedPosts
-            SearchType.TITLE -> titleMatchedPosts
-        },
+        displayedPosts = displayedPosts,
         onKeywordInputChange = viewModel::setKeywordInput,
         onSearchTypeChange = viewModel::setSearchType,
         onTabTypeChange = viewModel::setTabType,
@@ -94,7 +92,7 @@ private fun SearchScreen(
     isSearched: Boolean,
     searchType: SearchType,
     tabType: TabType,
-    displayedPosts: List<PostFeed>,
+    displayedPosts: LazyPagingItems<PostFeed>,
     onKeywordInputChange: (String) -> Unit,
     onSearchTypeChange: (SearchType) -> Unit,
     onTabTypeChange: (TabType) -> Unit,
@@ -119,34 +117,32 @@ private fun SearchScreen(
             .fillMaxSize()
             .background(Background)
     ) {
-        LazyColumn(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(start = 20.dp, end = 20.dp, top = 50.dp)
         ) {
-            item {
-                Spacer(Modifier.height(20.dp))
+            Spacer(Modifier.height(20.dp))
 
-                if (!isSearched) {
-                    SearchInitialView(
-                        recentKeywords = recentKeywords,
-                        removeKeyword = removeKeyword,
-                        clearKeywords = clearKeywords,
-                        onSearch = searchByRecentKeyword,
-                    )
-                } else {
-                    SearchResultView(
-                        searchType = searchType,
-                        tabType = tabType,
-                        onSearchTypeChange = onSearchTypeChange,
-                        onTabTypeChange = onTabTypeChange,
-                        displayedPosts = displayedPosts,
-                        navigateToPost = navigateToPost,
-                    )
-                }
-
-                Spacer(Modifier.height(100.dp))
+            if (!isSearched) {
+                SearchInitialView(
+                    recentKeywords = recentKeywords,
+                    removeKeyword = removeKeyword,
+                    clearKeywords = clearKeywords,
+                    onSearch = searchByRecentKeyword,
+                )
+            } else {
+                SearchResultView(
+                    searchType = searchType,
+                    tabType = tabType,
+                    onSearchTypeChange = onSearchTypeChange,
+                    onTabTypeChange = onTabTypeChange,
+                    displayedPosts = displayedPosts,
+                    navigateToPost = navigateToPost,
+                )
             }
+
+            Spacer(Modifier.height(100.dp))
         }
 
         Row(
@@ -194,7 +190,7 @@ private fun SearchScreenPreview() {
         isSearched = true,
         searchType = SearchType.CONTENT,
         tabType = TabType.ALL,
-        displayedPosts = fakePostFeeds,
+        displayedPosts = fakeLazyPagingPosts(),
         onKeywordInputChange = {},
         clearKeywords = {},
         onSearchTypeChange = {},
