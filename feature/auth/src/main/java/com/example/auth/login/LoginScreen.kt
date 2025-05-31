@@ -19,7 +19,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.auth.login.LoginViewModel.LoginEvent
 import com.example.common.event.TraceEvent
@@ -102,14 +101,6 @@ private fun LoginScreen(
                 loginKakao(context, loginKakao, onLoginFailure)
             }
         )
-
-        Spacer(Modifier.height(20.dp))
-
-        Text(
-            "둘러보기", style = TraceTheme.typography.bodyMM.copy(fontSize = 20.sp),
-            modifier = Modifier.clickable {
-                navigateToHome()
-            })
 
         Spacer(Modifier.weight(1f))
 

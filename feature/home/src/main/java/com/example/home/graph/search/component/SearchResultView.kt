@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
@@ -55,76 +56,79 @@ internal fun SearchResultView(
 
     var isSearchTypeDropDownMenuExpanded by remember { mutableStateOf(false) }
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Background)
-    ) {
-        item {
-            Box() {
+    val isRefreshing = displayedPosts.loadState.refresh is LoadState.Loading
+    val isAppending = displayedPosts.loadState.append is LoadState.Loading
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            item {
+                Box() {
+                    Row(
+                        modifier = Modifier
+                            .wrapContentWidth()
+                            .clickable {
+                                isSearchTypeDropDownMenuExpanded = true
+                            },
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(tabType.label, style = TraceTheme.typography.bodySSB)
+
+                        Spacer(Modifier.width(5.dp))
+
+                        Icon(
+                            imageVector = Icons.Filled.KeyboardArrowDown,
+                            contentDescription = "드롭다운 아이콘"
+                        )
+                    }
+
+                    TabTypeDropdownMenu(
+                        expanded = isSearchTypeDropDownMenuExpanded,
+                        onTabTypeChange = onTabTypeChange,
+                        onDismiss = { isSearchTypeDropDownMenuExpanded = false },
+                        selectedTabType = tabType
+                    )
+                }
+
+                Spacer(Modifier.height(40.dp))
+
+                TabRow(
+                    selectedTabIndex = tabs.indexOf(searchType),
+                    containerColor = Background,
+                    contentColor = Black,
+                    indicator = { tabPositions ->
+                        TabRowDefaults.SecondaryIndicator(
+                            color = TabIndicator,
+                            modifier = Modifier
+                                .tabIndicatorOffset(tabPositions[tabs.indexOf(searchType)])
+                        )
+                    }
+                ) {
+                    tabs.forEach { tab ->
+                        Tab(
+                            selected = tab == searchType,
+                            onClick = { onSearchTypeChange(tab) },
+                            text = {
+                                Text(
+                                    tab.label,
+                                    style = TraceTheme.typography.bodyXMR
+                                )
+                            }
+                        )
+                    }
+                }
+
+                Spacer(Modifier.height(15.dp))
+
                 Row(
-                    modifier = Modifier
-                        .wrapContentWidth()
-                        .clickable {
-                            isSearchTypeDropDownMenuExpanded = true
-                        },
+                    modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(tabType.label, style = TraceTheme.typography.bodySSB)
+                    Text("${displayedPosts.itemCount}개", style = TraceTheme.typography.bodySR)
 
-                    Spacer(Modifier.width(5.dp))
-
-                    Icon(
-                        imageVector = Icons.Filled.KeyboardArrowDown,
-                        contentDescription = "드롭다운 아이콘"
-                    )
-                }
-
-                TabTypeDropdownMenu(
-                    expanded = isSearchTypeDropDownMenuExpanded,
-                    onTabTypeChange = onTabTypeChange,
-                    onDismiss = { isSearchTypeDropDownMenuExpanded = false },
-                    selectedTabType = tabType
-                )
-            }
-
-            Spacer(Modifier.height(50.dp))
-
-            TabRow(
-                selectedTabIndex = tabs.indexOf(searchType),
-                containerColor = Background,
-                contentColor = Black,
-                indicator = { tabPositions ->
-                    TabRowDefaults.SecondaryIndicator(
-                        color = TabIndicator,
-                        modifier = Modifier
-                            .tabIndicatorOffset(tabPositions[tabs.indexOf(searchType)])
-                    )
-                }
-            ) {
-                tabs.forEach { tab ->
-                    Tab(
-                        selected = tab == searchType,
-                        onClick = { onSearchTypeChange(tab) },
-                        text = {
-                            Text(
-                                tab.label,
-                                style = TraceTheme.typography.bodyXMR
-                            )
-                        }
-                    )
-                }
-            }
-
-            Spacer(Modifier.height(15.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text("${displayedPosts.itemCount}개", style = TraceTheme.typography.bodySR)
-
-                Spacer(Modifier.weight(1f))
+                    Spacer(Modifier.weight(1f))
 
 //            Row(
 //                verticalAlignment = Alignment.CenterVertically
@@ -139,83 +143,71 @@ internal fun SearchResultView(
 //
 //                Text("정렬", style = TraceTheme.typography.bodySM, color = LightGray)
 //            }
-            }
-
-            Spacer(Modifier.height(25.dp))
-
-            if (displayedPosts.itemCount == 0) {
-
-                Spacer(Modifier.height(100.dp))
-
-                Box(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        "검색 결과가 없습니다.",
-                        style = TraceTheme.typography.bodySM,
-                        color = Gray,
-                        modifier = Modifier.align(
-                            Alignment.Center
-                        )
-                    )
                 }
 
-                Spacer(Modifier.height(3.dp))
+                Spacer(Modifier.height(25.dp))
 
-                Box(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        "다른 검색어를 입력하거나 필터를 다시 선택해 주세요.",
-                        style = TraceTheme.typography.bodySM,
-                        color = Gray,
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                }
-            }
-        }
+                if (displayedPosts.itemCount == 0) {
 
-        items(displayedPosts.itemCount) { index ->
-            displayedPosts[index]?.let { postFeed ->
-                PostFeed(postFeed, navigateToPost = { navigateToPost(postFeed.postId) })
+                    Spacer(Modifier.height(100.dp))
 
-                Spacer(Modifier.height(8.dp))
-
-                Spacer(
-                    Modifier
-                        .fillMaxWidth()
-                        .height(1.dp)
-                        .background(GrayLine)
-                )
-
-                Spacer(Modifier.height(15.dp))
-
-            }
-        }
-
-        item {
-            Spacer(Modifier.height(200.dp))
-        }
-
-        item {
-            when (val state = displayedPosts.loadState.append) {
-                is LoadState.Loading -> {
                     Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth()
                     ) {
-                        CircularProgressIndicator(
-                            color = PrimaryDefault, modifier = Modifier.align(
+                        Text(
+                            "검색 결과가 없습니다.",
+                            style = TraceTheme.typography.bodySM,
+                            color = Gray,
+                            modifier = Modifier.align(
                                 Alignment.Center
                             )
                         )
                     }
+
+                    Spacer(Modifier.height(3.dp))
+
+                    Box(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            "다른 검색어를 입력하거나 필터를 다시 선택해 주세요.",
+                            style = TraceTheme.typography.bodySM,
+                            color = Gray,
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                    }
                 }
-
-                is LoadState.Error -> {}
-
-                else -> {}
             }
+
+            items(displayedPosts.itemCount) { index ->
+                displayedPosts[index]?.let { postFeed ->
+                    PostFeed(postFeed, navigateToPost = { navigateToPost(postFeed.postId) })
+
+                    Spacer(Modifier.height(8.dp))
+
+                    Spacer(
+                        Modifier
+                            .fillMaxWidth()
+                            .height(1.dp)
+                            .background(GrayLine)
+                    )
+
+                    Spacer(Modifier.height(15.dp))
+
+                }
+            }
+
+            item {
+                Spacer(Modifier.height(200.dp))
+            }
+        }
+
+        if (isRefreshing || isAppending) {
+            CircularProgressIndicator(
+                color = PrimaryDefault, modifier = Modifier.align(
+                    if (isRefreshing) Alignment.Center else Alignment.BottomCenter
+                )
+            )
         }
     }
 }
