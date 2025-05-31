@@ -8,10 +8,11 @@ import kotlinx.serialization.Serializable
 data class DailyMissionResponse(
     val content: String,
     val changCount: Int,
+    val isVerified : Boolean,
 ) {
     fun toDomain(): DailyMission {
         return DailyMission(
-            mission = Mission(content, false),
+            mission = Mission(content, isVerified),
             changeCount = changCount
         )
     }
