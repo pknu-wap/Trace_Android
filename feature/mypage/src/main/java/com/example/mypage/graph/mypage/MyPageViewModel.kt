@@ -60,18 +60,6 @@ class MyPageViewModel @Inject constructor(
         _tapType.value = tab
     }
 
-    private fun setWrittenPosts(posts: List<PostFeed>) {
-        _writtenPosts.value = posts
-    }
-
-    private fun setCommentedPosts(posts: List<PostFeed>) {
-        _commentedPosts.value = posts
-    }
-
-    private fun setReactedPosts(posts: List<PostFeed>) {
-        _reactedPosts.value = posts
-    }
-
     sealed class MyPageEvent {
         data object NavigateToEditProfile : MyPageEvent()
         data class NavigateToPost(val postId: Int) : MyPageEvent()
