@@ -271,7 +271,6 @@ val fakePostDetail = PostDetail(
     postType = PostType.GOOD_DEED,
     title = "작은 선행을 나누다",
     content = "오늘은 작은 선행을 나누었습니다. 많은 사람들에게 도움이 되었으면 좋겠습니다.",
-    missionContent = "길거리 쓰레기 줍기기",
     nickname = "홍길동",
     viewCount = 120,
     emotionCount = EmotionCount(
