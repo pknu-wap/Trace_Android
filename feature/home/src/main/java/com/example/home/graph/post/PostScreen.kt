@@ -66,10 +66,8 @@ import com.example.designsystem.theme.MissionBackground
 import com.example.designsystem.theme.PrimaryActive
 import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.TraceTheme
-import com.example.designsystem.theme.VerificationButton
 import com.example.designsystem.theme.WarmGray
 import com.example.designsystem.theme.White
-import com.example.domain.model.mission.MAX_MISSION_CHANGE_COUNT
 import com.example.domain.model.post.Comment
 import com.example.domain.model.post.Emotion
 import com.example.domain.model.post.PostDetail
@@ -565,7 +563,7 @@ fun MissionHeader(missionContent: String) {
 
             Text(
                 "일일 미션",
-                style = TraceTheme.typography.missionHeader,
+                style = TraceTheme.typography.missionHeaderSmall,
                 color = com.example.designsystem.theme.MissionHeader,
             )
 
@@ -584,11 +582,11 @@ fun MissionHeader(missionContent: String) {
 
         Text(
             missionContent,
-            style = TraceTheme.typography.missionTitle,
+            style = TraceTheme.typography.missionTitleSmall,
             color = Black,
         )
 
-        Spacer(Modifier.height(30.dp))
+        Spacer(Modifier.height(15.dp))
     }
 }
 

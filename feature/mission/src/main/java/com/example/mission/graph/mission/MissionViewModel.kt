@@ -22,7 +22,7 @@ class MissionViewModel @Inject constructor(
 ) : ViewModel() {
     private val _dailyMission = MutableStateFlow(
         DailyMission(
-            mission = Mission("", isVerified = false),
+            mission = Mission("아직 미션이 할당되지 않았습니다", isVerified = false),
             changeCount = 0
         )
     )
