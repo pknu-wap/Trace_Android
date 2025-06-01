@@ -1,5 +1,6 @@
 package com.example.home.graph.post
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -19,11 +20,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,6 +38,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -58,11 +62,14 @@ import com.example.designsystem.theme.Black
 import com.example.designsystem.theme.DarkGray
 import com.example.designsystem.theme.EmotionLabel
 import com.example.designsystem.theme.GrayLine
+import com.example.designsystem.theme.MissionBackground
 import com.example.designsystem.theme.PrimaryActive
 import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.TraceTheme
+import com.example.designsystem.theme.VerificationButton
 import com.example.designsystem.theme.WarmGray
 import com.example.designsystem.theme.White
+import com.example.domain.model.mission.MAX_MISSION_CHANGE_COUNT
 import com.example.domain.model.post.Comment
 import com.example.domain.model.post.Emotion
 import com.example.domain.model.post.PostDetail
@@ -254,12 +261,17 @@ private fun PostScreen(
 
                 Spacer(Modifier.height(10.dp))
 
-                Spacer(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(1.dp)
-                        .background(GrayLine)
+                HorizontalDivider(
+                    modifier = Modifier.fillMaxWidth(),
+                    thickness = 1.dp,
+                    color = GrayLine
                 )
+
+                postDetail.missionContent?.let {
+                    Spacer(Modifier.height(15.dp))
+
+                    MissionHeader(it)
+                }
 
                 if (postDetail.images.isNotEmpty()) {
                     Spacer(Modifier.height(12.dp))
@@ -289,7 +301,7 @@ private fun PostScreen(
                             Emotion.GRATEFUL -> postDetail.emotionCount.gratefulCount
                         }
 
-                        val emotionResource =  when (emotion) {
+                        val emotionResource = when (emotion) {
                             Emotion.HEARTWARMING -> R.drawable.hearwarming
                             Emotion.LIKEABLE -> R.drawable.likeable
                             Emotion.TOUCHING -> R.drawable.touching
@@ -297,7 +309,7 @@ private fun PostScreen(
                             Emotion.GRATEFUL -> R.drawable.grateful
                         }
 
-                        val borderWidth = if(emotion == postDetail.yourEmotionType) 2.dp else 0.dp
+                        val borderWidth = if (emotion == postDetail.yourEmotionType) 2.dp else 0.dp
 
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally
@@ -308,7 +320,9 @@ private fun PostScreen(
                                 Image(
                                     painter = painterResource(emotionResource),
                                     contentDescription = emotion.label,
-                                    modifier = Modifier.size(26.dp).border(borderWidth, PrimaryDefault, CircleShape)
+                                    modifier = Modifier
+                                        .size(26.dp)
+                                        .border(borderWidth, PrimaryDefault, CircleShape)
                                 )
                             }
 
@@ -317,13 +331,15 @@ private fun PostScreen(
                             Text(
                                 emotion.label,
                                 style = TraceTheme.typography.bodySR,
-                                color = if(emotion == postDetail.yourEmotionType) PrimaryDefault else EmotionLabel
+                                color = if (emotion == postDetail.yourEmotionType) PrimaryDefault else EmotionLabel
                             )
 
                             Spacer(Modifier.height(3.dp))
 
                             Text(
-                                emotionCount.formatCount(), style = TraceTheme.typography.bodySSB, color = if(emotion == postDetail.yourEmotionType) PrimaryDefault else Black
+                                emotionCount.formatCount(),
+                                style = TraceTheme.typography.bodySSB,
+                                color = if (emotion == postDetail.yourEmotionType) PrimaryDefault else Black
                             )
                         }
                     }
@@ -333,11 +349,10 @@ private fun PostScreen(
 
                 Spacer(Modifier.height(8.dp))
 
-                Spacer(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(1.dp)
-                        .background(GrayLine)
+                HorizontalDivider(
+                    modifier = Modifier.fillMaxWidth(),
+                    thickness = 1.dp,
+                    color = GrayLine
                 )
 
                 if (comments.itemCount == 0 && comments.loadState.refresh is LoadState.NotLoading) {
@@ -365,7 +380,6 @@ private fun PostScreen(
                 }
 
             }
-
 
             items(
                 comments.itemCount
@@ -396,11 +410,10 @@ private fun PostScreen(
                         if (index != comments.itemCount - 1) {
                             Spacer(Modifier.height(15.dp))
 
-                            Spacer(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(1.dp)
-                                    .background(GrayLine)
+                            HorizontalDivider(
+                                modifier = Modifier.fillMaxWidth(),
+                                thickness = 1.dp,
+                                color = GrayLine
                             )
                         }
                     }
@@ -523,6 +536,59 @@ private fun PostScreen(
                 )
             )
         }
+    }
+}
+
+@Composable
+fun MissionHeader(missionContent: String) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(
+                RoundedCornerShape(16.dp)
+            )
+            .background(MissionBackground)
+            .padding(top = 12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Canvas(modifier = Modifier.size(6.dp)) {
+                drawCircle(
+                    color = com.example.designsystem.theme.MissionHeader,
+                    radius = size.minDimension / 2f
+                )
+            }
+
+            Spacer(Modifier.width(4.dp))
+
+            Text(
+                "일일 미션",
+                style = TraceTheme.typography.missionHeader,
+                color = com.example.designsystem.theme.MissionHeader,
+            )
+
+            Spacer(Modifier.width(4.dp))
+
+            Canvas(modifier = Modifier.size(6.dp)) {
+                drawCircle(
+                    color = com.example.designsystem.theme.MissionHeader,
+                    radius = size.minDimension / 2f
+                )
+            }
+        }
+
+        Spacer(Modifier.height(10.dp))
+
+
+        Text(
+            missionContent,
+            style = TraceTheme.typography.missionTitle,
+            color = Black,
+        )
+
+        Spacer(Modifier.height(30.dp))
     }
 }
 
