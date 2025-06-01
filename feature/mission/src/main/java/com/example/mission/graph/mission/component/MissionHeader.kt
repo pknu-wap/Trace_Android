@@ -47,7 +47,7 @@ internal fun MissionHeaderView(
                 RoundedCornerShape(16.dp)
             )
             .background(MissionBackground)
-            .padding(end = 12.dp, top = 4.dp)
+            .padding(start = 12.dp, end = 12.dp, top = 4.dp)
 
     ) {
         Box(
@@ -113,7 +113,7 @@ internal fun MissionHeaderView(
 
         Spacer(Modifier.height(30.dp))
 
-        Box(modifier = Modifier.fillMaxWidth().padding(start = 36.dp, end = 20.dp)) {
+        Box(modifier = Modifier.fillMaxWidth()) {
             Text(
                 dailyMission.mission.description,
                 style = TraceTheme.typography.missionTitle,
