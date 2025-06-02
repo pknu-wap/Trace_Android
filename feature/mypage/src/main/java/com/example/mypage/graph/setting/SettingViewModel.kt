@@ -20,11 +20,8 @@ class SettingViewModel @Inject constructor(
     val eventChannel = _eventChannel.receiveAsFlow()
 
     fun logout() = viewModelScope.launch {
-        authRepository.logOut().onSuccess {
-            _eventChannel.send(SettingEvent.LogoutSuccess)
-        }.onFailure {
-            _eventChannel.send(SettingEvent.LogoutFailure)
-        }
+        authRepository.logOut()
+        _eventChannel.send(SettingEvent.Logout)
     }
 
     fun unregisterUser() = viewModelScope.launch {
@@ -37,8 +34,7 @@ class SettingViewModel @Inject constructor(
 
     sealed class SettingEvent {
         data object NavigateBack : SettingEvent()
-        data object LogoutSuccess : SettingEvent()
-        data object LogoutFailure : SettingEvent()
+        data object Logout : SettingEvent()
         data object UnregisterUserSuccess : SettingEvent()
         data object UnregisterUserFailure : SettingEvent()
     }
