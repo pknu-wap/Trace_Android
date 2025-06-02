@@ -17,7 +17,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -166,7 +165,6 @@ private fun SearchScreen(
                 onValueChange = onKeywordInputChange,
                 onSearch = {
                     searchByInput()
-                    if(keywordInput.length >=2) keyboardController?.hide()
                 },
                 resetSearch = resetSearch
             )

@@ -28,7 +28,7 @@ class MainViewModel @Inject constructor(
             )
             else navigationHelper.navigate(NavigationEvent.To(AuthGraph.LoginRoute, popUpTo = true))
         }.onFailure {
-            navigationHelper.navigate(NavigationEvent.To(HomeGraph.HomeRoute, popUpTo = true))
+            navigationHelper.navigate(NavigationEvent.To(AuthGraph.LoginRoute, popUpTo = true))
         }
     }
 }

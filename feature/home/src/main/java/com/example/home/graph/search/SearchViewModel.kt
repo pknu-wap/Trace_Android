@@ -94,7 +94,7 @@ class SearchViewModel @Inject constructor(
             return@launch
         }
 
-        if (_keywordInput.value.length < 2) {
+        if (_keywordInput.value.length < MIN_SEARCH_LENGTH) {
             eventHelper.sendEvent(TraceEvent.ShowSnackBar("검색어는 두 글자 이상 입력해 주세요."))
             return@launch
         }
@@ -130,5 +130,9 @@ class SearchViewModel @Inject constructor(
     sealed class SearchEvent {
         data object NavigateBack : SearchEvent()
         data class NavigateToPost(val postId: Int) : SearchEvent()
+    }
+
+    companion object {
+        private const val MIN_SEARCH_LENGTH = 2
     }
 }
