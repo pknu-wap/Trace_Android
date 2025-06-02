@@ -168,13 +168,22 @@ private fun MyPageScreen(
 
                     Spacer(Modifier.height(10.dp))
 
-                    Text("선행 점수 ${userInfo.verificationScore}", style = TraceTheme.typography.bodyML)
+                    Text(
+                        "선행 점수 ${userInfo.verificationScore}",
+                        style = TraceTheme.typography.bodyMR.copy(
+                            fontSize = 15.sp,
+                            lineHeight = 19.sp
+                        )
+                    )
 
                     Spacer(Modifier.height(5.dp))
 
                     Text(
                         "선행 마크 ${userInfo.verificationCount}",
-                        style = TraceTheme.typography.bodyML
+                        style = TraceTheme.typography.bodyMR.copy(
+                            fontSize = 15.sp,
+                            lineHeight = 19.sp
+                        )
                     )
                 }
             }
@@ -200,10 +209,7 @@ private fun MyPageScreen(
                         text = {
                             Text(
                                 tab.label,
-                                style = if (tab == tabType) TraceTheme.typography.bodyMR.copy(
-                                    fontSize = 15.sp,
-                                    lineHeight = 19.sp
-                                ) else TraceTheme.typography.bodyML
+                                style = TraceTheme.typography.myPageTab
                             )
                         }
                     )
@@ -230,7 +236,7 @@ private fun MyPageScreen(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun MyPageScreenPreview() {
     MyPageScreen(

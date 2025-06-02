@@ -79,7 +79,7 @@ data class TraceTypography(
         fontSize = 20.sp,
         lineHeight = 24.sp
     ),
-    val missionVerification : TextStyle = TextStyle(
+    val missionVerification: TextStyle = TextStyle(
         fontFamily = HsJipTokkiRound,
         fontSize = 14.sp,
         lineHeight = 18.sp
@@ -89,7 +89,7 @@ data class TraceTypography(
         fontSize = 18.sp,
         lineHeight = 22.sp
     ),
-    val missionHeaderSmall : TextStyle = TextStyle(
+    val missionHeaderSmall: TextStyle = TextStyle(
         fontFamily = HsJipTokkiRound,
         fontSize = 14.sp,
         lineHeight = 18.sp
@@ -99,20 +99,25 @@ data class TraceTypography(
         fontSize = 28.sp,
         lineHeight = 34.sp
     ),
-    val missionTitleSmall : TextStyle = TextStyle(
+    val missionTitleSmall: TextStyle = TextStyle(
         fontFamily = HsGoolTokkiRegular,
         fontSize = 20.sp,
         lineHeight = 24.sp
     ),
-    val appDescription : TextStyle = TextStyle(
+    val appDescription: TextStyle = TextStyle(
         fontFamily = HsGoolTokkiRegular,
         fontSize = 24.sp,
         lineHeight = 28.sp
     ),
-    val missionCompletedTitle : TextStyle = TextStyle(
+    val missionCompletedTitle: TextStyle = TextStyle(
         fontFamily = HsGoolTokkiRegular,
         fontSize = 24.sp,
         lineHeight = 28.sp
+    ),
+    val myPageTab: TextStyle = TextStyle(
+        fontFamily = HsGoolTokkiRegular,
+        fontSize = 16.sp,
+        lineHeight = 20.sp
     ),
     val bodyMB: TextStyle = TextStyle(
         fontFamily = PretendardBold,
@@ -139,7 +144,7 @@ data class TraceTypography(
         fontSize = 20.sp,
         lineHeight = 24.sp
     ),
-    val bodyXMR : TextStyle = TextStyle(
+    val bodyXMR: TextStyle = TextStyle(
         fontFamily = HsGoolTokkiRegular,
         fontSize = 20.sp,
         lineHeight = 24.sp
