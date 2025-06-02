@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import com.example.common.util.clickable
 import com.example.designsystem.theme.Background
@@ -112,11 +113,14 @@ private fun RecentKeyword(
     onSearch: (String) -> Unit,
     removeKeyword: (String) -> Unit,
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     Card(
         modifier = Modifier
             .background(Background)
             .clickable(isRipple = true) {
                 onSearch(value)
+                keyboardController?.hide()
             },
         shape = RoundedCornerShape(8.dp),
         colors = CardColors(
