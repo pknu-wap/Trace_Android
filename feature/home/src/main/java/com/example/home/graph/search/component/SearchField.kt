@@ -44,6 +44,7 @@ import com.example.designsystem.theme.SearchField
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.WarmGray
 
+private const val MIN_SEARCH_LENGTH = 2
 
 private val customTextSelectionColors = TextSelectionColors(
     handleColor = PrimaryDefault,

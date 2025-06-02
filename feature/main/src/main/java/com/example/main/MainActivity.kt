@@ -57,16 +57,6 @@ class MainActivity : ComponentActivity() {
 
         installSplashScreen()
 
-//        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-//            if (!task.isSuccessful) {
-//                return@OnCompleteListener
-//            }
-//
-//            val token = task.result
-//            Log.d("traceMessaging", token.toString())
-//
-//        })
-
         if (intent.extras != null) { // 백그라운드 알림으로 앱에 진입
             handleNotificationIntent(intent, viewModel.navigationHelper)
         } else {
