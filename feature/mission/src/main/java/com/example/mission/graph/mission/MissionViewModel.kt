@@ -35,7 +35,7 @@ class MissionViewModel @Inject constructor(
         getDailyMission()
     }
 
-    private fun getDailyMission() = viewModelScope.launch {
+    fun getDailyMission() = viewModelScope.launch {
         missionRepository.getDailyMission().onSuccess { dailyMission ->
             _dailyMission.value = dailyMission
         }
