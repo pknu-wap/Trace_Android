@@ -100,7 +100,7 @@ private fun getEmotionBitmap(context: Context, type: String?, emotionType: Strin
     if (type == "emotion" && emotionType != null) {
         val emotion = Emotion.fromString(emotionType)
         val emotionResId = when (emotion) {
-            Emotion.HEARTWARMING -> com.example.designsystem.R.drawable.hearwarming
+            Emotion.HEARTWARMING -> com.example.designsystem.R.drawable.heartwarming
             Emotion.LIKEABLE -> com.example.designsystem.R.drawable.likeable
             Emotion.TOUCHING -> com.example.designsystem.R.drawable.touching
             Emotion.IMPRESSIVE -> com.example.designsystem.R.drawable.impressive
