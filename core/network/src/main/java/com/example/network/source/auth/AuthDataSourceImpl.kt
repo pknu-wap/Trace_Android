@@ -7,6 +7,7 @@ import com.example.network.model.auth.LoginKakaoResponse
 import com.example.network.model.auth.RegisterUserRequest
 import com.example.network.model.auth.TokenResponse
 import com.example.network.model.token.CheckTokenHealthRequest
+import com.example.network.model.token.CheckTokenHealthResponse
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -68,9 +69,10 @@ class AuthDataSourceImpl @Inject constructor(
         )
     }
 
-    override suspend fun checkTokenHealth(token: String): Boolean = traceApi.checkTokenHealth(
-        CheckTokenHealthRequest(token)
-    ).isSuccess
+    override suspend fun checkTokenHealth(token: String): Result<CheckTokenHealthResponse> =
+        traceApi.checkTokenHealth(
+            CheckTokenHealthRequest(token)
+        )
 
     override suspend fun logout(): Result<Unit> = traceApi.logout()
 
