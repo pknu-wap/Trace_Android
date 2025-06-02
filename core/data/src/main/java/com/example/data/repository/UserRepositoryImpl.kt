@@ -19,11 +19,13 @@ class UserRepositoryImpl @Inject constructor(
     private val localUserDataSource: LocalUserDataSource,
     private val imageResizer: ImageResizer,
 ) : UserRepository {
-    override suspend fun checkTokenHealth(): Result<Unit> = suspendRunCatching {
+    override suspend fun checkTokenHealth(): Result<Boolean> = suspendRunCatching {
         val token = localTokenDataSource.accessToken.first()
         if (token.isEmpty()) throw IllegalStateException("Access token is empty")
 
-        authDataSource.checkTokenHealth(token)
+        authDataSource.checkTokenHealth(token).getOrElse {
+            return@suspendRunCatching true
+        }.isExpired
     }
 
     override suspend fun getUserInfo(): Result<UserInfo> = suspendRunCatching {
