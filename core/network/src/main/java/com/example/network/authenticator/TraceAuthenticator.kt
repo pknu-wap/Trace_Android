@@ -10,7 +10,9 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import okhttp3.Authenticator
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import okhttp3.Route
 import javax.inject.Inject
@@ -55,7 +57,7 @@ class TraceAuthenticator @Inject constructor(
         val token = runBlocking {
             refreshMutex.withLock {
                 traceApi.get().refreshToken(RefreshTokenRequest(tokenManager.getRefreshToken())).onFailure {
-                    Log.d("traceAuthenticate", "실패 ${tokenManager.getRefreshToken()}")
+                    Log.d("traceAuthenticate", "실패 ${tokenManager.getRefreshToken()} \n 실패 이유 : $it")
                 }
             }
         }.getOrNull() ?: return null
@@ -67,8 +69,16 @@ class TraceAuthenticator @Inject constructor(
         }
 
         if (originRequest.url.encodedPath.contains("/api/v1/token/expiration")) {
+            val newAccessToken = runBlocking {
+                tokenManager.getAccessToken()
+            }
+
+            val mediaType = "application/json; charset=utf-8".toMediaType()
+            val newBody = "{\"token\":\"$newAccessToken\"}".toRequestBody(mediaType)
+
             return originRequest.newBuilder()
                 .header(RETRY_HEADER, (retryCount + 1).toString())
+                .method("POST", newBody)
                 .build()
         }
 

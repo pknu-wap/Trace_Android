@@ -25,7 +25,7 @@ class UserRepositoryImpl @Inject constructor(
         if (token.isEmpty()) throw IllegalStateException("Access token is empty")
 
         authDataSource.checkTokenHealth(token).getOrElse {
-            return@suspendRunCatching false
+            return@suspendRunCatching true
         }.isExpired
     }
 

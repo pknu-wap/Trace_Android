@@ -20,7 +20,7 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
     fun checkSession() = viewModelScope.launch {
         userRepository.checkTokenHealth().onSuccess { isExpired ->
-            if (isExpired) navigationHelper.navigate(
+            if (!isExpired) navigationHelper.navigate(
                 NavigationEvent.To(
                     HomeGraph.HomeRoute,
                     popUpTo = true
