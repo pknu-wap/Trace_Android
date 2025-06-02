@@ -303,7 +303,7 @@ private fun PostScreen(
                         }
 
                         val emotionResource = when (emotion) {
-                            Emotion.HEARTWARMING -> R.drawable.grateful
+                            Emotion.HEARTWARMING -> R.drawable.heartwarming
                             Emotion.LIKEABLE -> R.drawable.likeable
                             Emotion.TOUCHING -> R.drawable.touching
                             Emotion.IMPRESSIVE -> R.drawable.impressive
