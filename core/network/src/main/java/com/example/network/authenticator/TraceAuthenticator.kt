@@ -67,11 +67,12 @@ class TraceAuthenticator @Inject constructor(
         }
 
         if (originRequest.url.encodedPath.contains("/api/v1/token/expiration")) {
-            return null
+            return originRequest.newBuilder()
+                .header(RETRY_HEADER, (retryCount + 1).toString())
+                .build()
         }
 
-        val newRequest = response.request
-            .newBuilder()
+        val newRequest = originRequest.newBuilder()
             .header(RETRY_HEADER, (retryCount + 1).toString())
             .header("Authorization", "Bearer ${token.accessToken}")
             .build()

@@ -20,8 +20,7 @@ class UserRepositoryImpl @Inject constructor(
     private val imageResizer: ImageResizer,
 ) : UserRepository {
     override suspend fun checkTokenHealth(): Result<Boolean> = suspendRunCatching {
-        localTokenDataSource.setAccessToken("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0MjM3NzkyNDE0Iiwicm9sZSI6IlJPTEVfVVNFUiIsImlhdCI6MTc0NzMwNjY1MSwiZXhwIjoxNzQ3MzEwMjUxfQ._-lEqLcOtEU2tKtSOTKUWO_ly9fdGyLf1mpuqqzviD_Nh4aipo5Knw9gQ84kMzI8_hV21yS5w2mDE4g6R9suGA")
-        localTokenDataSource.setRefreshToken("")
+       localTokenDataSource.setAccessToken("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0MjM3NzkyNDE0Iiwicm9sZSI6IlJPTEVfVVNFUiIsImlhdCI6MTc0NzMwNjY1MSwiZXhwIjoxNzQ3MzEwMjUxfQ._-lEqLcOtEU2tKtSOTKUWO_ly9fdGyLf1mpuqqzviD_Nh4aipo5Knw9gQ84kMzI8_hV21yS5w2mDE4g6R9suGA")
         val token = localTokenDataSource.accessToken.first()
         if (token.isEmpty()) throw IllegalStateException("Access token is empty")
 
