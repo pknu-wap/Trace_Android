@@ -57,7 +57,7 @@ class SearchViewModel @Inject constructor(
         _isSearched
     ) { keyword, tab, searchType, isSearched ->
         SearchCondition(keyword, tab, searchType, isSearched)
-    }.filter { it.isSearched }
+    }.filter { it.isSearched && it.keyword.isNotBlank() }
         .map { Triple(it.keyword, it.tabType, it.searchType) }
         .flatMapLatest { (keyword, tab, searchType) ->
             searchRepository.searchPosts(
