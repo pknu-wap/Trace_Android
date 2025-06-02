@@ -3,6 +3,8 @@ package com.example.designsystem.component
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -26,14 +29,19 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun TraceSnackBar(
-    snackBarData : SnackbarData
+    snackBarData: SnackbarData
 ) {
     val message = snackBarData.visuals.message
+
+    val ime = WindowInsets.ime
+    val density = LocalDensity.current
+    val imeBottomPx = ime.getBottom(density)
+    val bottomOffset = with(density) { imeBottomPx.toDp() + 36.dp }
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
-            .padding(bottom = 36.dp, start = 20.dp, end = 20.dp)
+            .padding(bottom = bottomOffset, start = 20.dp, end = 20.dp)
             .wrapContentSize()
             .clip(RoundedCornerShape(12.dp))
             .background(PrimaryDefault)
@@ -41,7 +49,7 @@ fun TraceSnackBar(
     ) {
         Text(
             text = message,
-            maxLines = 1,
+            maxLines = 2,
             overflow = TextOverflow.Ellipsis,
             style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Medium),
             color = Color.White,

@@ -164,7 +164,6 @@ private fun SearchScreen(
                 value = keywordInput,
                 onValueChange = onKeywordInputChange,
                 onSearch = {
-                    keyboardController?.hide()
                     searchByInput()
                 },
                 resetSearch = resetSearch
