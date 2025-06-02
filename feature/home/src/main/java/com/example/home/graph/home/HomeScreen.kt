@@ -165,7 +165,7 @@ private fun HomeScreen(
                     .height(45.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("흔적들", style = TraceTheme.typography.headingMB, color = White)
+                Text("흔적들", style = TraceTheme.typography.headingMB, color = White, modifier = Modifier.height(24.dp))
 
                 Spacer(Modifier.weight(1f))
 

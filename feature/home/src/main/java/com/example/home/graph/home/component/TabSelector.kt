@@ -43,7 +43,7 @@ internal fun TabSelector(
             },
     ) {
         Text(
-            type.label, style = TraceTheme.typography.bodySM,
+            type.label, style = TraceTheme.typography.homeTab,
             color = if (type == selectedType) White else WarmGray,
             modifier = Modifier.align(Alignment.Center)
         )
