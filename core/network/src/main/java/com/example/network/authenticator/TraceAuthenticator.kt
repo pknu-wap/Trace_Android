@@ -28,13 +28,11 @@ class TraceAuthenticator @Inject constructor(
         val originRequest = response.request
 
         Log.d("traceAuthenticate", originRequest.toString())
-
         if (originRequest.header("Authorization")
                 .isNullOrEmpty() && !originRequest.url.encodedPath.contains("/api/v1/token/expiration")
         ) {
             return null
         }
-
 
         if (originRequest.url.encodedPath.contains("/api/v1/token/refresh")) {
             runBlocking {
@@ -56,9 +54,7 @@ class TraceAuthenticator @Inject constructor(
 
         val token = runBlocking {
             refreshMutex.withLock {
-                traceApi.get().refreshToken(RefreshTokenRequest(tokenManager.getRefreshToken())).onFailure {
-                    Log.d("traceAuthenticate", "실패 ${tokenManager.getRefreshToken()} \n 실패 이유 : $it")
-                }
+                traceApi.get().refreshToken(RefreshTokenRequest(tokenManager.getRefreshToken()))
             }
         }.getOrNull() ?: return null
 
