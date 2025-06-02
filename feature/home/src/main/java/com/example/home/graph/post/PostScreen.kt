@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -22,6 +23,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -65,6 +67,7 @@ import com.example.designsystem.theme.GrayLine
 import com.example.designsystem.theme.MissionBackground
 import com.example.designsystem.theme.PrimaryActive
 import com.example.designsystem.theme.PrimaryDefault
+import com.example.designsystem.theme.Red
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.WarmGray
 import com.example.designsystem.theme.White
@@ -300,28 +303,71 @@ private fun PostScreen(
                         }
 
                         val emotionResource = when (emotion) {
-                            Emotion.HEARTWARMING -> R.drawable.hearwarming
+                            Emotion.HEARTWARMING -> R.drawable.grateful
                             Emotion.LIKEABLE -> R.drawable.likeable
                             Emotion.TOUCHING -> R.drawable.touching
                             Emotion.IMPRESSIVE -> R.drawable.impressive
                             Emotion.GRATEFUL -> R.drawable.grateful
                         }
 
-                        val borderWidth = if (emotion == postDetail.yourEmotionType) 2.dp else 0.dp
+                        val isBorder = emotion == postDetail.yourEmotionType
 
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             IconButton(onClick = {
                                 toggleEmotion(emotion)
-                            }, modifier = Modifier.then(Modifier.size(26.dp))) {
-                                Image(
-                                    painter = painterResource(emotionResource),
-                                    contentDescription = emotion.label,
-                                    modifier = Modifier
-                                        .size(26.dp)
-                                        .border(borderWidth, PrimaryDefault, CircleShape)
-                                )
+                            }, modifier = Modifier.then(Modifier.size(36.dp))) {
+                                Box(
+                                    modifier = Modifier.size(28.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Image(
+                                        painter = painterResource(emotionResource),
+                                        contentDescription = emotion.label,
+                                        modifier = Modifier.size(28.dp)
+                                    )
+
+                                    if (isBorder) {
+                                        Box(
+                                            modifier = Modifier
+                                                .size(28.dp)
+                                                .border(1.dp, PrimaryDefault, CircleShape)
+                                        )
+                                    }
+
+                                    if (emotion == Emotion.GRATEFUL) {
+                                        Icon(
+                                            painter = painterResource(R.drawable.heart),
+                                            tint = Red,
+                                            contentDescription = "하트",
+                                            modifier = Modifier
+                                                .size(5.5.dp)
+                                                .align(Alignment.CenterEnd)
+                                                .offset(x = 1.dp)
+                                        )
+
+                                        Icon(
+                                            painter = painterResource(R.drawable.heart),
+                                            tint = Red,
+                                            contentDescription = "하트",
+                                            modifier = Modifier
+                                                .size(5.5.dp)
+                                                .align(Alignment.CenterStart)
+                                                .offset(x = -2.dp)
+                                        )
+
+                                        Icon(
+                                            painter = painterResource(R.drawable.heart),
+                                            tint = Red,
+                                            contentDescription = "하트",
+                                            modifier = Modifier
+                                                .size(5.5.dp)
+                                                .align(Alignment.TopEnd)
+                                                .offset(x = -3.dp)
+                                        )
+                                    }
+                                }
                             }
 
                             Spacer(Modifier.height(3.dp))
