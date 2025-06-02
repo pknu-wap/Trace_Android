@@ -84,7 +84,7 @@ internal fun TraceSearchField(
             ),
             keyboardActions = KeyboardActions(onSearch = {
                 onSearch()
-                focusManager.clearFocus()
+                if (value.length >= 2) focusManager.clearFocus()
             }),
             textStyle = TraceTheme.typography.bodySM,
             cursorBrush = SolidColor(PrimaryDefault),
