@@ -1,14 +1,18 @@
 package com.example.mission.graph.mission
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -22,6 +26,7 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.TraceTheme
 import com.example.domain.model.mission.DailyMission
 import com.example.domain.model.mission.Mission
@@ -79,6 +84,12 @@ private fun MissionScreen(
     val isRefreshing = completedMissions.loadState.refresh is LoadState.Loading
     val isAppending = completedMissions.loadState.append is LoadState.Loading
 
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+
+    }
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -112,11 +123,24 @@ private fun MissionScreen(
         }
 
         items(count = completedMissions.itemCount) { index ->
-            completedMissions[index]?.let {
-                VerifiedMissionBox(it, navigateToPost = navigateToPost)
+            Box {
+                Column {
+                    completedMissions[index]?.let {
+                        VerifiedMissionBox(it, navigateToPost = navigateToPost)
 
-                Spacer(Modifier.height(10.dp))
+                        Spacer(Modifier.height(10.dp))
+                    }
+                }
+
+                if (isRefreshing || isAppending) {
+                    CircularProgressIndicator(
+                        color = PrimaryDefault, modifier = Modifier.align(
+                            if (isRefreshing) Alignment.Center else Alignment.BottomCenter
+                        )
+                    )
+                }
             }
+
         }
     }
 }
