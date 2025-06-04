@@ -18,6 +18,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.LoadState
+import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.designsystem.theme.TraceTheme
 import com.example.domain.model.mission.DailyMission
 import com.example.domain.model.mission.Mission
@@ -25,6 +29,8 @@ import com.example.domain.model.mission.MissionFeed
 import com.example.mission.graph.mission.component.MissionCompletedHeaderView
 import com.example.mission.graph.mission.component.MissionHeaderView
 import com.example.mission.graph.mission.component.VerifiedMissionBox
+import kotlinx.coroutines.flow.flowOf
+import java.time.LocalDateTime
 
 @Composable
 internal fun MissionRoute(
@@ -33,7 +39,7 @@ internal fun MissionRoute(
     navigateToVerifyMission: (String) -> Unit,
 ) {
     val dailyMission by viewModel.dailyMission.collectAsStateWithLifecycle()
-    val verifiedMissions by viewModel.verifiedMissions.collectAsStateWithLifecycle()
+    val completedMissions = viewModel.completedMissions.collectAsLazyPagingItems()
 
     if (!dailyMission.mission.isVerified) {
         val lifecycleOwner = LocalLifecycleOwner.current
@@ -41,6 +47,7 @@ internal fun MissionRoute(
             val observer = LifecycleEventObserver { _, event ->
                 if (event == Lifecycle.Event.ON_RESUME) {
                     viewModel.getDailyMission()
+                    completedMissions.refresh()
                 }
             }
 
@@ -51,10 +58,10 @@ internal fun MissionRoute(
             }
         }
     }
-  
+
     MissionScreen(
         dailyMission = dailyMission,
-        verifiedMissions = verifiedMissions,
+        completedMissions = completedMissions,
         changeMission = viewModel::changeDailyMission,
         navigateToPost = navigateToPost,
         onVerifyMission = navigateToVerifyMission
@@ -64,11 +71,14 @@ internal fun MissionRoute(
 @Composable
 private fun MissionScreen(
     dailyMission: DailyMission,
-    verifiedMissions: List<MissionFeed>,
+    completedMissions: LazyPagingItems<MissionFeed>,
     changeMission: () -> Unit,
     navigateToPost: (Int) -> Unit,
     onVerifyMission: (String) -> Unit,
 ) {
+    val isRefreshing = completedMissions.loadState.refresh is LoadState.Loading
+    val isAppending = completedMissions.loadState.append is LoadState.Loading
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -101,12 +111,12 @@ private fun MissionScreen(
             Spacer(Modifier.height(16.dp))
         }
 
-        items(count = verifiedMissions.size, key = { index ->
-            verifiedMissions[index].missionId
-        }) { index ->
-            VerifiedMissionBox(verifiedMissions[index], navigateToPost = navigateToPost)
+        items(count = completedMissions.itemCount) { index ->
+            completedMissions[index]?.let {
+                VerifiedMissionBox(it, navigateToPost = navigateToPost)
 
-            Spacer(Modifier.height(10.dp))
+                Spacer(Modifier.height(10.dp))
+            }
         }
     }
 }
@@ -114,7 +124,7 @@ private fun MissionScreen(
 
 @Preview
 @Composable
-fun MissionScreenPreview() {
+private fun MissionScreenPreview() {
     MissionScreen(
         dailyMission = DailyMission(
             mission = Mission(
@@ -123,9 +133,54 @@ fun MissionScreenPreview() {
             ),
             changeCount = 0
         ),
-        verifiedMissions = fakeMissionFeeds1,
+        completedMissions = fakeLazyPagingMissions(),
         changeMission = {},
         navigateToPost = {},
         onVerifyMission = {}
     )
+}
+
+@Composable
+private fun fakeLazyPagingMissions(): LazyPagingItems<MissionFeed> {
+    return flowOf(
+        PagingData.from(
+            listOf(
+                MissionFeed(
+                    missionId = 1,
+                    description = "지하철에서 어르신에게 자리 양보하기",
+                    isVerified = true,
+                    imageUrl = "https://picsum.photos/200/300?random=1",
+                    createdAt = LocalDateTime.of(2025, 5, 22, 9, 0)
+                ),
+                MissionFeed(
+                    missionId = 2,
+                    description = "길거리 쓰레기 줍기",
+                    isVerified = false,
+                    imageUrl = null,
+                    createdAt = LocalDateTime.of(2025, 5, 21, 16, 30)
+                ),
+                MissionFeed(
+                    missionId = 3,
+                    description = "카페에서 다 쓴 컵 정리하기",
+                    isVerified = true,
+                    imageUrl = "https://picsum.photos/200/300?random=6",
+                    createdAt = LocalDateTime.of(2025, 5, 20, 13, 15)
+                ),
+                MissionFeed(
+                    missionId = 4,
+                    description = "지인에게 따뜻한 말 한마디 전하기",
+                    isVerified = false,
+                    imageUrl = null,
+                    createdAt = LocalDateTime.of(2025, 5, 19, 10, 45)
+                ),
+                MissionFeed(
+                    missionId = 5,
+                    description = "엘리베이터 버튼 대신 눌러주기",
+                    isVerified = true,
+                    imageUrl = "https://picsum.photos/200/300?random=2",
+                    createdAt = LocalDateTime.of(2025, 5, 18, 17, 5)
+                )
+            )
+        )
+    ).collectAsLazyPagingItems()
 }

@@ -265,7 +265,7 @@ fun HomeScreenPreview() {
 }
 
 @Composable
-fun fakeLazyPagingPosts(): LazyPagingItems<PostFeed> {
+internal fun fakeLazyPagingPosts(): LazyPagingItems<PostFeed> {
     return flowOf(
         PagingData.from(
             fakePostFeeds

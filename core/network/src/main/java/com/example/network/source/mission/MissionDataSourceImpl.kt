@@ -3,8 +3,11 @@ package com.example.network.source.mission
 import android.os.Build
 import com.example.network.api.TraceApi
 import com.example.network.model.mission.DailyMissionResponse
+import com.example.network.model.mission.GetCompletedMissionsRequest
+import com.example.network.model.mission.GetCompletedMissionsResponse
 import com.example.network.model.mission.VerifyMissionRequest
 import com.example.network.model.post.PostResponse
+import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -19,6 +22,18 @@ class MissionDataSourceImpl @Inject constructor(
 ) : MissionDataSource {
     override suspend fun getDailyMission(): Result<DailyMissionResponse> =
         traceApi.getDailyMission()
+
+    override suspend fun getCompletedMissions(
+        cursorDateTime: LocalDateTime?,
+        cursorId: Int?,
+        size: Int
+    ): Result<GetCompletedMissionsResponse> = traceApi.getCompletedMissions(
+        GetCompletedMissionsRequest(
+            cursorDateTime = cursorDateTime,
+            cursorId = cursorId,
+            size = size,
+        )
+    )
 
     override suspend fun changeDailyMission(): Result<DailyMissionResponse> =
         traceApi.changeDailyMission()
