@@ -231,29 +231,33 @@ private fun MyPageScreen(
             }
 
             items(displayedPosts.itemCount) { index ->
-                displayedPosts[index]?.let { postFeed ->
-                    PostFeed(postFeed, navigateToPost = { navigateToPost(postFeed.postId) })
+                Box {
+                    Column {
+                        displayedPosts[index]?.let { postFeed ->
+                            PostFeed(postFeed, navigateToPost = { navigateToPost(postFeed.postId) })
 
-                    Spacer(Modifier.height(8.dp))
+                            Spacer(Modifier.height(8.dp))
 
-                    HorizontalDivider(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        thickness = 1.dp,
-                        color = GrayLine
-                    )
+                            HorizontalDivider(
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                thickness = 1.dp,
+                                color = GrayLine
+                            )
 
-                    Spacer(Modifier.height(15.dp))
+                            Spacer(Modifier.height(15.dp))
+                        }
+                    }
+
+                    if (isRefreshing || isAppending) {
+                        CircularProgressIndicator(
+                            color = PrimaryDefault, modifier = Modifier.align(
+                                if (isRefreshing) Alignment.Center else Alignment.BottomCenter
+                            )
+                        )
+                    }
                 }
             }
-        }
-
-        if (isRefreshing || isAppending) {
-            CircularProgressIndicator(
-                color = PrimaryDefault, modifier = Modifier.align(
-                    if (isRefreshing) Alignment.Center else Alignment.BottomCenter
-                )
-            )
         }
     }
 
