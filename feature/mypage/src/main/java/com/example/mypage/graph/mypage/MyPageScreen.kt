@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -33,6 +34,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -43,6 +45,7 @@ import com.example.designsystem.component.ProfileImage
 import com.example.designsystem.theme.Background
 import com.example.designsystem.theme.Black
 import com.example.designsystem.theme.GrayLine
+import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.TabIndicator
 import com.example.designsystem.theme.TraceTheme
 import com.example.domain.model.mypage.MyPageTab
@@ -114,129 +117,146 @@ private fun MyPageScreen(
 ) {
     val tabs = MyPageTab.entries
 
-    LazyColumn(
+    val isRefreshing = displayedPosts.loadState.refresh is LoadState.Loading
+    val isAppending = displayedPosts.loadState.append is LoadState.Loading
+
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(
-                top = 13.dp, start = 20.dp, end = 14.dp
-            )
     ) {
-        item {
-            Box(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Image(
-                    painter = painterResource(R.drawable.setting_ic),
-                    contentDescription = "설정",
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .clickable {
-                            navigateToSetting()
-                        }
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(
+                    top = 13.dp, start = 20.dp, end = 14.dp
                 )
-            }
-
-            Spacer(Modifier.height(5.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                ProfileImage(
-                    profileImageUrl = userInfo.profileImageUrl,
-                    imageSize = if (userInfo.profileImageUrl != null) 96.dp else 86.dp,
-                    paddingValue = if (userInfo.profileImageUrl != null) 2.dp else 7.dp,
-                    strokeWidth = 10f,
-                )
-
-                Spacer(Modifier.width(20.dp))
-
-                Column {
-                    Row() {
-                        Text(userInfo.name, style = TraceTheme.typography.headingLB)
-
-                        Spacer(Modifier.width(2.dp))
-
-                        Image(
-                            painter = painterResource(R.drawable.arrow_right),
-                            contentDescription = "설정",
-                            modifier = Modifier
-                                .clickable {
-                                    navigateToEditProfile()
-                                }
-                        )
-                    }
-
-                    Spacer(Modifier.height(10.dp))
-
-                    Text(
-                        "선행 점수 ${userInfo.verificationScore}",
-                        style = TraceTheme.typography.bodyMR.copy(
-                            fontSize = 15.sp,
-                            lineHeight = 19.sp
-                        )
-                    )
-
-                    Spacer(Modifier.height(5.dp))
-
-                    Text(
-                        "선행 마크 ${userInfo.verificationCount}",
-                        style = TraceTheme.typography.bodyMR.copy(
-                            fontSize = 15.sp,
-                            lineHeight = 19.sp
-                        )
-                    )
-                }
-            }
-
-            Spacer(Modifier.height(28.dp))
-
-            TabRow(
-                selectedTabIndex = tabs.indexOf(tabType),
-                containerColor = Background,
-                contentColor = Black,
-                indicator = { tabPositions ->
-                    TabRowDefaults.SecondaryIndicator(
-                        color = TabIndicator,
+        ) {
+            item {
+                Box(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Image(
+                        painter = painterResource(R.drawable.setting_ic),
+                        contentDescription = "설정",
                         modifier = Modifier
-                            .tabIndicatorOffset(tabPositions[tabs.indexOf(tabType)])
+                            .align(Alignment.TopEnd)
+                            .clickable {
+                                navigateToSetting()
+                            }
                     )
                 }
-            ) {
-                tabs.forEach { tab ->
-                    Tab(
-                        selected = tab == tabType,
-                        onClick = { onTabTypeChange(tab) },
-                        text = {
-                            Text(
-                                tab.label,
-                                style = TraceTheme.typography.myPageTab
+
+                Spacer(Modifier.height(5.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    ProfileImage(
+                        profileImageUrl = userInfo.profileImageUrl,
+                        imageSize = if (userInfo.profileImageUrl != null) 96.dp else 86.dp,
+                        paddingValue = if (userInfo.profileImageUrl != null) 2.dp else 7.dp,
+                        strokeWidth = 10f,
+                    )
+
+                    Spacer(Modifier.width(20.dp))
+
+                    Column {
+                        Row() {
+                            Text(userInfo.name, style = TraceTheme.typography.headingLB)
+
+                            Spacer(Modifier.width(2.dp))
+
+                            Image(
+                                painter = painterResource(R.drawable.arrow_right),
+                                contentDescription = "설정",
+                                modifier = Modifier
+                                    .clickable {
+                                        navigateToEditProfile()
+                                    }
                             )
                         }
+
+                        Spacer(Modifier.height(10.dp))
+
+                        Text(
+                            "선행 점수 ${userInfo.verificationScore}",
+                            style = TraceTheme.typography.bodyMR.copy(
+                                fontSize = 15.sp,
+                                lineHeight = 19.sp
+                            )
+                        )
+
+                        Spacer(Modifier.height(5.dp))
+
+                        Text(
+                            "선행 마크 ${userInfo.verificationCount}",
+                            style = TraceTheme.typography.bodyMR.copy(
+                                fontSize = 15.sp,
+                                lineHeight = 19.sp
+                            )
+                        )
+                    }
+                }
+
+                Spacer(Modifier.height(28.dp))
+
+                TabRow(
+                    selectedTabIndex = tabs.indexOf(tabType),
+                    containerColor = Background,
+                    contentColor = Black,
+                    indicator = { tabPositions ->
+                        TabRowDefaults.SecondaryIndicator(
+                            color = TabIndicator,
+                            modifier = Modifier
+                                .tabIndicatorOffset(tabPositions[tabs.indexOf(tabType)])
+                        )
+                    }
+                ) {
+                    tabs.forEach { tab ->
+                        Tab(
+                            selected = tab == tabType,
+                            onClick = { onTabTypeChange(tab) },
+                            text = {
+                                Text(
+                                    tab.label,
+                                    style = TraceTheme.typography.myPageTab
+                                )
+                            }
+                        )
+                    }
+                }
+
+                Spacer(Modifier.height(20.dp))
+            }
+
+            items(displayedPosts.itemCount) { index ->
+                displayedPosts[index]?.let { postFeed ->
+                    PostFeed(postFeed, navigateToPost = { navigateToPost(postFeed.postId) })
+
+                    Spacer(Modifier.height(8.dp))
+
+                    HorizontalDivider(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        thickness = 1.dp,
+                        color = GrayLine
                     )
+
+                    Spacer(Modifier.height(15.dp))
                 }
             }
-
-            Spacer(Modifier.height(20.dp))
         }
 
-        items(displayedPosts.itemCount) { index ->
-            displayedPosts[index]?.let { postFeed ->
-                PostFeed(postFeed, navigateToPost = { navigateToPost(postFeed.postId) })
-
-                Spacer(Modifier.height(8.dp))
-
-                HorizontalDivider(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    thickness = 1.dp,
-                    color = GrayLine
+        if (isRefreshing || isAppending) {
+            CircularProgressIndicator(
+                color = PrimaryDefault, modifier = Modifier.align(
+                    if (isRefreshing) Alignment.Center else Alignment.BottomCenter
                 )
-
-                Spacer(Modifier.height(15.dp))
-            }
+            )
         }
     }
+
 }
 
 @Preview(showBackground = true)
