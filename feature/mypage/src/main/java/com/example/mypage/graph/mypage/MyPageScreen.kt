@@ -221,8 +221,8 @@ private fun MyPageScreen(
         }
 
         items(displayedPosts.itemCount) { index ->
-            displayedPosts[index]?.let {
-                PostFeed(it, navigateToPost = { navigateToPost(1) })
+            displayedPosts[index]?.let { postFeed ->
+                PostFeed(postFeed, navigateToPost = { navigateToPost(postFeed.postId) })
 
                 Spacer(Modifier.height(8.dp))
 
