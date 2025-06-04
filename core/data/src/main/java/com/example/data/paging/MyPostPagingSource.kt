@@ -2,31 +2,26 @@ package com.example.data.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.example.domain.model.mypage.MyPageTab
 import com.example.domain.model.post.PostFeed
-import com.example.domain.model.search.SearchType
-import com.example.domain.model.search.SearchTab
 import com.example.network.model.cursor.Cursor
-import com.example.network.source.search.SearchDataSource
+import com.example.network.source.post.PostDataSource
 
-class SearchPagingSource(
-    private val searchDataSource: SearchDataSource,
-    private val keyword: String,
-    private val tabType: SearchTab,
-    private val searchType: SearchType,
-    private val pageSize: Int = 10,
+class MyPostPagingSource(
+    private val postDatasource: PostDataSource,
+    private val tabType: MyPageTab,
+    private val pageSize: Int = 20
 ) : PagingSource<Cursor, PostFeed>() {
 
     override suspend fun load(params: LoadParams<Cursor>): LoadResult<Cursor, PostFeed> {
         return try {
             val cursor = params.key
 
-            val response = searchDataSource.searchPosts(
+            val response = postDatasource.getMyPosts(
                 cursorDateTime = cursor?.dateTime,
                 cursorId = cursor?.id,
                 size = pageSize,
-                keyword = keyword,
-                tabType = tabType,
-                searchType = searchType
+                tabType = tabType
             ).getOrThrow()
 
             val postFeeds = response.toDomain()

@@ -74,12 +74,13 @@ data class PostDetail(
     }
 }
 
-enum class TabType(val label: String) {
+enum class HomeTab(val label: String) {
     ALL("전체"),
     FREE("자유"),
     GOOD_DEED("선행"),
     MISSION("미션")
 }
+
 
 enum class PostType(val label: String) {
     FREE("자유"),

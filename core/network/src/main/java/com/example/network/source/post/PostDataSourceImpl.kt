@@ -1,12 +1,14 @@
 package com.example.network.source.post
 
 import android.os.Build
+import com.example.domain.model.mypage.MyPageTab
 import com.example.domain.model.post.Emotion
+import com.example.domain.model.post.HomeTab
 import com.example.domain.model.post.PostType
-import com.example.domain.model.post.TabType
 import com.example.domain.model.post.WritePostType
 import com.example.network.api.TraceApi
 import com.example.network.model.post.AddPostRequest
+import com.example.network.model.post.GetMyPostsRequest
 import com.example.network.model.post.GetPostsRequest
 import com.example.network.model.post.GetPostsResponse
 import com.example.network.model.post.PostResponse
@@ -31,13 +33,27 @@ class PostDataSourceImpl @Inject constructor(
         cursorDateTime: LocalDateTime?,
         cursorId: Int?,
         size: Int,
-        postType: TabType
+        postType: HomeTab
     ): Result<GetPostsResponse> = traceApi.getPosts(
         getPostsRequest = GetPostsRequest(
             cursorDateTime = cursorDateTime,
             cursorId = cursorId,
             size = size,
-            postType = if (postType == TabType.ALL) null else postType.name
+            postType = if (postType == HomeTab.ALL) null else postType.name
+        )
+    )
+
+    override suspend fun getMyPosts(
+        cursorDateTime: LocalDateTime?,
+        cursorId: Int?,
+        size: Int,
+        tabType: MyPageTab
+    ): Result<GetPostsResponse> = traceApi.getMyPosts(
+        getMyPostsRequest = GetMyPostsRequest(
+            cursorDateTime = cursorDateTime,
+            cursorId = cursorId,
+            size = size,
+            tabType = tabType.name
         )
     )
 

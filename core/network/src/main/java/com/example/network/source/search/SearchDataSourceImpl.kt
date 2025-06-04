@@ -1,7 +1,7 @@
 package com.example.network.source.search
 
-import com.example.domain.model.post.SearchType
-import com.example.domain.model.post.TabType
+import com.example.domain.model.search.SearchTab
+import com.example.domain.model.search.SearchType
 import com.example.network.api.TraceApi
 import com.example.network.model.post.GetPostsResponse
 import com.example.network.model.search.SearchPostsRequest
@@ -15,7 +15,7 @@ class SearchDataSourceImpl @Inject constructor(
         cursorDateTime: LocalDateTime?,
         cursorId: Int?,
         size: Int,
-        tabType: TabType,
+        tabType: SearchTab,
         keyword: String,
         searchType: SearchType
     ): Result<GetPostsResponse> = traceApi.searchPosts(
@@ -23,7 +23,7 @@ class SearchDataSourceImpl @Inject constructor(
             cursorDateTime = cursorDateTime,
             cursorId = cursorId,
             size = size,
-            postType = if(tabType != TabType.ALL) tabType.name else null,
+            postType = if(tabType != SearchTab.ALL) tabType.name else null,
             keyword = keyword,
             searchType = searchType.name
         )

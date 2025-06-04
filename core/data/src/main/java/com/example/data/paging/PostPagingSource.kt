@@ -2,15 +2,14 @@ package com.example.data.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.example.domain.model.post.HomeTab
 import com.example.domain.model.post.PostFeed
-import com.example.domain.model.post.TabType
 import com.example.network.model.cursor.Cursor
 import com.example.network.source.post.PostDataSource
 
-
 class PostPagingSource(
     private val postDatasource: PostDataSource,
-    private val tabType: TabType,
+    private val tabType: HomeTab,
     private val pageSize: Int = 20
 ) : PagingSource<Cursor, PostFeed>() {
 

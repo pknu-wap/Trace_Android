@@ -1,16 +1,18 @@
 package com.example.domain.repository
 
 import androidx.paging.PagingData
+import com.example.domain.model.mypage.MyPageTab
 import com.example.domain.model.post.Emotion
+import com.example.domain.model.post.HomeTab
 import com.example.domain.model.post.PostDetail
-import com.example.domain.model.post.PostFeed
-import com.example.domain.model.post.TabType
-import com.example.domain.model.post.WritePostType
+import com.example.domain.model.post.PostFeed import com.example.domain.model.post.WritePostType
 import kotlinx.coroutines.flow.Flow
 
 
 interface PostRepository {
-    fun getPostPagingFlow(tabType: TabType): Flow<PagingData<PostFeed>>
+    fun getPosts(tabType: HomeTab): Flow<PagingData<PostFeed>>
+
+    fun getMyPosts(tabType: MyPageTab) : Flow<PagingData<PostFeed>>
 
     suspend fun getPost(postId: Int): Result<PostDetail>
 

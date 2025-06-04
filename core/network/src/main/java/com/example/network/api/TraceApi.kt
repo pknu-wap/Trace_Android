@@ -10,6 +10,7 @@ import com.example.network.model.comment.GetCommentsRequest
 import com.example.network.model.comment.GetCommentsResponse
 import com.example.network.model.mission.DailyMissionResponse
 import com.example.network.model.notification.PostDeviceTokenRequest
+import com.example.network.model.post.GetMyPostsRequest
 import com.example.network.model.post.GetPostsRequest
 import com.example.network.model.post.GetPostsResponse
 import com.example.network.model.post.PostResponse
@@ -155,6 +156,10 @@ interface TraceApi {
         @Part("request") verifyMissionRequest: RequestBody,
         @Part imageFiles: List<MultipartBody.Part>? = null
     ): Result<PostResponse>
+
+    // 마이페이지
+    @POST("/api/v1/posts/my")
+    suspend fun getMyPosts(@Body getMyPostsRequest: GetMyPostsRequest): Result<GetPostsResponse>
 
     // 알림
     @POST("/api/v1/fcm/tokens")

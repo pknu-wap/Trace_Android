@@ -39,17 +39,17 @@ import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.TabIndicator
 import com.example.designsystem.theme.TraceTheme
 import com.example.domain.model.post.PostFeed
-import com.example.domain.model.post.SearchType
-import com.example.domain.model.post.TabType
+import com.example.domain.model.search.SearchTab
+import com.example.domain.model.search.SearchType
 
 
 @Composable
 internal fun SearchResultView(
     searchType: SearchType,
-    tabType: TabType,
+    tabType: SearchTab,
     displayedPosts: LazyPagingItems<PostFeed>,
     onSearchTypeChange: (SearchType) -> Unit,
-    onTabTypeChange: (TabType) -> Unit,
+    onTabTypeChange: (SearchTab) -> Unit,
     navigateToPost: (Int) -> Unit,
 ) {
     val tabs = SearchType.entries
