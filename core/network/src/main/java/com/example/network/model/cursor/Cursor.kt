@@ -5,6 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Cursor(
-    val dateTime : LocalDateTime,
-    val id : Int,
+    val dateTime : LocalDateTime?,
+    val id : Int?,
 )

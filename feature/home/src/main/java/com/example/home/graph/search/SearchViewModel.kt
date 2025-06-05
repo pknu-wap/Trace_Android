@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.example.common.event.EventHelper
 import com.example.common.event.TraceEvent
-import com.example.domain.model.post.SearchType
-import com.example.domain.model.post.TabType
+import com.example.domain.model.search.SearchTab
+import com.example.domain.model.search.SearchType
 import com.example.domain.model.search.SearchCondition
 import com.example.domain.repository.SearchRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -46,18 +46,18 @@ class SearchViewModel @Inject constructor(
     private val _searchType = MutableStateFlow(SearchType.ALL)
     val searchType = _searchType.asStateFlow()
 
-    private val _tabType = MutableStateFlow(TabType.ALL)
+    private val _tabType = MutableStateFlow(SearchTab.ALL)
     val tabType = _tabType.asStateFlow()
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val postPagingFlow = combine(
+    val postFeeds = combine(
         _keywordInput,
         _tabType,
         _searchType,
         _isSearched
     ) { keyword, tab, searchType, isSearched ->
         SearchCondition(keyword, tab, searchType, isSearched)
-    }.filter { it.isSearched }
+    }.filter { it.isSearched && it.keyword.isNotBlank() }
         .map { Triple(it.keyword, it.tabType, it.searchType) }
         .flatMapLatest { (keyword, tab, searchType) ->
             searchRepository.searchPosts(
@@ -80,7 +80,7 @@ class SearchViewModel @Inject constructor(
         _searchType.value = searchType
     }
 
-    fun setTabType(tabType: TabType) {
+    fun setTabType(tabType: SearchTab) {
         _tabType.value = tabType
     }
 
@@ -94,7 +94,7 @@ class SearchViewModel @Inject constructor(
             return@launch
         }
 
-        if (_keywordInput.value.length < 2) {
+        if (_keywordInput.value.length < MIN_SEARCH_LENGTH) {
             eventHelper.sendEvent(TraceEvent.ShowSnackBar("검색어는 두 글자 이상 입력해 주세요."))
             return@launch
         }
@@ -130,5 +130,9 @@ class SearchViewModel @Inject constructor(
     sealed class SearchEvent {
         data object NavigateBack : SearchEvent()
         data class NavigateToPost(val postId: Int) : SearchEvent()
+    }
+
+    companion object {
+        private const val MIN_SEARCH_LENGTH = 2
     }
 }

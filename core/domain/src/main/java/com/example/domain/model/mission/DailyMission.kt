@@ -1,5 +1,6 @@
 package com.example.domain.model.mission
 
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.TextStyle
 import java.util.Locale
@@ -21,7 +22,7 @@ data class MissionFeed(
     val description: String,
     val isVerified: Boolean,
     val imageUrl : String? = null,
-    val createdAt : LocalDateTime
+    val createdAt : LocalDate
 ) {
     fun getFormattedDate() : String {
         val month = createdAt.monthValue

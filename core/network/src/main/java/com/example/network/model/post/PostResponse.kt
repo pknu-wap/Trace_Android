@@ -47,7 +47,7 @@ data class PostResponse(
             profileImageUrl = profileImageUrl,
             yourEmotionType = Emotion.fromString(yourEmotionType),
             createdAt = createdAt.toJavaLocalDateTime(),
-            updatedAt = updatedAt.toJavaLocalDateTime(),
+            updatedAt = updatedAt.toJavaLocalDateTime() ,
             isOwner = isOwner,
             isVerified = isVerified,
         )

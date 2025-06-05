@@ -77,7 +77,6 @@ class NotificationService : FirebaseMessagingService() {
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
 
-
         val notificationManager: NotificationManager =
             context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(System.currentTimeMillis().toInt(), builder.build())
@@ -100,7 +99,7 @@ private fun getEmotionBitmap(context: Context, type: String?, emotionType: Strin
     if (type == "emotion" && emotionType != null) {
         val emotion = Emotion.fromString(emotionType)
         val emotionResId = when (emotion) {
-            Emotion.HEARTWARMING -> com.example.designsystem.R.drawable.hearwarming
+            Emotion.HEARTWARMING -> com.example.designsystem.R.drawable.heartwarming
             Emotion.LIKEABLE -> com.example.designsystem.R.drawable.likeable
             Emotion.TOUCHING -> com.example.designsystem.R.drawable.touching
             Emotion.IMPRESSIVE -> com.example.designsystem.R.drawable.impressive

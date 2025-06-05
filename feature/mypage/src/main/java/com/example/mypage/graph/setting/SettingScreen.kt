@@ -45,10 +45,7 @@ internal fun SettingRoute(
         viewModel.eventChannel.collect { event ->
             when (event) {
                 is SettingEvent.NavigateBack -> navigateBack()
-                is SettingEvent.LogoutSuccess -> navigateToLogin()
-                is SettingEvent.LogoutFailure -> {
-                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("로그아웃에 실패했습니다."))
-                }
+                is SettingEvent.Logout -> navigateToLogin()
                 is SettingEvent.UnregisterUserSuccess -> navigateToLogin()
                 is SettingEvent.UnregisterUserFailure -> {
                     viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("회원 탈퇴에 실패했습니다."))

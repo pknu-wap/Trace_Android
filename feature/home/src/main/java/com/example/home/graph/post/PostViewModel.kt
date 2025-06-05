@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.example.common.event.EventHelper
 import com.example.common.event.TraceEvent
-import com.example.domain.model.post.Comment
 import com.example.domain.model.post.Emotion
 import com.example.domain.model.post.EmotionCount
 import com.example.domain.model.post.PostDetail
@@ -34,7 +33,7 @@ class PostViewModel @Inject constructor(
     private val _eventChannel = Channel<PostEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
 
-    private val postId: Int = savedStateHandle["postId"] ?: 99999
+    private val postId: Int = requireNotNull(savedStateHandle["postId"])
 
     init {
         getPost()
@@ -42,7 +41,26 @@ class PostViewModel @Inject constructor(
 
     private val _refreshTrigger = MutableStateFlow(false)
 
-    private val _postDetail = MutableStateFlow(fakePostDetail)
+    private val _postDetail = MutableStateFlow(
+        PostDetail(
+            postId = -1,
+            postType = PostType.GOOD_DEED,
+            viewCount = 0,
+            emotionCount = EmotionCount(),
+            title = "",
+            content = "",
+            missionContent = "",
+            providerId = "",
+            nickname = "",
+            images = emptyList(),
+            profileImageUrl = "",
+            yourEmotionType = null,
+            createdAt = LocalDateTime.MIN,
+            updatedAt =  LocalDateTime.MIN,
+            isOwner = false,
+            isVerified = false
+        )
+    )
     val postDetail = _postDetail.asStateFlow()
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -54,9 +72,6 @@ class PostViewModel @Inject constructor(
 
     private val _commentInput = MutableStateFlow("")
     val commentInput = _commentInput.asStateFlow()
-
-    private val _isCommentLoading = MutableStateFlow(false)
-    val isCommentLoading = _isCommentLoading.asStateFlow()
 
     private val _replyTargetId: MutableStateFlow<Int?> = MutableStateFlow(null)
     val replyTargetId = _replyTargetId.asStateFlow()
@@ -74,12 +89,8 @@ class PostViewModel @Inject constructor(
     }
 
     private fun getPost() = viewModelScope.launch {
-        if (postId != 99999) {
-            postRepository.getPost(postId).onSuccess {
-                _postDetail.value = it
-            }.onFailure {
-                _postDetail.value = fakePostDetail
-            }
+        postRepository.getPost(postId).onSuccess {
+            _postDetail.value = it
         }
     }
 
@@ -140,8 +151,6 @@ class PostViewModel @Inject constructor(
             return@launch
         }
 
-        _isCommentLoading.value = true
-
         commentRepository.addComment(postId = postId, content = _commentInput.value)
             .onSuccess { comment ->
                 _commentInput.value = ""
@@ -149,8 +158,6 @@ class PostViewModel @Inject constructor(
             }.onFailure {
                 eventHelper.sendEvent(TraceEvent.ShowSnackBar("댓글 작성에 실패했습니다."))
             }
-
-        _isCommentLoading.value = false
 
     }
 
@@ -163,8 +170,6 @@ class PostViewModel @Inject constructor(
                 return@launch
             }
 
-            _isCommentLoading.value = true
-
             commentRepository.addReplyToComment(
                 postId = postId,
                 commentId = parentId,
@@ -172,13 +177,11 @@ class PostViewModel @Inject constructor(
             ).onSuccess { replyComment ->
                 clearReplyTargetId()
                 refreshComments()
-                _isCommentLoading.value = false
                 _commentInput.value = ""
 
                 onSuccess(parentId)
             }.onFailure {
                 eventHelper.sendEvent(TraceEvent.ShowSnackBar("답글 작성에 실패했습니다."))
-                _isCommentLoading.value = false
             }
 
         }
@@ -201,95 +204,4 @@ class PostViewModel @Inject constructor(
     }
 
 }
-
-val fakeChildComments = listOf(
-    Comment(
-        nickName = "이수지",
-        profileImageUrl = "https://randomuser.me/api/portraits/women/3.jpg",
-        content = "정말 좋은 내용이에요!",
-        createdAt = LocalDateTime.now().minusMinutes(30), providerId = "1234", postId = 1,
-        commentId = 11, parentId = 1, isOwner = true,
-    ),
-    Comment(
-        nickName = "박영희",
-        profileImageUrl = null,
-        content = "완전 공감해요!",
-        createdAt = LocalDateTime.now().minusDays(2), providerId = "1234", postId = 1,
-        commentId = 12, parentId = 1, isOwner = true,
-    ),
-    Comment(
-        nickName = "최민준",
-        profileImageUrl = null,
-        content = "읽기만 했는데 좋네요!",
-        createdAt = LocalDateTime.now().minusHours(10), providerId = "1234", postId = 1,
-        commentId = 13, parentId = 1, isOwner = true,
-    )
-)
-
-val fakeComments = listOf(
-    Comment(
-        nickName = "홍길동",
-        profileImageUrl = "https://randomuser.me/api/portraits/men/1.jpg",
-        content = "이 글 정말 감동적이에요!",
-        createdAt = LocalDateTime.now().minusDays(1),
-        providerId = "1234", postId = 1,
-        commentId = 14, parentId = null, isOwner = true, replies = fakeChildComments
-    ),
-    Comment(
-        nickName = "김민수",
-        profileImageUrl = "https://randomuser.me/api/portraits/men/2.jpg",
-        content = "좋은 글 감사합니다!",
-        createdAt = LocalDateTime.now().minusHours(5), providerId = "1234", postId = 1,
-        commentId = 24, parentId = null, isOwner = true,
-    ),
-    Comment(
-        nickName = "이수지",
-        profileImageUrl = "https://randomuser.me/api/portraits/women/3.jpg",
-        content = "정말 좋은 내용이에요!",
-        createdAt = LocalDateTime.now().minusMinutes(30), providerId = "1234", postId = 1,
-        commentId = 34, parentId = null, isOwner = true,
-    ),
-    Comment(
-        nickName = "박영희",
-        profileImageUrl = null,
-        content = "완전 공감해요!",
-        createdAt = LocalDateTime.now().minusDays(2), providerId = "1234", postId = 1,
-        commentId = 44, parentId = null, isOwner = true,
-    ),
-    Comment(
-        nickName = "최민준",
-        profileImageUrl = null,
-        content = "읽기만 했는데 좋네요!",
-        createdAt = LocalDateTime.now().minusHours(10), providerId = "1234", postId = 1,
-        commentId = 54, parentId = null, isOwner = true,
-    )
-)
-
-val fakePostDetail = PostDetail(
-    postId = 0,
-    providerId = "1234",
-    postType = PostType.GOOD_DEED,
-    title = "작은 선행을 나누다",
-    content = "오늘은 작은 선행을 나누었습니다. 많은 사람들에게 도움이 되었으면 좋겠습니다.",
-    nickname = "홍길동",
-    viewCount = 120,
-    emotionCount = EmotionCount(
-        heartWarmingCount = 35,
-        likeableCount = 50,
-        touchingCount = 15,
-        impressiveCount = 20,
-        gratefulCount = 10
-    ),
-    images = listOf(
-        "https://picsum.photos/200/300?random=1",
-        "https://picsum.photos/200/300?random=2",
-        "https://picsum.photos/200/300?random=3"
-    ),
-    profileImageUrl = "https://picsum.photos/200/300?random=1",
-    createdAt = LocalDateTime.now().minusDays(3),
-    updatedAt = LocalDateTime.now(),
-    isVerified = true,
-    isOwner = true,
-
-    )
 

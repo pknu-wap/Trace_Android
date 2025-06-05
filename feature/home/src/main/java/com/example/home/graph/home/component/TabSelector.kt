@@ -19,13 +19,13 @@ import com.example.designsystem.theme.PrimaryActive
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.WarmGray
 import com.example.designsystem.theme.White
-import com.example.domain.model.post.TabType
+import com.example.domain.model.post.HomeTab
 
 @Composable
 internal fun TabSelector(
-    type: TabType,
-    selectedType: TabType,
-    onTabSelected: (TabType) -> Unit
+    type: HomeTab,
+    selectedType: HomeTab,
+    onTabSelected: (HomeTab) -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -43,7 +43,7 @@ internal fun TabSelector(
             },
     ) {
         Text(
-            type.label, style = TraceTheme.typography.bodySM,
+            type.label, style = TraceTheme.typography.homeTab,
             color = if (type == selectedType) White else WarmGray,
             modifier = Modifier.align(Alignment.Center)
         )

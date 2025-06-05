@@ -30,8 +30,8 @@ import com.example.designsystem.R
 import com.example.designsystem.theme.Background
 import com.example.designsystem.theme.PrimaryDefault
 import com.example.domain.model.post.PostFeed
-import com.example.domain.model.post.SearchType
-import com.example.domain.model.post.TabType
+import com.example.domain.model.search.SearchTab
+import com.example.domain.model.search.SearchType
 import com.example.home.graph.home.fakeLazyPagingPosts
 import com.example.home.graph.search.SearchViewModel.SearchEvent
 import com.example.home.graph.search.component.SearchInitialView
@@ -49,7 +49,7 @@ internal fun SearchRoute(
     val isSearched by viewModel.isSearched.collectAsStateWithLifecycle()
     val searchType by viewModel.searchType.collectAsStateWithLifecycle()
     val tabType by viewModel.tabType.collectAsStateWithLifecycle()
-    val displayedPosts = viewModel.postPagingFlow.collectAsLazyPagingItems()
+    val displayedPosts = viewModel.postFeeds.collectAsLazyPagingItems()
 
     LaunchedEffect(isSearched) {
         viewModel.loadRecentKeywords()
@@ -90,11 +90,11 @@ private fun SearchScreen(
     recentKeywords: List<String>,
     isSearched: Boolean,
     searchType: SearchType,
-    tabType: TabType,
+    tabType: SearchTab,
     displayedPosts: LazyPagingItems<PostFeed>,
     onKeywordInputChange: (String) -> Unit,
     onSearchTypeChange: (SearchType) -> Unit,
-    onTabTypeChange: (TabType) -> Unit,
+    onTabTypeChange: (SearchTab) -> Unit,
     searchByInput: () -> Unit,
     searchByRecentKeyword: (String) -> Unit,
     removeKeyword: (String) -> Unit,
@@ -164,7 +164,6 @@ private fun SearchScreen(
                 value = keywordInput,
                 onValueChange = onKeywordInputChange,
                 onSearch = {
-                    keyboardController?.hide()
                     searchByInput()
                 },
                 resetSearch = resetSearch
@@ -183,7 +182,7 @@ private fun SearchScreenPreview() {
         recentKeywords = listOf("선행", "제비", "흥부", "선행자", "쓰레기"),
         isSearched = true,
         searchType = SearchType.CONTENT,
-        tabType = TabType.ALL,
+        tabType = SearchTab.ALL,
         displayedPosts = fakeLazyPagingPosts(),
         onKeywordInputChange = {},
         clearKeywords = {},

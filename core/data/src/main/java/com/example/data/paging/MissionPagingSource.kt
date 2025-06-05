@@ -2,33 +2,28 @@ package com.example.data.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.example.domain.model.post.HomeTab
-import com.example.domain.model.post.PostFeed
+import com.example.domain.model.mission.MissionFeed
 import com.example.network.model.cursor.Cursor
-import com.example.network.source.post.PostDataSource
+import com.example.network.source.mission.MissionDataSource
 
-class PostPagingSource(
-    private val postDatasource: PostDataSource,
-    private val tabType: HomeTab,
+class MissionPagingSource(
+    private val missionDataSource: MissionDataSource,
     private val pageSize: Int = 20
-) : PagingSource<Cursor, PostFeed>() {
+) : PagingSource<Cursor, MissionFeed>() {
 
-    override suspend fun load(params: LoadParams<Cursor>): LoadResult<Cursor, PostFeed> {
+    override suspend fun load(params: LoadParams<Cursor>): LoadResult<Cursor, MissionFeed> {
         return try {
             val cursor = params.key
 
-            val response = postDatasource.getPosts(
+            val response = missionDataSource.getCompletedMissions(
                 cursorDateTime = cursor?.dateTime,
-                cursorId = cursor?.id,
                 size = pageSize,
-                postType = tabType
             ).getOrThrow()
 
             val postFeeds = response.toDomain()
 
             val nextCursor = if (response.hasNext && response.cursor != null) Cursor(
-                id = response.cursor?.id
-                    ?: throw IllegalStateException("Cursor must be present when hasNext is true"),
+                id = null,
                 dateTime = response.cursor?.dateTime
                     ?: throw IllegalStateException("Cursor must be present when hasNext is true")
 
@@ -47,5 +42,5 @@ class PostPagingSource(
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Cursor, PostFeed>): Cursor? = null
+    override fun getRefreshKey(state: PagingState<Cursor, MissionFeed>): Cursor? = null
 }

@@ -1,6 +1,6 @@
 [versions]
 ## Android gradle plugin
-androidGradlePlugin = "8.9.3"
+androidGradlePlugin = "8.10.1"
 ## AndroidX
 # https://developer.android.com/jetpack/androidx/releases/core
 androidxCore = "1.16.0"
@@ -82,8 +82,6 @@ androidxEspresso = "3.6.1"
 
 # https://kotest.io/
 kotest = "5.9.0"
-
-
 
 [libraries]
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }

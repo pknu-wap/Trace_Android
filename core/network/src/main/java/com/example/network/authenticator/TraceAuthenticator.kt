@@ -1,5 +1,6 @@
 package com.example.network.authenticator
 
+import android.util.Log
 import com.example.network.api.TraceApi
 import com.example.network.model.token.RefreshTokenRequest
 import com.example.network.token.TokenManager
@@ -9,7 +10,9 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import okhttp3.Authenticator
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import okhttp3.Route
 import javax.inject.Inject
@@ -24,12 +27,12 @@ class TraceAuthenticator @Inject constructor(
     override fun authenticate(route: Route?, response: Response): Request? {
         val originRequest = response.request
 
+        Log.d("traceAuthenticate", originRequest.toString())
         if (originRequest.header("Authorization")
                 .isNullOrEmpty() && !originRequest.url.encodedPath.contains("/api/v1/token/expiration")
         ) {
             return null
         }
-
 
         if (originRequest.url.encodedPath.contains("/api/v1/token/refresh")) {
             runBlocking {
@@ -62,11 +65,20 @@ class TraceAuthenticator @Inject constructor(
         }
 
         if (originRequest.url.encodedPath.contains("/api/v1/token/expiration")) {
-            return null
+            val newAccessToken = runBlocking {
+                tokenManager.getAccessToken()
+            }
+
+            val mediaType = "application/json; charset=utf-8".toMediaType()
+            val newBody = "{\"token\":\"$newAccessToken\"}".toRequestBody(mediaType)
+
+            return originRequest.newBuilder()
+                .header(RETRY_HEADER, (retryCount + 1).toString())
+                .method("POST", newBody)
+                .build()
         }
 
-        val newRequest = response.request
-            .newBuilder()
+        val newRequest = originRequest.newBuilder()
             .header(RETRY_HEADER, (retryCount + 1).toString())
             .header("Authorization", "Bearer ${token.accessToken}")
             .build()

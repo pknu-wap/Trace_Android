@@ -19,6 +19,8 @@ import com.example.mission.navigation.navigateToVerifyMission
 import com.example.mypage.navigation.myPageNavGraph
 import com.example.mypage.navigation.navigateToSetting
 import com.example.mypage.navigation.navigateToUpdateProfile
+import com.example.navigation.HomeGraph
+import com.example.navigation.MissionGraph
 import com.example.navigation.SplashRoute
 import com.example.splash.navigation.splashScreen
 
@@ -63,12 +65,19 @@ fun AppNavHost(
             navigateToSearch = {
                 navController.navigateToSearch()
             },
+            navigateToPostReplacing = { postId ->
+                navController.navigateToPost(postId, navOptions = navOptions {
+                    popUpTo<HomeGraph.HomeRoute>()
+                })
+            },
             navigateBack = { navigateBack(navController) },
         )
 
         missionNavGraph(
             navigateToPost = { postId ->
-                navController.navigateToPost(postId)
+                navController.navigateToPost(postId, navOptions = navOptions {
+                    popUpTo(MissionGraph.MissionRoute)
+                })
             },
             navigateToVerifyMission = { description ->
                 navController.navigateToVerifyMission(description)

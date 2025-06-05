@@ -2,6 +2,7 @@ package com.example.mission.graph.verifymission.component
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -68,7 +69,7 @@ internal fun VerifyMissionHeaderView(
 
         Spacer(Modifier.height(10.dp))
 
-        Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 30.dp)) {
+        Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 30.dp), horizontalArrangement = Arrangement.Center) {
             Text(
                 description,
                 style = TraceTheme.typography.missionTitle.copy(fontSize = 24.sp, lineHeight = 28.sp),

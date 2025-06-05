@@ -5,11 +5,13 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.example.common.util.suspendRunCatching
 import com.example.data.image.ImageResizer
+import com.example.data.paging.MyPostPagingSource
 import com.example.data.paging.PostPagingSource
+import com.example.domain.model.mypage.MyPageTab
 import com.example.domain.model.post.Emotion
+import com.example.domain.model.post.HomeTab
 import com.example.domain.model.post.PostDetail
 import com.example.domain.model.post.PostFeed
-import com.example.domain.model.post.TabType
 import com.example.domain.model.post.WritePostType
 import com.example.domain.repository.PostRepository
 import com.example.network.source.post.PostDataSource
@@ -20,11 +22,20 @@ class PostRepositoryImpl @Inject constructor(
     private val postDataSource: PostDataSource,
     private val imageResizer: ImageResizer,
 ) : PostRepository {
-    override fun getPostPagingFlow(tabType: TabType): Flow<PagingData<PostFeed>> {
+    override fun getPosts(tabType: HomeTab): Flow<PagingData<PostFeed>> {
         return Pager(
             config = PagingConfig(pageSize = DEFAULT_PAGE_SIZE),
             pagingSourceFactory = {
                 PostPagingSource(postDataSource, tabType)
+            }
+        ).flow
+    }
+
+    override fun getMyPosts(tabType: MyPageTab): Flow<PagingData<PostFeed>> {
+        return Pager(
+            config = PagingConfig(pageSize = DEFAULT_PAGE_SIZE),
+            pagingSourceFactory = {
+                MyPostPagingSource(postDataSource, tabType)
             }
         ).flow
     }

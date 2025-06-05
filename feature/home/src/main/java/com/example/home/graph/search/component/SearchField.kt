@@ -33,6 +33,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -44,6 +45,7 @@ import com.example.designsystem.theme.SearchField
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.WarmGray
 
+private const val MIN_SEARCH_LENGTH = 2
 
 private val customTextSelectionColors = TextSelectionColors(
     handleColor = PrimaryDefault,
@@ -64,6 +66,7 @@ internal fun TraceSearchField(
     onSearch: () -> Unit,
     resetSearch: () -> Unit,
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
     val isKeyboardVisible = WindowInsets.isImeVisible
     var isFocused by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
@@ -84,7 +87,10 @@ internal fun TraceSearchField(
             ),
             keyboardActions = KeyboardActions(onSearch = {
                 onSearch()
-                focusManager.clearFocus()
+                if (value.length >= MIN_SEARCH_LENGTH) {
+                    keyboardController?.hide()
+                    focusManager.clearFocus()
+                }
             }),
             textStyle = TraceTheme.typography.bodySM,
             cursorBrush = SolidColor(PrimaryDefault),
