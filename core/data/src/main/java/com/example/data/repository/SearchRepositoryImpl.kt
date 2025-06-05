@@ -7,8 +7,9 @@ import com.example.common.util.suspendRunCatching
 import com.example.data.paging.SearchPagingSource
 import com.example.datastore.datasource.keyword.LocalKeywordDataSource
 import com.example.domain.model.post.PostFeed
-import com.example.domain.model.post.SearchType
-import com.example.domain.model.post.TabType
+import com.example.domain.model.search.SearchType
+
+import com.example.domain.model.search.SearchTab
 import com.example.domain.repository.SearchRepository
 import com.example.network.source.search.SearchDataSource
 import kotlinx.coroutines.flow.Flow
@@ -21,7 +22,7 @@ class SearchRepositoryImpl @Inject constructor(
 ) : SearchRepository {
     override suspend fun searchPosts(
         keyword: String,
-        tabType: TabType,
+        tabType: SearchTab,
         searchType: SearchType
     ): Flow<PagingData<PostFeed>> {
         return Pager(

@@ -51,21 +51,21 @@ data class PostFeed(
 }
 
 data class PostDetail(
-    val postId : Int,
+    val postId: Int,
     val postType: PostType,
     val viewCount: Int,
     val emotionCount: EmotionCount,
     val title: String,
     val content: String,
-    val missionContent : String? = null,
-    val providerId :String,
+    val missionContent: String? = null,
+    val providerId:String,
     val nickname: String,
     val images: List<String> = emptyList(),
     val profileImageUrl: String? = null,
-    val yourEmotionType : Emotion? = null,
+    val yourEmotionType: Emotion? = null,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime,
-    val isOwner : Boolean = true,
+    val isOwner: Boolean = true,
     val isVerified: Boolean = false,
 ) {
     fun getFormattedDate(): String {
@@ -74,12 +74,13 @@ data class PostDetail(
     }
 }
 
-enum class TabType(val label: String) {
+enum class HomeTab(val label: String) {
     ALL("전체"),
     FREE("자유"),
     GOOD_DEED("선행"),
     MISSION("미션")
 }
+
 
 enum class PostType(val label: String) {
     FREE("자유"),

@@ -1,4 +1,4 @@
-package com.example.domain.model.post
+package com.example.domain.model.search
 
 enum class SearchType(val label : String) {
     ALL("전체"),

@@ -22,16 +22,16 @@ import androidx.compose.ui.unit.dp
 import com.example.common.util.clickable
 import com.example.designsystem.theme.Background
 import com.example.designsystem.theme.TraceTheme
-import com.example.domain.model.post.TabType
+import com.example.domain.model.search.SearchTab
 
 @Composable
 internal fun TabTypeDropdownMenu(
     expanded: Boolean,
     onDismiss: () -> Unit,
-    selectedTabType: TabType,
-    onTabTypeChange: (TabType) -> Unit
+    selectedTabType: SearchTab,
+    onTabTypeChange: (SearchTab) -> Unit
 ) {
-    val entries = TabType.entries
+    val entries = SearchTab.entries
 
     if (expanded) {
         DropdownMenu(
@@ -82,7 +82,7 @@ private fun TabTypeDropdownMenuPreview() {
             expanded = true,
             onTabTypeChange = {},
             onDismiss = {},
-            selectedTabType = TabType.ALL
+            selectedTabType = SearchTab.ALL
         )
     }
 

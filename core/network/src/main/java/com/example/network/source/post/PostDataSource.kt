@@ -1,8 +1,9 @@
 package com.example.network.source.post
 
 
+import com.example.domain.model.mypage.MyPageTab
 import com.example.domain.model.post.Emotion
-import com.example.domain.model.post.TabType
+import com.example.domain.model.post.HomeTab
 import com.example.domain.model.post.WritePostType
 import com.example.network.model.post.GetPostsResponse
 import com.example.network.model.post.PostResponse
@@ -15,7 +16,14 @@ interface PostDataSource {
         cursorDateTime : LocalDateTime?,
         cursorId : Int?,
         size : Int,
-        postType : TabType
+        postType : HomeTab
+    ) : Result<GetPostsResponse>
+
+    suspend fun getMyPosts(
+        cursorDateTime : LocalDateTime?,
+        cursorId : Int?,
+        size : Int,
+        tabType: MyPageTab
     ) : Result<GetPostsResponse>
 
     suspend fun getPost(
