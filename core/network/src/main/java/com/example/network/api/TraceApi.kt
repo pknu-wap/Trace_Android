@@ -158,7 +158,7 @@ interface TraceApi {
     ): Result<PostResponse>
 
     // 마이페이지
-    @POST("/api/v1/posts/my")
+    @POST("/api/v1/user/myPosts")
     suspend fun getMyPosts(@Body getMyPostsRequest: GetMyPostsRequest): Result<GetPostsResponse>
 
     // 알림

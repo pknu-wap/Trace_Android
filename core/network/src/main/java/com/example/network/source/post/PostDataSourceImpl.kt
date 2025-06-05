@@ -53,7 +53,7 @@ class PostDataSourceImpl @Inject constructor(
             cursorDateTime = cursorDateTime,
             cursorId = cursorId,
             size = size,
-            tabType = tabType.name
+            myPageTab = tabType.name
         )
     )
 

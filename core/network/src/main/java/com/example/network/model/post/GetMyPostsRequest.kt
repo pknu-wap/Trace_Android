@@ -8,5 +8,5 @@ data class GetMyPostsRequest(
     val cursorDateTime : LocalDateTime?,
     val cursorId : Int?,
     val size : Int,
-    val tabType : String
+    val myPageTab : String
 )
