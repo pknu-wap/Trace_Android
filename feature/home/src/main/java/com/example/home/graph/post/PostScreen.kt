@@ -73,7 +73,9 @@ import com.example.designsystem.theme.WarmGray
 import com.example.designsystem.theme.White
 import com.example.domain.model.post.Comment
 import com.example.domain.model.post.Emotion
+import com.example.domain.model.post.EmotionCount
 import com.example.domain.model.post.PostDetail
+import com.example.domain.model.post.PostType
 import com.example.home.graph.post.PostViewModel.PostEvent
 import com.example.home.graph.post.component.CommentView
 import com.example.home.graph.post.component.OtherPostDropdownMenu
@@ -82,6 +84,7 @@ import com.example.home.graph.post.component.PostImageContent
 import com.example.home.graph.post.component.TraceCommentField
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 
 
 @Composable
@@ -93,7 +96,6 @@ internal fun PostRoute(
     val comments = viewModel.commentPagingFlow.collectAsLazyPagingItems()
     val commentInput by viewModel.commentInput.collectAsStateWithLifecycle()
     val postDetail by viewModel.postDetail.collectAsStateWithLifecycle()
-    val isCommentLoading by viewModel.isCommentLoading.collectAsStateWithLifecycle()
     val replyTargetId by viewModel.replyTargetId.collectAsStateWithLifecycle()
 
     LaunchedEffect(true) {
@@ -115,7 +117,6 @@ internal fun PostRoute(
         postDetail = postDetail,
         comments = comments,
         commentInput = commentInput,
-        isCommentLoading = isCommentLoading,
         isReplying = replyTargetId != null,
         replyTargetId = replyTargetId,
         onCommentInputChange = viewModel::setCommentInput,
@@ -141,7 +142,6 @@ private fun PostScreen(
     commentInput: String,
     isReplying: Boolean,
     replyTargetId: Int?,
-    isCommentLoading: Boolean,
     onDeletePost: () -> Unit,
     onReportPost: () -> Unit,
     toggleEmotion: (Emotion) -> Unit,
@@ -179,13 +179,6 @@ private fun PostScreen(
             .imePadding()
             .pullRefresh(pullRefreshState)
     ) {
-
-        if (isCommentLoading) {
-            CircularProgressIndicator(
-                color = PrimaryActive, modifier = Modifier.align(Alignment.Center)
-            )
-        }
-
         PullRefreshIndicator(
             refreshing = isRefreshing,
             state = pullRefreshState,
@@ -263,9 +256,7 @@ private fun PostScreen(
                 Spacer(Modifier.height(10.dp))
 
                 HorizontalDivider(
-                    modifier = Modifier.fillMaxWidth(),
-                    thickness = 1.dp,
-                    color = GrayLine
+                    modifier = Modifier.fillMaxWidth(), thickness = 1.dp, color = GrayLine
                 )
 
                 postDetail.missionContent?.let {
@@ -394,9 +385,7 @@ private fun PostScreen(
                 Spacer(Modifier.height(8.dp))
 
                 HorizontalDivider(
-                    modifier = Modifier.fillMaxWidth(),
-                    thickness = 1.dp,
-                    color = GrayLine
+                    modifier = Modifier.fillMaxWidth(), thickness = 1.dp, color = GrayLine
                 )
 
                 if (comments.itemCount == 0 && comments.loadState.refresh is LoadState.NotLoading) {
@@ -625,7 +614,6 @@ fun MissionHeader(missionContent: String) {
 
         Spacer(Modifier.height(10.dp))
 
-
         Text(
             missionContent,
             style = TraceTheme.typography.missionTitleSmall,
@@ -639,11 +627,39 @@ fun MissionHeader(missionContent: String) {
 @Preview
 @Composable
 fun PostScreenPreview() {
+    val fakePostDetail = PostDetail(
+        postId = 0,
+        providerId = "1234",
+        postType = PostType.GOOD_DEED,
+        title = "작은 선행을 나누다",
+        content = "오늘은 작은 선행을 나누었습니다. 많은 사람들에게 도움이 되었으면 좋겠습니다.",
+        nickname = "홍길동",
+        viewCount = 120,
+        emotionCount = EmotionCount(
+            heartWarmingCount = 35,
+            likeableCount = 50,
+            touchingCount = 15,
+            impressiveCount = 20,
+            gratefulCount = 10
+        ),
+        images = listOf(
+            "https://picsum.photos/200/300?random=1",
+            "https://picsum.photos/200/300?random=2",
+            "https://picsum.photos/200/300?random=3"
+        ),
+        profileImageUrl = "https://picsum.photos/200/300?random=1",
+        createdAt = LocalDateTime.now().minusDays(3),
+        updatedAt = LocalDateTime.now(),
+        isVerified = true,
+        isOwner = true,
+
+        )
+
+
     PostScreen(
         commentInput = "",
         postDetail = fakePostDetail,
         comments = fakeLazyPagingComments(),
-        isCommentLoading = false,
         isReplying = true,
         onCommentInputChange = {},
         navigateBack = {},
@@ -663,9 +679,72 @@ fun PostScreenPreview() {
 
 @Composable
 fun fakeLazyPagingComments(): LazyPagingItems<Comment> {
+    val fakeChildComments = listOf(
+        Comment(
+            nickName = "이수지",
+            profileImageUrl = "https://randomuser.me/api/portraits/women/3.jpg",
+            content = "정말 좋은 내용이에요!",
+            createdAt = LocalDateTime.now().minusMinutes(30), providerId = "1234", postId = 1,
+            commentId = 11, parentId = 1, isOwner = true,
+        ), Comment(
+            nickName = "박영희",
+            profileImageUrl = null,
+            content = "완전 공감해요!",
+            createdAt = LocalDateTime.now().minusDays(2), providerId = "1234", postId = 1,
+            commentId = 12, parentId = 1, isOwner = true,
+        ), Comment(
+            nickName = "최민준",
+            profileImageUrl = null,
+            content = "읽기만 했는데 좋네요!",
+            createdAt = LocalDateTime.now().minusHours(10), providerId = "1234", postId = 1,
+            commentId = 13, parentId = 1, isOwner = true,
+        )
+    )
+
     return flowOf(
         PagingData.from(
-            fakeComments
+            listOf(
+                Comment(
+                    nickName = "홍길동",
+                    profileImageUrl = "https://randomuser.me/api/portraits/men/1.jpg",
+                    content = "이 글 정말 감동적이에요!",
+                    createdAt = LocalDateTime.now().minusDays(1),
+                    providerId = "1234",
+                    postId = 1,
+                    commentId = 14,
+                    parentId = null,
+                    isOwner = true,
+                    replies = fakeChildComments
+                ), Comment(
+                    nickName = "김민수",
+                    profileImageUrl = "https://randomuser.me/api/portraits/men/2.jpg",
+                    content = "좋은 글 감사합니다!",
+                    createdAt = LocalDateTime.now().minusHours(5), providerId = "1234", postId = 1,
+                    commentId = 24, parentId = null, isOwner = true,
+                ), Comment(
+                    nickName = "이수지",
+                    profileImageUrl = "https://randomuser.me/api/portraits/women/3.jpg",
+                    content = "정말 좋은 내용이에요!",
+                    createdAt = LocalDateTime.now().minusMinutes(30),
+                    providerId = "1234",
+                    postId = 1,
+                    commentId = 34,
+                    parentId = null,
+                    isOwner = true,
+                ), Comment(
+                    nickName = "박영희",
+                    profileImageUrl = null,
+                    content = "완전 공감해요!",
+                    createdAt = LocalDateTime.now().minusDays(2), providerId = "1234", postId = 1,
+                    commentId = 44, parentId = null, isOwner = true,
+                ), Comment(
+                    nickName = "최민준",
+                    profileImageUrl = null,
+                    content = "읽기만 했는데 좋네요!",
+                    createdAt = LocalDateTime.now().minusHours(10), providerId = "1234", postId = 1,
+                    commentId = 54, parentId = null, isOwner = true,
+                )
+            )
         )
     ).collectAsLazyPagingItems()
 }
