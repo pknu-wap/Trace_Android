@@ -35,6 +35,7 @@ import com.example.mission.graph.mission.component.MissionCompletedHeaderView
 import com.example.mission.graph.mission.component.MissionHeaderView
 import com.example.mission.graph.mission.component.VerifiedMissionBox
 import kotlinx.coroutines.flow.flowOf
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Composable
@@ -174,35 +175,35 @@ private fun fakeLazyPagingMissions(): LazyPagingItems<MissionFeed> {
                     description = "지하철에서 어르신에게 자리 양보하기",
                     isVerified = true,
                     imageUrl = "https://picsum.photos/200/300?random=1",
-                    createdAt = LocalDateTime.of(2025, 5, 22, 9, 0)
+                    createdAt = LocalDate.of(2025, 5, 22)
                 ),
                 MissionFeed(
                     missionId = 2,
                     description = "길거리 쓰레기 줍기",
                     isVerified = false,
                     imageUrl = null,
-                    createdAt = LocalDateTime.of(2025, 5, 21, 16, 30)
+                    createdAt = LocalDate.of(2025, 5, 21)
                 ),
                 MissionFeed(
                     missionId = 3,
                     description = "카페에서 다 쓴 컵 정리하기",
                     isVerified = true,
                     imageUrl = "https://picsum.photos/200/300?random=6",
-                    createdAt = LocalDateTime.of(2025, 5, 20, 13, 15)
+                    createdAt = LocalDate.of(2025, 5, 20)
                 ),
                 MissionFeed(
                     missionId = 4,
                     description = "지인에게 따뜻한 말 한마디 전하기",
                     isVerified = false,
                     imageUrl = null,
-                    createdAt = LocalDateTime.of(2025, 5, 19, 10, 45)
+                    createdAt = LocalDate.of(2025, 5, 19)
                 ),
                 MissionFeed(
                     missionId = 5,
                     description = "엘리베이터 버튼 대신 눌러주기",
                     isVerified = true,
                     imageUrl = "https://picsum.photos/200/300?random=2",
-                    createdAt = LocalDateTime.of(2025, 5, 18, 17, 5)
+                    createdAt = LocalDate.of(2025, 5, 18)
                 )
             )
         )

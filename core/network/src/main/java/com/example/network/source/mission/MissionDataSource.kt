@@ -11,7 +11,6 @@ interface MissionDataSource {
 
     suspend fun getCompletedMissions(
         cursorDateTime : LocalDateTime?,
-        cursorId : Int?,
         size : Int,
     ) : Result<GetCompletedMissionsResponse>
 

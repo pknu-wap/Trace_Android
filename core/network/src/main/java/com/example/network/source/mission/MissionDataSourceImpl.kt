@@ -25,12 +25,10 @@ class MissionDataSourceImpl @Inject constructor(
 
     override suspend fun getCompletedMissions(
         cursorDateTime: LocalDateTime?,
-        cursorId: Int?,
         size: Int
     ): Result<GetCompletedMissionsResponse> = traceApi.getCompletedMissions(
         GetCompletedMissionsRequest(
             cursorDateTime = cursorDateTime,
-            cursorId = cursorId,
             size = size,
         )
     )

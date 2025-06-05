@@ -17,15 +17,13 @@ class MissionPagingSource(
 
             val response = missionDataSource.getCompletedMissions(
                 cursorDateTime = cursor?.dateTime,
-                cursorId = cursor?.id,
                 size = pageSize,
             ).getOrThrow()
 
             val postFeeds = response.toDomain()
 
             val nextCursor = if (response.hasNext && response.cursor != null) Cursor(
-                id = response.cursor?.id
-                    ?: throw IllegalStateException("Cursor must be present when hasNext is true"),
+                id = null,
                 dateTime = response.cursor?.dateTime
                     ?: throw IllegalStateException("Cursor must be present when hasNext is true")
 

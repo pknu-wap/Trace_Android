@@ -2,7 +2,10 @@ package com.example.network.model.mission
 
 import com.example.domain.model.mission.MissionFeed
 import com.example.network.model.cursor.Cursor
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toJavaLocalDateTime
 import kotlinx.serialization.Serializable
 
@@ -19,9 +22,10 @@ data class GetCompletedMissionsResponse(
 data class MissionContent(
     val postId: Int,
     val content: String,
+    val changeCount : Int,
     val isVerified: Boolean,
     val imageUrl: String? = null,
-    val createdAt: LocalDateTime,
+    val createdAt: LocalDate,
 ) {
     fun toDomain(): MissionFeed {
         return MissionFeed(
@@ -29,7 +33,7 @@ data class MissionContent(
             description = content,
             isVerified = isVerified,
             imageUrl = imageUrl,
-            createdAt = createdAt.toJavaLocalDateTime()
+            createdAt = createdAt.toJavaLocalDate()
         )
     }
 }

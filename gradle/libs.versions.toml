@@ -83,8 +83,6 @@ androidxEspresso = "3.6.1"
 # https://kotest.io/
 kotest = "5.9.0"
 
-
-
 [libraries]
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
 kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
