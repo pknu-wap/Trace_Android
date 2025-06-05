@@ -9,6 +9,8 @@ import com.example.network.model.comment.CommentResponse
 import com.example.network.model.comment.GetCommentsRequest
 import com.example.network.model.comment.GetCommentsResponse
 import com.example.network.model.mission.DailyMissionResponse
+import com.example.network.model.mission.GetCompletedMissionsRequest
+import com.example.network.model.mission.GetCompletedMissionsResponse
 import com.example.network.model.notification.PostDeviceTokenRequest
 import com.example.network.model.post.GetPostsRequest
 import com.example.network.model.post.GetPostsResponse
@@ -145,6 +147,9 @@ interface TraceApi {
     // 미션
     @GET("/api/v1/missions/today")
     suspend fun getDailyMission() : Result<DailyMissionResponse>
+
+    @POST("/api/v1/missions/completed")
+    suspend fun getCompletedMissions(@Body getCompletedMissionsRequest: GetCompletedMissionsRequest) : Result<GetCompletedMissionsResponse>
 
     @POST("/api/v1/missions/change")
     suspend fun changeDailyMission() : Result<DailyMissionResponse>

@@ -120,7 +120,7 @@ data class TraceTypography(
         lineHeight = 20.sp
     ),
     val homeTab : TextStyle = TextStyle(
-        fontFamily = HsJipTokkiRound,
+        fontFamily = PretendardMedium,
         fontSize = 14.sp,
         lineHeight = 18.sp
     ),

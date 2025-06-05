@@ -30,6 +30,7 @@ import com.example.common.util.clickable
 import com.example.designsystem.theme.Background
 import com.example.designsystem.theme.TraceTheme
 import com.example.domain.model.mission.MissionFeed
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Composable
@@ -131,7 +132,7 @@ fun VerifiedMissionBoxPreview() {
                 description = "카페에서 다 쓴 컵 정리하기",
                 isVerified = true,
                 imageUrl = "https://picsum.photos/200/300?random=6",
-                createdAt = LocalDateTime.of(2025, 5, 20, 13, 15)
+                createdAt = LocalDate.of(2025, 5, 20,)
             ),
             navigateToPost = {}
         )
