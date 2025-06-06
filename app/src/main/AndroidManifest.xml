@@ -42,8 +42,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
 
-                <data android:host="oauth"
-                    android:scheme="kakao${KAKAO_NATIVE_APP_KEY}" />
+                <data android:scheme="${KAKAO_REDIRECT_URI}" android:host="oauth" />
             </intent-filter>
         </activity>
 

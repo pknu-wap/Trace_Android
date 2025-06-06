@@ -31,7 +31,7 @@ android {
             properties["KAKAO_NATIVE_APP_KEY"] as String
         )
 
-        manifestPlaceholders["KAKAO_NATIVE_APP_KEY"] = properties["KAKAO_NATIVE_APP_KEY"] as String
+        manifestPlaceholders["KAKAO_REDIRECT_URI"] = properties["KAKAO_REDIRECT_URI"] as String
     }
 
     buildFeatures {
