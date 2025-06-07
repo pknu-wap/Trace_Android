@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import com.example.common.ui.NoRippleInteractionSource
 import com.example.designsystem.theme.Black
+import com.example.designsystem.theme.CloudGray
 import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.White
@@ -75,7 +76,7 @@ internal fun AppBottomBar(
                         ) {
 
                             Icon(
-                                painter = painterResource(topLevelRoute.unSelectedIcon),
+                                painter = painterResource(topLevelRoute.selectedIcon),
                                 contentDescription = topLevelRoute.contentDescription,
                                 modifier = Modifier.size(24.dp),
                             )
@@ -99,8 +100,9 @@ internal fun AppBottomBar(
                     interactionSource = remember { NoRippleInteractionSource() },
                     colors = NavigationBarItemDefaults.colors(
                         selectedIconColor = PrimaryDefault,
+                        unselectedIconColor = CloudGray,
                         selectedTextColor = PrimaryDefault,
-                        unselectedTextColor = Black,
+                        unselectedTextColor = CloudGray,
                         indicatorColor = Color.Transparent
                     ),
 
