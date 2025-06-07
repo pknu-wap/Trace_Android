@@ -20,14 +20,12 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination
 import com.example.common.ui.NoRippleInteractionSource
 import com.example.designsystem.theme.Black
 import com.example.designsystem.theme.PrimaryDefault
+import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.White
 import com.example.navigation.HomeBaseRoute
 import com.example.navigation.MissionBaseRoute
@@ -43,7 +41,7 @@ internal fun AppBottomBar(
 ) {
     Box(
         modifier = Modifier
-            .height(61.dp)
+            .height(51.dp)
             .drawBehind {
                 val shadowHeight = 1.dp.toPx()
 
@@ -65,11 +63,9 @@ internal fun AppBottomBar(
             containerColor = White,
             modifier = modifier
                 .align(Alignment.BottomCenter)
-                .height(60.dp)
+                .height(50.dp)
         ) {
             TopLevelDestination.entries.forEach { topLevelRoute ->
-                val icon =
-                    if (currentDestination.isRouteInHierarchy(topLevelRoute.route)) topLevelRoute.selectedIcon else topLevelRoute.unSelectedIcon
 
                 NavigationBarItem(
                     icon = {
@@ -79,7 +75,7 @@ internal fun AppBottomBar(
                         ) {
 
                             Icon(
-                                painter = painterResource(icon),
+                                painter = painterResource(topLevelRoute.unSelectedIcon),
                                 contentDescription = topLevelRoute.contentDescription,
                                 modifier = Modifier.size(24.dp),
                             )
@@ -88,11 +84,7 @@ internal fun AppBottomBar(
 
                             Text(
                                 text = topLevelRoute.title,
-                                style = TextStyle(
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 12.sp,
-                                    lineHeight = 16.sp,
-                                )
+                                style = TraceTheme.typography.bodyXSM
                             )
                         }
                     },
@@ -109,7 +101,7 @@ internal fun AppBottomBar(
                         selectedIconColor = PrimaryDefault,
                         selectedTextColor = PrimaryDefault,
                         unselectedTextColor = Black,
-                        indicatorColor = Color.Transparent,
+                        indicatorColor = Color.Transparent
                     ),
 
                     )
