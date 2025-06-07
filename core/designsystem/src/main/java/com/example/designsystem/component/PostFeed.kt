@@ -42,160 +42,51 @@ import com.example.domain.model.post.PostType
 import java.time.LocalDateTime
 
 @Composable
- fun PostFeed(
+fun PostFeed(
     postFeed: PostFeed,
     navigateToPost: (Int) -> Unit
 ) {
-    if (postFeed.imageUrl != null) {
-        val painter = rememberAsyncImagePainter(
+
+    val painter = postFeed.imageUrl?.let {
+        rememberAsyncImagePainter(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(postFeed.imageUrl)
+                .data(it)
                 .crossfade(true)
                 .build()
         )
+    }
 
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable {
-                    navigateToPost(postFeed.postId)
-                }) {
-            Column(
-                modifier = Modifier
-                    .padding(end = 95.dp)
-                    .align(Alignment.CenterStart)
-            ) {
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    Text(
-                        postFeed.title,
-                        style = TraceTheme.typography.bodyMSB.copy(fontSize = 16.sp),
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis
-                    )
+    val endPadding = if (postFeed.imageUrl != null) 95.dp else 0.dp
 
-                    if (postFeed.isVerified) {
-                        Spacer(Modifier.width(4.dp))
-
-                        Image(
-                            painter = painterResource(R.drawable.verification_mark),
-                            contentDescription = "선행 인증 마크"
-                        )
-                    }
-                }
-
-                Spacer(Modifier.height(3.dp))
-
-                Text(
-                    postFeed.content,
-                    style = TraceTheme.typography.bodySSB.copy(fontSize = 13.sp),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    color = DarkGray
-                )
-
-                Spacer(Modifier.height(8.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    ProfileImage(
-                        profileImageUrl = postFeed.profileImageUrl,
-                        imageSize = if (postFeed.profileImageUrl != null) 18.dp else 16.dp,
-                        paddingValue = if (postFeed.profileImageUrl != null) 1.dp else 2.dp
-                    )
-
-
-                    Spacer(Modifier.width(6.dp))
-
-                    Text(
-                        postFeed.nickname,
-                        style = TraceTheme.typography.bodySSB.copy(fontSize = 11.sp),
-                        color = WarmGray
-                    )
-
-                    Spacer(Modifier.width(12.dp))
-
-                    Text(
-                        postFeed.getFormattedTime(),
-                        style = TraceTheme.typography.bodySSB.copy(fontSize = 11.sp),
-                        color = WarmGray
-                    )
-
-                    Spacer(Modifier.width(12.dp))
-
-                    Text(
-                        "${postFeed.viewCount} 읽음",
-                        style = TraceTheme.typography.bodySSB.copy(fontSize = 11.sp),
-                        color = WarmGray
-                    )
-
-                    Spacer(Modifier.width(7.dp))
-
-                    Image(
-                        painter = painterResource(R.drawable.comment_ic),
-                        contentDescription = "댓글 아이콘",
-                        colorFilter = ColorFilter.tint(
-                            PrimaryDefault
-                        )
-                    )
-
-                    Spacer(Modifier.width(3.dp))
-
-                    Text(
-                        "${postFeed.commentCount}",
-                        style = TraceTheme.typography.bodySSB.copy(fontSize = 11.sp),
-                        color = PrimaryDefault
-                    )
-
-                    Spacer(Modifier.width(10.dp))
-
-                    Image(
-                        imageVector = Icons.Default.Favorite,
-                        contentDescription = "감정표현",
-                        colorFilter = ColorFilter.tint(Red),
-                        modifier = Modifier.size(15.dp)
-                    )
-
-                    Spacer(Modifier.width(3.dp))
-
-                    Text(
-                        postFeed.totalEmotionCount.toString(),
-                        style = TraceTheme.typography.bodySSB.copy(fontSize = 11.sp),
-                        color = WarmGray
-                    )
-                }
-
-            }
-
-
-            Box(
-                modifier = Modifier
-                    .size(75.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .align(Alignment.CenterEnd),
-            ) {
-                Image(
-                    painter = painter,
-                    contentDescription = "대표 이미지",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-
-        }
-    } else {
-        Column(
-            modifier = Modifier.clickable {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
                 navigateToPost(postFeed.postId)
-            }
+            }) {
+
+        Column(
+            modifier = Modifier
+                .padding(end = endPadding)
+                .align(Alignment.CenterStart)
         ) {
-            Text(
-                postFeed.title,
-                style = TraceTheme.typography.bodyMSB.copy(fontSize = 16.sp),
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
-            )
+            Row(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    postFeed.title,
+                    style = TraceTheme.typography.bodyMSB.copy(fontSize = 16.sp),
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+
+                if (postFeed.isVerified) {
+                    Spacer(Modifier.width(4.dp))
+
+                    Image(
+                        painter = painterResource(R.drawable.verification_mark),
+                        contentDescription = "선행 인증 마크"
+                    )
+                }
+            }
 
             Spacer(Modifier.height(3.dp))
 
@@ -211,7 +102,7 @@ import java.time.LocalDateTime
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 ProfileImage(
                     profileImageUrl = postFeed.profileImageUrl,
@@ -227,7 +118,7 @@ import java.time.LocalDateTime
                     color = WarmGray
                 )
 
-                Spacer(Modifier.width(17.dp))
+                Spacer(Modifier.width(8.dp))
 
                 Text(
                     postFeed.getFormattedTime(),
@@ -235,7 +126,7 @@ import java.time.LocalDateTime
                     color = WarmGray
                 )
 
-                Spacer(Modifier.width(12.dp))
+                Spacer(Modifier.width(8.dp))
 
                 Text(
                     "${postFeed.viewCount} 읽음",
@@ -278,8 +169,26 @@ import java.time.LocalDateTime
                     color = WarmGray
                 )
             }
+
+        }
+
+        if (postFeed.imageUrl != null && painter != null) {
+            Box(
+                modifier = Modifier
+                    .size(75.dp)
+                    .clip(RoundedCornerShape(16.dp))
+                    .align(Alignment.CenterEnd),
+            ) {
+                Image(
+                    painter = painter,
+                    contentDescription = "대표 이미지",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
         }
     }
+
 }
 
 @Preview
@@ -297,11 +206,10 @@ private fun PostFeedPreview() {
                 content = "오늘 공원에서 쓰레기를 줍고 깨끗한 환경을 만들었습니다. 주변 사람들이 함께 참여해주셨습니다.",
                 nickname = "선행자1",
                 createdAt = LocalDateTime.now(),
-
                 viewCount = 150,
                 commentCount = 5,
                 isVerified = true,
-                postId = 1, providerId = "1234", updatedAt = LocalDateTime.now()
+                postId = 1, providerId = "1234", updatedAt = LocalDateTime.now(),
             ),
         ) { }
     }

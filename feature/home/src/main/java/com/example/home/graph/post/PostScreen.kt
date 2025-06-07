@@ -65,7 +65,6 @@ import com.example.designsystem.theme.DarkGray
 import com.example.designsystem.theme.EmotionLabel
 import com.example.designsystem.theme.GrayLine
 import com.example.designsystem.theme.MissionBackground
-import com.example.designsystem.theme.PrimaryActive
 import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.Red
 import com.example.designsystem.theme.TraceTheme
@@ -418,7 +417,7 @@ private fun PostScreen(
                 comments.itemCount
             ) { index ->
                 comments[index]?.let { comment ->
-                    if (!comment.isDeleted) {
+                    if (!comment.isDeleted || comment.replies.isNotEmpty()) {
 
                         Spacer(Modifier.height(13.dp))
 

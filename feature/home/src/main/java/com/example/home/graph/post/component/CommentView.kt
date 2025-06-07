@@ -54,9 +54,11 @@ internal fun CommentView(
             alpha = 0.2f
         ) else Background
 
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .background(backgroundColor)) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(backgroundColor)
+    ) {
         if (!comment.isDeleted) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -139,7 +141,7 @@ internal fun CommentView(
         }
     }
 
-    comment.replies.forEachIndexed { index, childComment ->
+    comment.replies.filter { !it.isDeleted }.forEachIndexed { index, childComment ->
         if (index == 0) Spacer(Modifier.height(20.dp))
 
         ChildCommentView(
