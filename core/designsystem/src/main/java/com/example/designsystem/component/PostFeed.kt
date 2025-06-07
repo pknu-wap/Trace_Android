@@ -116,7 +116,7 @@ fun PostFeed(
                     color = WarmGray
                 )
 
-                Spacer(Modifier.width(12.dp))
+                Spacer(Modifier.width(8.dp))
 
                 Text(
                     postFeed.getFormattedTime(),
@@ -124,7 +124,7 @@ fun PostFeed(
                     color = WarmGray
                 )
 
-                Spacer(Modifier.width(12.dp))
+                Spacer(Modifier.width(8.dp))
 
                 Text(
                     "${postFeed.viewCount} 읽음",
