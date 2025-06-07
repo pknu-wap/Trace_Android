@@ -76,7 +76,7 @@ internal fun AppBottomBar(
                         ) {
 
                             Icon(
-                                painter = painterResource(topLevelRoute.selectedIcon),
+                                painter = painterResource(topLevelRoute.icon),
                                 contentDescription = topLevelRoute.contentDescription,
                                 modifier = Modifier.size(24.dp),
                             )
@@ -91,9 +91,17 @@ internal fun AppBottomBar(
                     },
                     onClick = {
                         when (topLevelRoute) {
-                            TopLevelDestination.HOME -> navigateToBottomNaviDestination(HomeBaseRoute)
-                            TopLevelDestination.MISSION -> navigateToBottomNaviDestination(MissionBaseRoute)
-                            TopLevelDestination.MY_Page -> navigateToBottomNaviDestination(MyPageBaseRoute)
+                            TopLevelDestination.HOME -> navigateToBottomNaviDestination(
+                                HomeBaseRoute
+                            )
+
+                            TopLevelDestination.MISSION -> navigateToBottomNaviDestination(
+                                MissionBaseRoute
+                            )
+
+                            TopLevelDestination.MY_Page -> navigateToBottomNaviDestination(
+                                MyPageBaseRoute
+                            )
                         }
                     },
                     selected = currentDestination.isRouteInHierarchy(topLevelRoute.route),
@@ -105,8 +113,7 @@ internal fun AppBottomBar(
                         unselectedTextColor = CloudGray,
                         indicatorColor = Color.Transparent
                     ),
-
-                    )
+                )
             }
         }
 

@@ -47,12 +47,14 @@ fun PostFeed(
     navigateToPost: (Int) -> Unit
 ) {
 
-    val painter = rememberAsyncImagePainter(
-        model = ImageRequest.Builder(LocalContext.current)
-            .data(postFeed.imageUrl)
-            .crossfade(true)
-            .build()
-    )
+    val painter = postFeed.imageUrl?.let {
+        rememberAsyncImagePainter(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(it)
+                .crossfade(true)
+                .build()
+        )
+    }
 
     val endPadding = if (postFeed.imageUrl != null) 95.dp else 0.dp
 

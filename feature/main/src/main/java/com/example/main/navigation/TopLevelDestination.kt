@@ -9,29 +9,25 @@ import kotlin.reflect.KClass
 
 enum class TopLevelDestination(
     val route : KClass<*>,
-    @DrawableRes val selectedIcon : Int,
-    @DrawableRes val unSelectedIcon : Int,
+    @DrawableRes val icon : Int,
     val contentDescription: String,
     val title : String
 ) {
     HOME(
         route = HomeGraph.HomeRoute::class,
-        selectedIcon = R.drawable.home_actvie,
-        unSelectedIcon = R.drawable.home,
+        icon = R.drawable.home_actvie,
         contentDescription = "홈",
         title = "홈"
     ),
     MISSION(
         route = MissionGraph.MissionRoute::class,
-        selectedIcon = R.drawable.mission_active,
-        unSelectedIcon = R.drawable.mission,
+        icon = R.drawable.mission_active,
         contentDescription = "미션",
         title = "미션"
     ),
     MY_Page(
         route = MyPageGraph.MyPageRoute::class,
-        selectedIcon = R.drawable.my_page_active,
-        unSelectedIcon = R.drawable.my_page,
+        icon = R.drawable.my_page_active,
         contentDescription = "마이페이지",
         title = "마이페이지"
     ),
