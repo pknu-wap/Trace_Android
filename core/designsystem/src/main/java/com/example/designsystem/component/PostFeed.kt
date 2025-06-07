@@ -172,22 +172,23 @@ fun PostFeed(
 
         }
 
-
-        Box(
-            modifier = Modifier
-                .size(75.dp)
-                .clip(RoundedCornerShape(16.dp))
-                .align(Alignment.CenterEnd),
-        ) {
-            Image(
-                painter = painter,
-                contentDescription = "대표 이미지",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
-            )
+        if (postFeed.imageUrl != null && painter != null) {
+            Box(
+                modifier = Modifier
+                    .size(75.dp)
+                    .clip(RoundedCornerShape(16.dp))
+                    .align(Alignment.CenterEnd),
+            ) {
+                Image(
+                    painter = painter,
+                    contentDescription = "대표 이미지",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
         }
-
     }
+
 }
 
 @Preview
